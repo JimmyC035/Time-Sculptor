@@ -148,4 +148,13 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:21.0.1'
 
 
+    def koin_version = '2.1.0-alpha-1'
+// Koin for Kotlin
+    implementation "org.koin:koin-core:$koin_version"
+// Koin AndroidX ViewModel features
+    implementation "org.koin:koin-androidx-viewmodel:$koin_version"
+// Koin for Android
+    implementation "org.koin:koin-android:$koin_version"
+
+
 }

@@ -1,0 +1,191 @@
+package com.example.timesculptor.util
+
+import android.content.Context
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
+import android.util.Log
+import com.example.timesculptor.R
+import java.util.Calendar
+import java.util.Locale
+
+object AppUtil {
+
+    private const val A_DAY = (86400 * 1000).toLong()
+    fun parsePackageName(pckManager: PackageManager, data: String): String {
+        val applicationInformation: ApplicationInfo? =
+            try {
+                pckManager.getApplicationInfo(data, PackageManager.GET_META_DATA)
+        } catch (e: PackageManager.NameNotFoundException) {
+            null
+        }
+        return (if (applicationInformation != null) pckManager.getApplicationLabel(
+            applicationInformation
+        ) else data) as String
+    }
+
+    fun getPackageIcon(context: Context, packageName: String): Drawable {
+        val manager = context.packageManager
+        try {
+            return manager.getApplicationIcon(packageName)
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+        }
+        return context.resources.getDrawable(R.drawable.ic_android_black_24dp)
+    }
+
+    fun formatMilliSeconds(milliSeconds: Long): String {
+        val second = milliSeconds / 1000L
+        return if (second < 60) {
+            String.format("%ss", second)
+        } else if (second < 60 * 60) {
+            String.format("%sm %ss", second / 60, second % 60)
+        } else {
+            String.format(
+                "%sh %sm %ss",
+                second / 3600,
+                second % 3600 / 60,
+                second % 3600 % 60
+            )
+        }
+    }
+
+    fun isSystemApp(manager: PackageManager, packageName: String): Boolean {
+        var isSystemApp = false
+        try {
+            val applicationInfo = manager.getApplicationInfo(packageName, 0)
+            if (applicationInfo != null) {
+                isSystemApp = (applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
+                        || applicationInfo.flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP != 0)
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+        }
+        return isSystemApp
+    }
+
+    fun isInstalled(packageManager: PackageManager, packageName: String): Boolean {
+        var applicationInfo: ApplicationInfo? = null
+        try {
+            applicationInfo = packageManager.getApplicationInfo(packageName, 0)
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+        }
+        return applicationInfo != null
+    }
+
+    fun openable(packageManager: PackageManager, packageName: String?): Boolean {
+        return packageManager.getLaunchIntentForPackage(packageName!!) != null
+    }
+
+    fun getAppUid(packageManager: PackageManager, packageName: String): Int {
+        val applicationInfo: ApplicationInfo
+        try {
+            applicationInfo = packageManager.getApplicationInfo(packageName, 0)
+            return applicationInfo.uid
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+        }
+        return 0
+    }
+
+    fun getTimeRange(sort: SortEnum?): LongArray {
+        val range: LongArray = when (sort) {
+            SortEnum.TODAY -> getTodayRange()
+            SortEnum.YESTERDAY -> getYesterday()
+            SortEnum.THIS_WEEK -> getThisWeek()
+            SortEnum.THIS_MONTH -> getThisMonth()
+            SortEnum.THIS_YEAR -> getThisYear()
+            else -> getTodayRange()
+        }
+        Log.d("**********", range[0].toString() + " ~ " + range[1])
+        return range
+    }
+
+    private fun getTodayRange(): LongArray {
+        val timeNow = System.currentTimeMillis()
+        val cal = Calendar.getInstance()
+        cal[Calendar.HOUR_OF_DAY] = 0
+        cal[Calendar.MINUTE] = 0
+        cal[Calendar.SECOND] = 0
+        cal[Calendar.MILLISECOND] = 0
+        return longArrayOf(cal.timeInMillis, timeNow)
+    }
+
+    fun getYesterdayTimestamp(): Long {
+        val timeNow = System.currentTimeMillis()
+        val cal = Calendar.getInstance()
+        cal.timeInMillis = timeNow - A_DAY
+        cal[Calendar.HOUR_OF_DAY] = 0
+        cal[Calendar.MINUTE] = 0
+        cal[Calendar.SECOND] = 0
+        cal[Calendar.MILLISECOND] = 0
+        return cal.timeInMillis
+    }
+
+    private fun getYesterday(): LongArray {
+        val timeNow = System.currentTimeMillis()
+        val cal = Calendar.getInstance()
+        cal.timeInMillis = timeNow - A_DAY
+        cal[Calendar.HOUR_OF_DAY] = 0
+        cal[Calendar.MINUTE] = 0
+        cal[Calendar.SECOND] = 0
+        cal[Calendar.MILLISECOND] = 0
+        val start = cal.timeInMillis
+        val end = if (start + A_DAY > timeNow) timeNow else start + A_DAY
+        return longArrayOf(start, end)
+    }
+
+    private fun getThisWeek(): LongArray {
+        val timeNow = System.currentTimeMillis()
+        val cal = Calendar.getInstance()
+        cal[Calendar.DAY_OF_WEEK] = Calendar.MONDAY
+        cal[Calendar.HOUR_OF_DAY] = 0
+        cal[Calendar.MINUTE] = 0
+        cal[Calendar.SECOND] = 0
+        cal[Calendar.MILLISECOND] = 0
+        val start = cal.timeInMillis
+        val end = if (start + A_DAY > timeNow) timeNow else start + A_DAY
+        return longArrayOf(start, end)
+    }
+
+    private fun getThisMonth(): LongArray {
+        val timeNow = System.currentTimeMillis()
+        val cal = Calendar.getInstance()
+        cal[Calendar.DAY_OF_MONTH] = 1
+        cal[Calendar.HOUR_OF_DAY] = 0
+        cal[Calendar.MINUTE] = 0
+        cal[Calendar.SECOND] = 0
+        cal[Calendar.MILLISECOND] = 0
+        return longArrayOf(cal.timeInMillis, timeNow)
+    }
+
+    private fun getThisYear(): LongArray {
+        val timeNow = System.currentTimeMillis()
+        val cal = Calendar.getInstance()
+        cal[Calendar.YEAR] = Calendar.getInstance()[Calendar.YEAR]
+        cal[Calendar.MONTH] = Calendar.JANUARY
+        cal[Calendar.DAY_OF_MONTH] = 1
+        cal[Calendar.HOUR_OF_DAY] = 0
+        cal[Calendar.MINUTE] = 0
+        cal[Calendar.SECOND] = 0
+        cal[Calendar.MILLISECOND] = 0
+        return longArrayOf(cal.timeInMillis, timeNow)
+    }
+
+    fun humanReadableByteCount(bytes: Long): String {
+        val unit = 1024
+        if (bytes < unit) return "$bytes B"
+        val exp = (Math.log(bytes.toDouble()) / Math.log(unit.toDouble())).toInt()
+        val pre = "KMGTPE"[exp - 1].toString() + ""
+        return String.format(
+            Locale.getDefault(),
+            "%.1f %sB",
+            bytes / Math.pow(unit.toDouble(), exp.toDouble()),
+            pre
+        )
+    }
+
+
+
+}

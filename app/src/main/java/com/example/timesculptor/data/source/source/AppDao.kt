@@ -1,12 +1,13 @@
-package com.example.timesculptor.data.source
+package com.example.timesculptor.data.source.source
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Update
+import com.example.timesculptor.data.source.AppUsageData
 
 
 @Dao
-interface TimeSculptorDao {
+interface AppDao {
 
     @Insert
     fun insert(AppUsageData: AppUsageData)

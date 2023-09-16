@@ -1,18 +1,21 @@
-package com.example.timesculptor.data.source
+package com.example.timesculptor.data.source.source
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.timesculptor.data.source.AppUsageData
+import com.example.timesculptor.data.source.PackageData
+import com.example.timesculptor.data.source.SessionData
 
 
-@Database(entities = [AppUsageData::class,DailyUsageData::class,SessionData::class], version = 1, exportSchema = false)
+@Database(entities = [AppUsageData::class, PackageData::class, SessionData::class], version = 1, exportSchema = false)
 abstract class TimeSculptorDataBase: RoomDatabase() {
 
     /**
      * Connects the database to the DAO.
      */
-    abstract val TimeSculptorDao: TimeSculptorDao
+    abstract val TimeSculptorDao: AppDao
 
     /**
      * Define a companion object, this allows us to add functions on the StylishDatabase class.

@@ -7,27 +7,31 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
-@Entity(foreignKeys = [ForeignKey(
-    entity = DailyUsageData::class,
-    parentColumns = arrayOf("generatedId"),
-    childColumns = arrayOf("app_id"),
-    onDelete = ForeignKey.CASCADE
-)],tableName = "session_table")
+@Entity(tableName = "session_table")
 @Parcelize
 data class SessionData(
     @PrimaryKey(autoGenerate = true)
-    val key:Long = 0L,
+    var key: Long = 0L,
 
-    @ColumnInfo(name = "app_id")
-    val appId : String ="",
+    @ColumnInfo(name = "app_name")
+    var appName: String = "",
 
-    @ColumnInfo(name = "start_time")
-    val startTime : Long =0L,
+    @ColumnInfo(name = "package_name")
+    var packageName: String = "",
 
-    @ColumnInfo(name = "end_time")
-    val endTime : Long =0L,
+    @ColumnInfo(name = "duration")
+    var duration: Long = 0L,
+
+    @ColumnInfo(name = "event_time")
+    var eventTime: Long = 0L,
+
+    @ColumnInfo(name = "event_type")
+    var eventType: Int = 0,
+
+    @ColumnInfo(name = "count")
+    var count: Int = 0,
 
     @ColumnInfo(name = "date")
-    val date : Long = 0L,
+    var date: Long = 0L,
 
     ) : Parcelable

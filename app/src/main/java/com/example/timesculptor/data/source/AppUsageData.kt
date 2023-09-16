@@ -10,7 +10,7 @@ import kotlinx.parcelize.Parcelize
 
 
 @Entity(foreignKeys = [ForeignKey(
-    entity = DailyUsageData::class,
+    entity = PackageData::class,
     parentColumns = arrayOf("generatedId"),
     childColumns = arrayOf("app_id"),
     onDelete = ForeignKey.CASCADE

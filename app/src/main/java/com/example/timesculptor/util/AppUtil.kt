@@ -17,11 +17,14 @@ object AppUtil {
             try {
                 pckManager.getApplicationInfo(data, PackageManager.GET_META_DATA)
         } catch (e: PackageManager.NameNotFoundException) {
+                Log.i("session name","$e")
             null
         }
-        return (if (applicationInformation != null) pckManager.getApplicationLabel(
-            applicationInformation
-        ) else data) as String
+        return if (applicationInformation != null) {
+            pckManager.getApplicationLabel(applicationInformation).toString()
+        } else {
+            data
+        }
     }
 
     fun getPackageIcon(context: Context, packageName: String): Drawable {
@@ -54,10 +57,7 @@ object AppUtil {
         var isSystemApp = false
         try {
             val applicationInfo = manager.getApplicationInfo(packageName, 0)
-            if (applicationInfo != null) {
-                isSystemApp = (applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
-                        || applicationInfo.flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP != 0)
-            }
+            isSystemApp = (applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0)
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
         }
@@ -136,7 +136,7 @@ object AppUtil {
         return longArrayOf(start, end)
     }
 
-    private fun getThisWeek(): LongArray {
+     fun getThisWeek(): LongArray {
         val timeNow = System.currentTimeMillis()
         val cal = Calendar.getInstance()
         cal[Calendar.DAY_OF_WEEK] = Calendar.MONDAY

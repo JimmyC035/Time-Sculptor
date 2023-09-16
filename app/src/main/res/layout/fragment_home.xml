@@ -17,10 +17,14 @@
         android:background="@color/white"
         tools:context=".homepage.HomeFragment">
 
-<!--        <androidx.compose.ui.platform.ComposeView-->
-<!--            android:id="@+id/composeView"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent" />-->
+        <androidx.compose.ui.platform.ComposeView
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/composeView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

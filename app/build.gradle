@@ -38,8 +38,10 @@ android {
     buildFeatures {
         viewBinding true
         dataBinding true
-
-
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.6"
     }
 }
 
@@ -155,13 +157,11 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.44")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
 
-    //jetpack compose
-//    implementation "androidx.compose.ui:ui:1.0.5"
-//    implementation "androidx.compose.foundation:foundation:1.0.5"
-//    implementation "androidx.compose.ui:ui-tooling:1.0.5"
-//    implementation "androidx.compose.ui:ui-tooling-preview:1.0.5"
-//    implementation "androidx.compose.material:material:1.0.5"
-//    implementation "androidx.compose.runtime:runtime:1.0.5"
+//    jetpack compose
+    implementation "androidx.compose.ui:ui:1.0.5"
+    implementation "androidx.compose.foundation:foundation:1.0.5"
+    implementation "androidx.compose.material:material:1.0.5"
+    implementation "androidx.compose.runtime:runtime:1.0.5"
 
 
 

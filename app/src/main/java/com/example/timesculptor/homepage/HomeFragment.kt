@@ -7,7 +7,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
 import com.example.timesculptor.data.source.DataManager
 import com.example.timesculptor.databinding.FragmentHomeBinding
@@ -27,7 +30,7 @@ class HomeFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
         Log.i("bbt","here?")
-//        val composeView = binding.composeView
+        val composeView = binding.composeView
 
         //should be moved to repo
         val dataManager = DataManager()
@@ -38,17 +41,18 @@ class HomeFragment : Fragment() {
         Log.i("session","$listItem")
 
 //
-//        composeView.setContent {
-//            PieChart(
-//                data = mapOf(
-//                    Pair(listItem[0].packageName,listItem[0].usageTime.toInt()),
-//                    Pair(listItem[1].packageName,listItem[1].usageTime.toInt()),
-//                    Pair(listItem[2].packageName,listItem[2].usageTime.toInt()),
-//                    Pair(listItem[3].packageName,listItem[3].usageTime.toInt()),
-//                    Pair(listItem[4].packageName,listItem[4].usageTime.toInt()),
-//                )
-//            )
-//        }
+        composeView.setContent {
+            PieChart(
+                data = mapOf(
+                    Pair(listItem[0].packageName,listItem[0].usageTime.toInt()),
+                    Pair(listItem[1].packageName,listItem[1].usageTime.toInt()),
+                    Pair(listItem[2].packageName,listItem[2].usageTime.toInt()),
+                    Pair(listItem[3].packageName,listItem[3].usageTime.toInt()),
+                    Pair(listItem[4].packageName,listItem[4].usageTime.toInt()),
+                )
+
+            )
+        }
 
 
         viewModel.testEventStats(requireContext())

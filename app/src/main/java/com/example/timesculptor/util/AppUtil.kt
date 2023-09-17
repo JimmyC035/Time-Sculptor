@@ -185,6 +185,19 @@ object AppUtil {
             pre
         )
     }
+    fun Long.toHoursMinutesSeconds(): String {
+        val totalSeconds = this / 1000
+        val hours = totalSeconds / 3600
+        val minutes = (totalSeconds % 3600) / 60
+        val seconds = totalSeconds % 60
+
+        val timeString = when {
+            hours > 0 -> String.format("%02dh %02dm %02ds", hours, minutes, seconds)
+            minutes > 0 -> String.format("%02dm %02ds", minutes, seconds)
+            else -> String.format("%02ds", seconds)
+        }
+        return timeString
+    }
 
 
 

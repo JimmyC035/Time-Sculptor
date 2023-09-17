@@ -10,4 +10,41 @@
         android:name="com.example.timesculptor.homepage.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.example.timesculptor.history.HistoryFragment"
+        android:label="HistoryFragment" />
+    <fragment
+        android:id="@+id/todayFragment"
+        android:name="com.example.timesculptor.today.TodayFragment"
+        android:label="TodayFragment" />
+    <fragment
+        android:id="@+id/pomodoroFragment"
+        android:name="com.example.timesculptor.pomodoro.PomodoroFragment"
+        android:label="PomodoroFragment" />
+
+    <action
+        android:id="@+id/action_navigate_to_home_Fragment"
+        app:destination="@id/homeFragment"
+        app:popUpTo="@id/nav_graph"
+        app:popUpToInclusive="true" />
+
+    <action
+        android:id="@+id/action_navigate_to_pomodoro_Fragment"
+        app:destination="@id/pomodoroFragment"
+        app:popUpTo="@id/nav_graph"
+        app:popUpToInclusive="true" />
+
+    <action
+        android:id="@+id/action_navigate_to_today_Fragment"
+        app:destination="@id/todayFragment"
+        app:popUpTo="@id/nav_graph"
+        app:popUpToInclusive="true" />
+
+    <action
+        android:id="@+id/action_navigate_to_history_Fragment"
+        app:destination="@id/historyFragment"
+        app:popUpTo="@id/nav_graph"
+        app:popUpToInclusive="true" />
+
 </navigation>

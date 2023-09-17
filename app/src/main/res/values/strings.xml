@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Time Sculptor</string>
+    <string name="today">Today</string>
+    <string name="clock">Clock</string>
+    <string name="history">History</string>
+    <string name="pomodoro">pomodoro</string>
 </resources>

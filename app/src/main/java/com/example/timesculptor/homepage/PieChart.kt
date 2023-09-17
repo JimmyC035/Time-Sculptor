@@ -20,21 +20,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.timesculptor.util.AppUtil.toHoursMinutesSeconds
 import com.example.timesculptor.util.Blue
-import com.example.timesculptor.util.Purple200
-import com.example.timesculptor.util.Purple500
 import com.example.timesculptor.util.Purple700
-import com.example.timesculptor.util.Teal200
+import com.example.timesculptor.util.lightBlue
+import com.example.timesculptor.util.lightBrown
+import com.example.timesculptor.util.lightGreen
+import com.example.timesculptor.util.lightRed
+import com.example.timesculptor.util.lightYellow
 
 
 @Composable
 fun PieChart(
-    data: Map<String, Int>,
-    radiusOuter: Dp = 90.dp,
-    chartBarWidth: Dp = 10.dp,
+    data: Map<String, Long>,
+    radiusOuter: Dp = 100.dp,
+    chartBarWidth: Dp = 20.dp,
     animDuration: Int = 1000,
 
-) {
+    ) {
 
     val totalSum = data.values.sum()
     val floatValue = mutableListOf<Float>()
@@ -50,11 +53,13 @@ fun PieChart(
     // add the colors as per the number of data(no. of pie chart entries)
     // so that each data will get a color
     val colors = listOf(
-        Purple200,
-        Purple500,
-        Teal200,
-        Purple700,
-        Blue
+        lightBlue,
+        lightYellow,
+        lightRed,
+        Color.Magenta,
+        lightBrown,
+        lightGreen
+
     )
 
     var animationPlayed by remember { mutableStateOf(false) }
@@ -129,7 +134,7 @@ fun PieChart(
 
 @Composable
 fun DetailsPieChart(
-    data: Map<String, Int>,
+    data: Map<String, Long>,
     colors: List<Color>
 ) {
     Column(
@@ -150,8 +155,8 @@ fun DetailsPieChart(
 
 @Composable
 fun DetailsPieChartItem(
-    data: Pair<String, Int>,
-    height: Dp = 45.dp,
+    data: Pair<String, Long>,
+    height: Dp = 30.dp,
     color: Color
 ) {
 
@@ -181,13 +186,13 @@ fun DetailsPieChartItem(
                     text = data.first,
                     fontWeight = FontWeight.Medium,
                     fontSize = 22.sp,
-                    color = Color.Black
+                    color = Color.White
                 )
                 Text(
                     modifier = Modifier.padding(start = 15.dp),
-                    text = data.second.toString(),
+                    text = data.second.toHoursMinutesSeconds(),
                     fontWeight = FontWeight.Medium,
-                    fontSize = 22.sp,
+                    fontSize = 20.sp,
                     color = Color.Gray
                 )
             }

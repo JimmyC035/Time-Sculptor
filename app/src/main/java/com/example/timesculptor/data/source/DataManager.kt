@@ -107,7 +107,7 @@ class DataManager {
     }
 
     // another method to get all apps usage but weird bug
-    fun getApps(context: Context, sort: Int, offset: Int): List<AppItem> {
+    fun getApps(context: Context, offset: Int): List<AppItem> {
         val items: MutableList<AppItem> = ArrayList()
         val newList: MutableList<AppItem> = ArrayList()
         val manager = context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
@@ -143,8 +143,7 @@ class DataManager {
                 }
             }
             //duration and used time count
-            if (TextUtils.isEmpty(prevPackage)) prevPackage =
-                eventPackage // check if first iteration
+            if (prevPackage == "") prevPackage = eventPackage // check if first iteration
             if (prevPackage != eventPackage) { // check if package changed
                 if (startPoints.containsKey(prevPackage) && endPoints.containsKey(prevPackage)) {
                     val lastEndEvent = endPoints[prevPackage]
@@ -170,12 +169,13 @@ class DataManager {
 //            val hideUninstall: Boolean = PreferenceManager()
 //                .getBoolean(PreferenceManager.PREF_SETTINGS_HIDE_UNINSTALL_APPS)
             val packageManager = context.packageManager
+            val appsToKeep = setOf("com.google.android.youtube")
 
             for (item in items) {
                 if (!AppUtil.openable(packageManager, item.mPackageName)) {
                     continue
                 }
-                if (AppUtil.isSystemApp(packageManager, item.mPackageName!!)) {
+                if (AppUtil.isSystemApp(packageManager, item.mPackageName!!) && ignoreItem(item,appsToKeep)) {
                     continue
                 }
                 if (!AppUtil.isInstalled(packageManager, item.mPackageName!!)) {
@@ -184,19 +184,7 @@ class DataManager {
                 item.mName = AppUtil.parsePackageName(packageManager, item.mPackageName!!)
                 newList.add(item)
             }
-            when (sort) {
-                0 -> {
-                    newList.sortByDescending { it.mUsageTime }
-                }
-
-                1 -> {
-                    newList.sortWith { left, right -> (right.mEventTime - left.mEventTime).toInt() }
-                }
-
-                2 -> {
-                    newList.sortWith { left, right -> right.mCount - left.mCount }
-                }
-            }
+            newList.sortByDescending { it.mUsageTime }
         }
         return newList
     }
@@ -272,6 +260,13 @@ class DataManager {
             if (item.mPackageName == packageName) return item
         }
         return null
+    }
+
+    private fun ignoreItem(items: AppItem, packageNameSet: Set<String>): Boolean {
+        for (ignoreItem in packageNameSet) {
+            if (items.mPackageName == ignoreItem) return false
+        }
+        return true
     }
 
     internal class ClonedEvent(event: UsageEvents.Event) {

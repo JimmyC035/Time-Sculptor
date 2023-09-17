@@ -1,8 +1,8 @@
 package com.example.timesculptor.data.source.source
 
 data class AppItem (
-    var mName: String? = null,
-    var mPackageName: String? = null,
+    var mName: String = "",
+    var mPackageName: String = "",
     var mEventTime: Long = 0,
     var mUsageTime: Long = 0,
     var mEventType: Int = 0,

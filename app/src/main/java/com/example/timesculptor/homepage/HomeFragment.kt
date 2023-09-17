@@ -1,21 +1,16 @@
 package com.example.timesculptor.homepage
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.layout.offset
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
 import com.example.timesculptor.data.source.DataManager
 import com.example.timesculptor.databinding.FragmentHomeBinding
+import com.example.timesculptor.util.AppUtil.toHoursMinutesSeconds
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -36,23 +31,31 @@ class HomeFragment : Fragment() {
         val dataManager = DataManager()
 //        val listItem = dataManager.getTargetAppTimeline(requireContext(),"com.google.android.youtube",3)
 //        Log.i("session","$listItem")
-        val listItem = dataManager.getAll(requireContext(),3)
-//        val listItem = dataManager.getApps(requireContext(),0,0)
+//        val listItem = dataManager.getAll(requireContext(),0)
+        val listItem = dataManager.getApps(requireContext(),0)
         Log.i("session","$listItem")
+
 
 //
         composeView.setContent {
-            PieChart(
-                data = mapOf(
-                    Pair(listItem[0].packageName,listItem[0].usageTime.toInt()),
-                    Pair(listItem[1].packageName,listItem[1].usageTime.toInt()),
-                    Pair(listItem[2].packageName,listItem[2].usageTime.toInt()),
-                    Pair(listItem[3].packageName,listItem[3].usageTime.toInt()),
-                    Pair(listItem[4].packageName,listItem[4].usageTime.toInt()),
+            if(listItem.size >= 5){
+                PieChart(
+                    data = listItem.take(5).associate {
+                        val item = it
+                        Pair(item.mName, item.mUsageTime)
+                    }
                 )
+            }else{
+                PieChart(
+                    data = listItem.indices.associate {
+                        val item = listItem[it]
+                        Pair(item.mName, item.mUsageTime)
+                    }
+                )
+            }
 
-            )
         }
+
 
 
         viewModel.testEventStats(requireContext())

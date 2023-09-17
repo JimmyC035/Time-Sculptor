@@ -5,7 +5,7 @@ import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.timesculptor.data.source.DataManager
+import com.example.timesculptor.data.source.NotificationHistory
 import com.example.timesculptor.data.source.source.TimeSculptorRepository
 import com.example.timesculptor.util.AppUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +19,9 @@ class HomeViewModel @Inject constructor(
     private val TimeSculptorRepository: TimeSculptorRepository
 ) : ViewModel() {
 
-
+    suspend fun testInsert(notificationHistory: NotificationHistory){
+        TimeSculptorRepository.insert(notificationHistory)
+    }
 
 
 

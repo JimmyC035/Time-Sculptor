@@ -5,11 +5,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.timesculptor.data.source.AppUsageData
+import com.example.timesculptor.data.source.NotificationHistory
 import com.example.timesculptor.data.source.PackageData
 import com.example.timesculptor.data.source.SessionData
 
 
-@Database(entities = [AppUsageData::class, PackageData::class, SessionData::class], version = 1, exportSchema = false)
+@Database(entities = [AppUsageData::class, PackageData::class, SessionData::class, NotificationHistory::class], version = 1, exportSchema = false)
 abstract class TimeSculptorDataBase: RoomDatabase() {
 
     /**
@@ -18,7 +19,7 @@ abstract class TimeSculptorDataBase: RoomDatabase() {
     abstract val TimeSculptorDao: AppDao
 
     /**
-     * Define a companion object, this allows us to add functions on the StylishDatabase class.
+     * Define a companion object, this allows us to add functions on the Database class.
      *
      * For example, clients can call `StylishDatabase.getInstance(context)` to instantiate
      * a new StylishDatabase.

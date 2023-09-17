@@ -163,6 +163,9 @@ dependencies {
     implementation "androidx.compose.material:material:1.0.5"
     implementation "androidx.compose.runtime:runtime:1.0.5"
 
+    //notification Listener
+//    implementation 'com.github.lilongweidev:EasyLibrary:1.0.4'
+
 
 
 

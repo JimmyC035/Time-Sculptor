@@ -7,6 +7,7 @@
         tools:ignore="QueryAllPackagesPermission" />
     <uses-permission android:name="android.permission.GET_PACKAGE_SIZE" />
 
+
     <application
         android:name=".TimeApplication"
         android:allowBackup="true"
@@ -18,14 +19,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TimeSculptor"
         tools:targetApi="31">
+        <service android:name="com.example.timesculptor.service.NotificationListener"
+            android:label="@string/service_name"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
         <activity
             android:name=".MainActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
     </application>
 

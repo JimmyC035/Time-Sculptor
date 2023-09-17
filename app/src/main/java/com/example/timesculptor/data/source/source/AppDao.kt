@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Update
 import com.example.timesculptor.data.source.AppUsageData
+import com.example.timesculptor.data.source.NotificationHistory
 
 
 @Dao
@@ -11,6 +12,9 @@ interface AppDao {
 
     @Insert
     fun insert(AppUsageData: AppUsageData)
+
+    @Insert
+    fun insert(notificationHistory: NotificationHistory)
 
     /**
      * When updating a row with a value already set in a column,
@@ -21,3 +25,4 @@ interface AppDao {
     @Update
     fun update(AppUsageData: AppUsageData)
 }
+

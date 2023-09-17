@@ -7,10 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.timesculptor.data.source.DataManager
+import com.example.timesculptor.data.source.NotificationHistory
 import com.example.timesculptor.databinding.FragmentHomeBinding
-import com.example.timesculptor.util.AppUtil.toHoursMinutesSeconds
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -34,6 +36,13 @@ class HomeFragment : Fragment() {
 //        val listItem = dataManager.getAll(requireContext(),0)
         val listItem = dataManager.getApps(requireContext(),0)
         Log.i("session","$listItem")
+
+
+        // for testing insert dao
+//        val noti = NotificationHistory(listItem[0].mPackageName,listItem[0].mName,listItem[0].mEventTime)
+//        lifecycleScope.launch {
+//            viewModel.testInsert(noti)
+//        }
 
 
 //

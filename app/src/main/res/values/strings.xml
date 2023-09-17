@@ -4,4 +4,6 @@
     <string name="clock">Clock</string>
     <string name="history">History</string>
     <string name="pomodoro">pomodoro</string>
+    <string name="service_name">NotificationListener</string>
+
 </resources>

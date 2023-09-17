@@ -2,7 +2,7 @@ package com.example.timesculptor.data.source.source
 
 import com.example.timesculptor.data.source.NotificationHistory
 
-interface TimeSculptorRepository {
+interface DataSourceInterface {
 
     fun hello(){}
 

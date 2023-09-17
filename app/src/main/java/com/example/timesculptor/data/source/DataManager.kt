@@ -5,16 +5,11 @@ import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.provider.Settings
-import android.text.TextUtils
 import android.util.Log
-import androidx.compose.ui.unit.TextUnit
 import com.example.timesculptor.data.source.source.AppItem
 import com.example.timesculptor.util.AppConst
 import com.example.timesculptor.util.AppUtil
-import com.example.timesculptor.util.PreferenceManager
 import com.example.timesculptor.util.SortEnum
 import java.text.SimpleDateFormat
 import java.util.Date

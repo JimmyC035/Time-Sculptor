@@ -1,20 +1,18 @@
 package com.example.timesculptor
 
-import android.app.AppOpsManager
-import android.app.usage.UsageStatsManager
-import android.content.Context
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.content.ComponentName
 import android.os.Bundle
 import android.provider.Settings
+import android.text.TextUtils
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.timesculptor.data.source.DataManager
 import com.example.timesculptor.databinding.ActivityMainBinding
-import com.example.timesculptor.databinding.FragmentHomeBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -30,9 +28,20 @@ class MainActivity : AppCompatActivity() {
         val dataManager = DataManager()
 
 
+
         if (!dataManager.hasUsagePermissionGranted(this)) {
             dataManager.requestUsagePermission(this)
         }
+
+//        if(!isNotificationServiceEnabled()){
+//            enableNotificationListenerAlertDialog = buildNotificationServiceAlertDialog();
+//            enableNotificationListenerAlertDialog.show();
+//        }
+
+
+
+
+
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.myNavHostFragment) as NavHostFragment
@@ -71,5 +80,25 @@ class MainActivity : AppCompatActivity() {
             false
         }
     }
+//    private fun isNotificationServiceEnabled(): Boolean {
+//        val pkgName = packageName
+//        val flat = Settings.Secure.getString(
+//            contentResolver,
+//            ENABLED_NOTIFICATION_LISTENERS
+//        )
+//        if (!TextUtils.isEmpty(flat)) {
+//            val names = flat.split(":".toRegex()).dropLastWhile { it.isEmpty() }
+//                .toTypedArray()
+//            for (i in names.indices) {
+//                val cn = ComponentName.unflattenFromString(names[i])
+//                if (cn != null) {
+//                    if (TextUtils.equals(pkgName, cn.packageName)) {
+//                        return true
+//                    }
+//                }
+//            }
+//        }
+//        return false
+//    }
 
 }

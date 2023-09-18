@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.IBinder
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
+import android.util.Log
 import com.example.timesculptor.TimeApplication
 import com.example.timesculptor.data.source.NotificationHistory
 import com.example.timesculptor.data.source.source.AppDao
@@ -22,7 +23,7 @@ class NotificationListener : NotificationListenerService() {
 
     override fun onCreate() {
         super.onCreate()
-         database = TimeSculptorDataBase.getInstance(applicationContext)
+         database = TimeSculptorDataBase.getInstance(this)
          appDao = database.TimeSculptorDao
     }
 
@@ -34,12 +35,14 @@ class NotificationListener : NotificationListenerService() {
         super.onNotificationPosted(sbn)
 
         val notificationTime = sbn.postTime
+//        val test = sbn.notification.extras.getString("android.text")
+//        Log.i("notitest","$test")
 
         val packageName = sbn.packageName
 
         val notificationHistory = NotificationHistory()
 
-        notificationHistory.name = AppUtil.parsePackageName(TimeApplication.instance.applicationContext.packageManager,packageName)
+        notificationHistory.name = AppUtil.parsePackageName(this.packageManager,packageName)
         notificationHistory.createdTime = notificationTime
         notificationHistory.packageName = packageName
 

@@ -44,6 +44,9 @@ class HomeFragment : Fragment() {
 //            viewModel.testInsert(noti)
 //        }
 
+        val youtube = dataManager.getTargetAppTimeline(requireContext(),"com.example.timesculptor",0)
+        Log.i("youtube","$youtube")
+
 
 //
         composeView.setContent {

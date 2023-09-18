@@ -23,11 +23,16 @@ import androidx.compose.ui.unit.sp
 import com.example.timesculptor.util.AppUtil.toHoursMinutesSeconds
 import com.example.timesculptor.util.Blue
 import com.example.timesculptor.util.Purple700
+import com.example.timesculptor.util.azureBlue
+import com.example.timesculptor.util.coralBlush
+import com.example.timesculptor.util.goldenSunray
+import com.example.timesculptor.util.lavenderMist
 import com.example.timesculptor.util.lightBlue
 import com.example.timesculptor.util.lightBrown
 import com.example.timesculptor.util.lightGreen
 import com.example.timesculptor.util.lightRed
 import com.example.timesculptor.util.lightYellow
+import com.example.timesculptor.util.softLilac
 
 
 @Composable
@@ -53,13 +58,12 @@ fun PieChart(
     // add the colors as per the number of data(no. of pie chart entries)
     // so that each data will get a color
     val colors = listOf(
-        lightBlue,
-        lightYellow,
-        lightRed,
-        Color.Magenta,
-        lightBrown,
+        lavenderMist,
+        azureBlue,
+        goldenSunray,
+        coralBlush,
+        softLilac,
         lightGreen
-
     )
 
     var animationPlayed by remember { mutableStateOf(false) }

@@ -1,9 +1,7 @@
 package com.example.timesculptor
 
-import android.content.ComponentName
+
 import android.os.Bundle
-import android.provider.Settings
-import android.text.TextUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -19,6 +17,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -29,18 +28,14 @@ class MainActivity : AppCompatActivity() {
 
 
 
+
         if (!dataManager.hasUsagePermissionGranted(this)) {
             dataManager.requestUsagePermission(this)
         }
 
-//        if(!isNotificationServiceEnabled()){
-//            enableNotificationListenerAlertDialog = buildNotificationServiceAlertDialog();
-//            enableNotificationListenerAlertDialog.show();
-//        }
-
-
-
-
+        if(!dataManager.isNotificationAccessGranted(this)){
+            dataManager.requestNotificationAccess(this)
+        }
 
 
         val navHostFragment =
@@ -48,8 +43,6 @@ class MainActivity : AppCompatActivity() {
         val navBottomView: BottomNavigationView = findViewById(R.id.BottomNavigationView)
         val navController = navHostFragment.navController
         navBottomView.setupWithNavController(navController)
-
-
 
         setupBottomNav()
     }
@@ -80,25 +73,4 @@ class MainActivity : AppCompatActivity() {
             false
         }
     }
-//    private fun isNotificationServiceEnabled(): Boolean {
-//        val pkgName = packageName
-//        val flat = Settings.Secure.getString(
-//            contentResolver,
-//            ENABLED_NOTIFICATION_LISTENERS
-//        )
-//        if (!TextUtils.isEmpty(flat)) {
-//            val names = flat.split(":".toRegex()).dropLastWhile { it.isEmpty() }
-//                .toTypedArray()
-//            for (i in names.indices) {
-//                val cn = ComponentName.unflattenFromString(names[i])
-//                if (cn != null) {
-//                    if (TextUtils.equals(pkgName, cn.packageName)) {
-//                        return true
-//                    }
-//                }
-//            }
-//        }
-//        return false
-//    }
-
 }

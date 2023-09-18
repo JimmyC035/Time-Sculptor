@@ -5,7 +5,10 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverter
+import androidx.room.TypeConverters
 import kotlinx.parcelize.Parcelize
+import java.util.Date
 
 @Entity(tableName = "session_table")
 @Parcelize
@@ -32,6 +35,7 @@ data class SessionData(
     var count: Int = 0,
 
     @ColumnInfo(name = "date")
-    var date: Long = 0L,
+    @TypeConverters(DateConverters::class)
+    var date: Date = Date(),
 
     ) : Parcelable

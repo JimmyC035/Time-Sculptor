@@ -4,13 +4,16 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.example.timesculptor.data.source.AppUsageData
+import com.example.timesculptor.data.source.DateConverters
 import com.example.timesculptor.data.source.NotificationHistory
 import com.example.timesculptor.data.source.PackageData
 import com.example.timesculptor.data.source.SessionData
 
 
 @Database(entities = [AppUsageData::class, PackageData::class, SessionData::class, NotificationHistory::class], version = 1, exportSchema = false)
+@TypeConverters(DateConverters::class)
 abstract class TimeSculptorDataBase: RoomDatabase() {
 
     /**

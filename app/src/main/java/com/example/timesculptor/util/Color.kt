@@ -11,5 +11,10 @@ val lightYellow = Color(0xFFF5BA13)
 val lightRed = Color(0xFFFF5576)
 val lightBrown = Color(0xFFFFCCA7)
 val lightGreen = Color(0xFFBEED99)
+val lavenderMist = Color(0xFFB3B5EE)
+val azureBlue = Color(0xFF4777AF)
+val goldenSunray = Color(0xFFE3CAE3)
+val coralBlush = Color(0xFFF29494)
+val softLilac = Color(0xFFE3CAE3)
 
 

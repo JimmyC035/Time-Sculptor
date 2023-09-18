@@ -57,7 +57,8 @@ object AppUtil {
         var isSystemApp = false
         try {
             val applicationInfo = manager.getApplicationInfo(packageName, 0)
-            isSystemApp = (applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0)
+            isSystemApp = (applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
+                    && (applicationInfo.flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) == 0
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
         }

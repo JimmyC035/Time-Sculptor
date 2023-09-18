@@ -1,8 +1,10 @@
 package com.example.timesculptor.data.source
 
 import android.app.AppOpsManager
+import android.app.NotificationManager
 import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.provider.Settings
@@ -32,6 +34,22 @@ class DataManager {
         )
         return mode == AppOpsManager.MODE_ALLOWED
     }
+    fun isNotificationAccessGranted(context: Context): Boolean {
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val enabledListenerPackages = Settings.Secure.getString(
+            context.contentResolver,
+            "enabled_notification_listeners"
+        )
+        val packageName = context.packageName
+        return enabledListenerPackages?.contains(packageName) == true
+    }
+
+    fun requestNotificationAccess(context: Context) {
+        val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//        startActivityForResult(intent, REQUEST_NOTIFICATION_ACCESS)
+        context.startActivity(intent)
+    }
 
     fun getTargetAppTimeline(context: Context, target: String, offset: Int): List<SessionData?> {
         val items: MutableList<SessionData?> = ArrayList()
@@ -60,7 +78,7 @@ class DataManager {
             )
             if (currentPackage == target) {
                 Log.d(
-                    "*******",
+                    "forins",
                     currentPackage + " " + target + " " + SimpleDateFormat(
                         "yyyy/MM/dd HH:mm:ss",
                         Locale.getDefault()
@@ -81,27 +99,37 @@ class DataManager {
                 } else if (eventType == UsageEvents.Event.ACTIVITY_PAUSED) {
                     if (start > 0) {
                         prevEndEvent = ClonedEvent(event)
+                        item.duration = prevEndEvent.timeStamp - start
+                        if (item.duration <= 0) item.duration = 0
+                        items.add(item.copy())
+                        start = 0
                     }
                     Log.d("*******", "add end $start")
                 }
             } else {
                 // record last
-                if (prevEndEvent != null && start > 0) {
-                    item.eventTime = prevEndEvent.timeStamp
-                    item.eventType = prevEndEvent.eventType
-                    item.duration = prevEndEvent.timeStamp - start
-                    if (item.duration <= 0) item.duration = 0
-                    if (item.duration > AppConst.USAGE_TIME_MIX) item.count++
-                    items.add(item.copy())
-                    start = 0
-                    prevEndEvent = null
-                }
+//                if (prevEndEvent != null && start > 0) {
+//                    item.eventTime = prevEndEvent.timeStamp
+//                    item.eventType = prevEndEvent.eventType
+//                    item.duration = prevEndEvent.timeStamp - start
+//                    if (item.duration <= 0) item.duration = 0
+//                    if (item.duration > AppConst.USAGE_TIME_MIX) item.count++
+//                    items.add(item.copy())
+//                    start = 0
+//                    prevEndEvent = null
+//                }
             }
         }
+        var total = 0L
+
+        items.forEach{total += it!!.duration}
+
+        Log.i("forins","${total/1000}")
+        Log.i("foritem", items.toString())
         return items
     }
 
-    // another method to get all apps usage but weird bug
+     // another method to get all apps usage but weird bug
     fun getApps(context: Context, offset: Int): List<AppItem> {
         val items: MutableList<AppItem> = ArrayList()
         val newList: MutableList<AppItem> = ArrayList()
@@ -135,42 +163,40 @@ class DataManager {
             if (eventType == UsageEvents.Event.ACTIVITY_PAUSED) {
                 if (startPoints.isNotEmpty() && startPoints.containsKey(eventPackage)) {
                     endPoints[eventPackage] = ClonedEvent(event)
+                    if (prevPackage == "") prevPackage = eventPackage // check if first iteration
+                    if (prevPackage != eventPackage) { // check if package changed
+                        if (startPoints.containsKey(prevPackage) && endPoints.containsKey(prevPackage)) {
+                            val lastEndEvent = endPoints[prevPackage]
+                            val listItem = containItem(items, prevPackage)
+                            if (listItem != null) {
+                                listItem.mEventTime = lastEndEvent!!.timeStamp
+                                var duration = lastEndEvent.timeStamp - startPoints[prevPackage]!!
+                                if (duration <= 0) duration = 0
+                                listItem.mUsageTime += duration
+                                if (duration > AppConst.USAGE_TIME_MIX) {
+                                    listItem.mCount++
+                                }
+                            }
+                            startPoints.remove(prevPackage)
+                            endPoints.remove(prevPackage)
+                        }
+                        prevPackage = eventPackage
+                    }
                 }
             }
             //duration and used time count
-            if (prevPackage == "") prevPackage = eventPackage // check if first iteration
-            if (prevPackage != eventPackage) { // check if package changed
-                if (startPoints.containsKey(prevPackage) && endPoints.containsKey(prevPackage)) {
-                    val lastEndEvent = endPoints[prevPackage]
-                    val listItem = containItem(items, prevPackage)
-                    if (listItem != null) {
-                        listItem.mEventTime = lastEndEvent!!.timeStamp
-                        var duration = lastEndEvent.timeStamp - startPoints[prevPackage]!!
-                        if (duration <= 0) duration = 0
-                        listItem.mUsageTime += duration
-                        if (duration > AppConst.USAGE_TIME_MIX) {
-                            listItem.mCount++
-                        }
-                    }
-                    startPoints.remove(prevPackage)
-                    endPoints.remove(prevPackage)
-                }
-                prevPackage = eventPackage
-            }
+
         }
         if (items.size > 0) {
-//            val hideSystem: Boolean = PreferenceManager()
-//                .getBoolean(PreferenceManager.PREF_SETTINGS_HIDE_SYSTEM_APPS)
-//            val hideUninstall: Boolean = PreferenceManager()
-//                .getBoolean(PreferenceManager.PREF_SETTINGS_HIDE_UNINSTALL_APPS)
             val packageManager = context.packageManager
-            val appsToKeep = setOf("com.google.android.youtube")
+            val appsToKeep = setOf("com.google.android.youtube","com.instagram.android")
+//                    && ignoreItem(item,appsToKeep)
 
             for (item in items) {
                 if (!AppUtil.openable(packageManager, item.mPackageName)) {
                     continue
                 }
-                if (AppUtil.isSystemApp(packageManager, item.mPackageName!!) && ignoreItem(item,appsToKeep)) {
+                if (AppUtil.isSystemApp(packageManager, item.mPackageName!!)) {
                     continue
                 }
                 if (!AppUtil.isInstalled(packageManager, item.mPackageName!!)) {
@@ -184,70 +210,6 @@ class DataManager {
         return newList
     }
 
-
-    fun getAll(context: Context, offset: Int): List<HomeItem> {
-        val manager = context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
-        val range = AppUtil.getTimeRange(SortEnum.getSortEnum(offset))
-        val usageStatsList =
-            manager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, range[0], range[1])
-        val packageManager = context.packageManager
-
-        val usageMap = mutableMapOf<String, Long>()
-
-        val appsToKeep = setOf("com.google.android.youtube")
-
-        for (usageStats in usageStatsList) {
-            val packageName = AppUtil.parsePackageName(packageManager, usageStats.packageName)
-            val totalTimeInForeground = usageStats.totalTimeInForeground / 1000
-
-            if (!AppUtil.isSystemApp(packageManager, packageName)) {
-                val currentTotalTime = usageMap[packageName] ?: 0
-                usageMap[packageName] = currentTotalTime + totalTimeInForeground
-            }
-        }
-
-        val sortedItems = usageMap.entries.sortedByDescending { it.value }
-
-        val topFiveItems = sortedItems.take(5)
-
-        val homeItemList = mutableListOf<HomeItem>()
-        for ((packageName, totalTimeInForeground) in topFiveItems) {
-            val homeItem = HomeItem(packageName, totalTimeInForeground, 0)
-            homeItemList.add(homeItem)
-        }
-
-        return homeItemList
-    }
-
-
-
-
-
-//    fun getAll(context: Context, offset: Int): List<HomeItem> {
-//        val manager = context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
-//        val range = AppUtil.getTimeRange(SortEnum.getSortEnum(offset))
-//        val usageStatsList =
-//            manager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, range[0], range[1])
-//        val packageManager = context.packageManager
-//
-//        val usageMap = mutableMapOf<String, Long>()
-//
-//        for (usageStats in usageStatsList) {
-//            val packageName = AppUtil.parsePackageName(packageManager, usageStats.packageName)
-//            val totalTimeInForeground = usageStats.totalTimeInForeground / 1000
-//            val currentTotalTime = usageMap[packageName] ?: 0
-//            usageMap[packageName] = currentTotalTime + totalTimeInForeground
-//        }
-//
-//        val homeItemList = mutableListOf<HomeItem>()
-//        for ((packageName, totalTimeInForeground) in usageMap) {
-//
-//            val homeItem = HomeItem(packageName, totalTimeInForeground, 0)
-//            homeItemList.add(homeItem)
-//        }
-//
-//        return homeItemList
-//    }
 
 
     private fun containItem(items: List<AppItem>, packageName: String): AppItem? {

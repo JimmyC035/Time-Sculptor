@@ -7,4 +7,6 @@ interface DataSourceInterface {
     fun hello(){}
 
     suspend fun insert(notificationHistory: NotificationHistory){}
+
+    suspend fun insert(listAppItem: List<AppItem>){}
 }

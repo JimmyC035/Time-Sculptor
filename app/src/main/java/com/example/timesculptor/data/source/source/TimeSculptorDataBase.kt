@@ -12,7 +12,7 @@ import com.example.timesculptor.data.source.PackageData
 import com.example.timesculptor.data.source.SessionData
 
 
-@Database(entities = [AppUsageData::class, PackageData::class, SessionData::class, NotificationHistory::class], version = 1, exportSchema = false)
+@Database(entities = [AppUsageData::class, PackageData::class, SessionData::class, NotificationHistory::class,AppItem::class], version = 1, exportSchema = false)
 @TypeConverters(DateConverters::class)
 abstract class TimeSculptorDataBase: RoomDatabase() {
 
@@ -70,7 +70,7 @@ abstract class TimeSculptorDataBase: RoomDatabase() {
                     instance = Room.databaseBuilder(
                         context.applicationContext,
                         TimeSculptorDataBase::class.java,
-                        "time_sculptor_database"
+                        "time_db"
                     )
                         // Wipes and rebuilds instead of migrating if no Migration object.
                         // Migration is not part of this lesson. You can learn more about

@@ -6,6 +6,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.timesculptor.data.source.NotificationHistory
+import com.example.timesculptor.data.source.source.AppItem
 import com.example.timesculptor.data.source.source.TimeSculptorRepository
 import com.example.timesculptor.util.AppUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,10 +20,16 @@ class HomeViewModel @Inject constructor(
     private val TimeSculptorRepository: TimeSculptorRepository
 ) : ViewModel() {
 
-    suspend fun testInsert(notificationHistory: NotificationHistory){
-        TimeSculptorRepository.insert(notificationHistory)
+    suspend fun testForInsert(listAppItem: List<AppItem>){
+        TimeSculptorRepository.insert(listAppItem)
     }
 
+    fun doWork(context: Context){
+        TimeSculptorRepository.createAndEnqueueWorker(context)
+    }
+    fun doDBWork(context: Context){
+        TimeSculptorRepository.createAndEnqueueDBWorker(context)
+    }
 
 
     fun printEventStatsInfo(eventStats: EventStats) {

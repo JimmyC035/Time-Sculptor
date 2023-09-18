@@ -9,23 +9,27 @@ import com.example.timesculptor.TimeApplication
 import com.example.timesculptor.data.source.NotificationHistory
 import com.example.timesculptor.data.source.source.AppDao
 import com.example.timesculptor.data.source.source.TimeSculptorDataBase
+import com.example.timesculptor.data.source.source.TimeSculptorRepository
 import com.example.timesculptor.util.AppUtil
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class NotificationListener : NotificationListenerService() {
+
 
    lateinit var database : TimeSculptorDataBase
    private lateinit var appDao: AppDao
-
     override fun onCreate() {
         super.onCreate()
-         database = TimeSculptorDataBase.getInstance(this)
-         appDao = database.TimeSculptorDao
+        database = TimeSculptorDataBase.getInstance(applicationContext)
+        appDao = database.TimeSculptorDao
     }
+
 
     override fun onBind(intent: Intent): IBinder? {
         return super.onBind(intent)

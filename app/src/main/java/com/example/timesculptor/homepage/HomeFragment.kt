@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.work.WorkManager
 import com.example.timesculptor.data.source.DataManager
 import com.example.timesculptor.data.source.NotificationHistory
 import com.example.timesculptor.databinding.FragmentHomeBinding
@@ -43,10 +44,17 @@ class HomeFragment : Fragment() {
 //        lifecycleScope.launch {
 //            viewModel.testInsert(noti)
 //        }
+//
+//        val youtube = dataManager.getTargetAppTimeline(requireContext(),"com.example.timesculptor",0)
+//        Log.i("youtube","$youtube")
 
-        val youtube = dataManager.getTargetAppTimeline(requireContext(),"com.example.timesculptor",0)
-        Log.i("youtube","$youtube")
+        //for testing db
+//        lifecycleScope.launch {
+//            viewModel.testForInsert(dataManager.getApps(requireContext(),0))
+//        }
 
+        viewModel.doWork(requireContext())
+        viewModel.doDBWork(requireContext())
 
 //
         composeView.setContent {

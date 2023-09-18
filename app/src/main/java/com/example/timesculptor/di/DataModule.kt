@@ -45,4 +45,7 @@ object DaoModule {
 
     @Provides
     fun provideAppDao(dataBase: TimeSculptorDataBase): AppDao = dataBase.TimeSculptorDao
+
+//    @Provides
+//    fun provideRepoImpl(dataBase: TimeSculptorDataBase) = Repo(dataBase.TimeSculptorDao)
 }

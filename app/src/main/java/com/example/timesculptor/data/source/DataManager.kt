@@ -212,6 +212,7 @@ class DataManager {
 
 
 
+
     private fun containItem(items: List<AppItem>, packageName: String): AppItem? {
         for (item in items) {
             if (item.mPackageName == packageName) return item

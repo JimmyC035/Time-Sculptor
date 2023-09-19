@@ -69,6 +69,10 @@ class MainActivity : AppCompatActivity() {
                     findNavController(R.id.myNavHostFragment).navigate(R.id.action_navigate_to_home_Fragment)
                     return@setOnItemSelectedListener true
                 }
+                R.id.setting -> {
+                    findNavController(R.id.myNavHostFragment).navigate(R.id.action_navigate_to_user_setting_Fragment)
+                    return@setOnItemSelectedListener true
+                }
             }
             false
         }

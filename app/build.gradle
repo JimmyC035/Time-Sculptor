@@ -162,6 +162,8 @@ dependencies {
     implementation "androidx.compose.foundation:foundation:1.0.5"
     implementation "androidx.compose.material:material:1.0.5"
     implementation "androidx.compose.runtime:runtime:1.0.5"
+    implementation "com.google.accompanist:accompanist-drawablepainter:0.28.0" //0.28.0
+
 
     //workManager
     implementation("androidx.work:work-runtime-ktx:2.8.0")

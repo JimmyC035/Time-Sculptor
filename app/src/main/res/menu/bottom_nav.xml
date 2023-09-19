@@ -20,4 +20,8 @@
         android:id="@+id/pomodoro"
         android:icon="@drawable/pomodoro"/>
 
+    <item android:title="@string/setting"
+        android:id="@+id/setting"
+        android:icon="@drawable/settings"/>
+
 </menu>

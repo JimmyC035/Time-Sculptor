@@ -8,12 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.work.WorkManager
+import com.example.timesculptor.R
 import com.example.timesculptor.data.source.DataManager
 import com.example.timesculptor.data.source.NotificationHistory
 import com.example.timesculptor.databinding.FragmentHomeBinding
+import com.example.timesculptor.util.AppUtil
+import com.example.timesculptor.util.AppUtil.toHoursMinutesSeconds
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -27,44 +32,60 @@ class HomeFragment : Fragment() {
         val binding = FragmentHomeBinding.inflate(inflater,container,false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
-        Log.i("bbt","here?")
+        val usageTime = binding.totalUsage
+        val usageTimeInCircle = binding.circleTime
+        val homeDate = binding.homeDate
         val composeView = binding.composeView
 
-        //should be moved to repo
-        val dataManager = DataManager()
-//        val listItem = dataManager.getTargetAppTimeline(requireContext(),"com.google.android.youtube",3)
-//        Log.i("session","$listItem")
-//        val listItem = dataManager.getAll(requireContext(),0)
-        val listItem = dataManager.getApps(requireContext(),0)
+
+
+        //get data
+        val listItem = viewModel.getHomePageData(requireContext())
         Log.i("session","$listItem")
 
 
-        // for testing insert dao
-//        val noti = NotificationHistory(listItem[0].mPackageName,listItem[0].mName,listItem[0].mEventTime)
-//        lifecycleScope.launch {
-//            viewModel.testInsert(noti)
-//        }
-//
-//        val youtube = dataManager.getTargetAppTimeline(requireContext(),"com.example.timesculptor",0)
-//        Log.i("youtube","$youtube")
+        //can't refresh due to function only call while viewModel init
 
-        //for testing db
-//        lifecycleScope.launch {
-//            viewModel.testForInsert(dataManager.getApps(requireContext(),0))
-//        }
+            viewModel.notiCount.observe(viewLifecycleOwner){
+                Log.i("noti", it.toString())
+            }
 
-        viewModel.doWork(requireContext())
-        viewModel.doDBWork(requireContext())
 
-//        viewModel.cancelWork(requireContext())
 
-//
+
+
+        //get total time
+        viewModel.getUsage(requireContext())
+
+        lifecycleScope.launch {
+            viewModel.totalTime.collect{
+                usageTime.text = it.toHoursMinutesSeconds()
+                usageTimeInCircle.text = it.toHoursMinutesSeconds()
+            }
+        }
+
+        //get today date
+        lifecycleScope.launch {
+            viewModel.todayDate.collect{
+                homeDate.text = it
+            }
+        }
+
+
+
+
         composeView.setContent {
             if(listItem.size >= 5){
                 PieChart(
                     data = listItem.take(5).associate {
                         val item = it
                         Pair(item.mName, item.mUsageTime)
+                    },
+                    icon = listItem.take(5).map {
+                       viewModel.getAppIcon(requireContext(),it.mPackageName)!!
+                    },
+                    packageName = listItem.take(5).map{
+                        it.mPackageName
                     }
                 )
             }else{
@@ -72,7 +93,16 @@ class HomeFragment : Fragment() {
                     data = listItem.indices.associate {
                         val item = listItem[it]
                         Pair(item.mName, item.mUsageTime)
+                    },
+                    icon = listItem.indices.map {
+                        val item = listItem[it]
+                        viewModel.getAppIcon(requireContext(),item.mPackageName)!!
+                    },
+                    packageName = listItem.indices.map{
+                        val item = listItem[it]
+                        item.mPackageName
                     }
+
                 )
             }
 
@@ -80,7 +110,7 @@ class HomeFragment : Fragment() {
 
 
 
-        viewModel.testEventStats(requireContext())
+//        viewModel.testEventStats(requireContext())
 
         Log.i("bbt","call?")
 

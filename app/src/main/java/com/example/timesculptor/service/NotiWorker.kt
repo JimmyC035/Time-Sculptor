@@ -9,6 +9,7 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.timesculptor.R
 import com.example.timesculptor.data.source.source.AppDao
+import com.example.timesculptor.data.source.source.Repo
 import com.example.timesculptor.data.source.source.TimeSculptorDataBase
 import com.example.timesculptor.util.AppUtil.toHoursMinutesSeconds
 import java.util.Calendar
@@ -31,9 +32,14 @@ class NotiWorker(context: Context, params: WorkerParameters) : Worker(context, p
             appDao = database.TimeSculptorDao
 
 
+
             //get date to get data
             val calendar = Calendar.getInstance()
             calendar.add(Calendar.DAY_OF_YEAR, -1)
+            calendar.set(Calendar.HOUR_OF_DAY, 0)
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 0)
+            calendar.set(Calendar.MILLISECOND, 0)
             val yesterday = calendar.time
             var totalTime = 0L
             var message = ""

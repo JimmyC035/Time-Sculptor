@@ -23,6 +23,11 @@
         android:name="com.example.timesculptor.pomodoro.PomodoroFragment"
         android:label="PomodoroFragment" />
 
+    <fragment
+        android:id="@+id/userSettingFragment"
+        android:name="com.example.timesculptor.setting.UserSettingFragment"
+        android:label="UserSettingFragment" />
+
     <action
         android:id="@+id/action_navigate_to_home_Fragment"
         app:destination="@id/homeFragment"
@@ -46,5 +51,26 @@
         app:destination="@id/historyFragment"
         app:popUpTo="@id/nav_graph"
         app:popUpToInclusive="true" />
+
+    <action
+        android:id="@+id/action_navigate_to_user_setting_Fragment"
+        app:destination="@id/userSettingFragment"
+        app:popUpTo="@id/nav_graph"
+        app:popUpToInclusive="true" />
+
+    <action
+        android:id="@+id/action_navigate_to_detail_Fragment"
+        app:destination="@id/detailFragment"
+        app:popUpToInclusive="true" />
+
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.example.timesculptor.detail.DetailFragment"
+        android:label="DetailFragment" >
+        <argument
+            android:name="packageName"
+            app:argType="string" />
+    </fragment>
+
 
 </navigation>

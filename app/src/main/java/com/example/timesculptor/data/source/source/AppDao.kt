@@ -20,8 +20,11 @@ interface AppDao {
     @Insert
     fun insert(notificationHistory: NotificationHistory)
 
-    @Query("SELECT * FROM app_item WHERE `date` = :yesterday")
+    @Query("SELECT * FROM app_item WHERE DATE(`date`) = :yesterday")
     fun getYesterday(yesterday: Date): List<AppItem?>
+
+    @Query("SELECT * FROM notification_history WHERE DATE(`date`) = DATE(:today)")
+    fun getNotificationForToday(today: Date): List<NotificationHistory>
 
     /**
      * When updating a row with a value already set in a column,

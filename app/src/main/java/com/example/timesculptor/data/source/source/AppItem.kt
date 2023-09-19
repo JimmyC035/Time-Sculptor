@@ -34,7 +34,7 @@ data class AppItem (
 
     @ColumnInfo(name = "date")
     @TypeConverters(DateConverters::class)
-    var date : Date = Date(),
+    var date : Date = Date() ,
 
 //    @ColumnInfo(name = "is_system")
 //    private var mIsSystem: Boolean = false,

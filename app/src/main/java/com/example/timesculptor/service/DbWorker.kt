@@ -2,6 +2,7 @@ package com.example.timesculptor.service
 
 import android.app.NotificationManager
 import android.content.Context
+import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.timesculptor.data.source.DataManager
@@ -27,8 +28,11 @@ class DbWorker(context: Context, params: WorkerParameters) : Worker(context, par
             val dailyData = dataManager.getApps(applicationContext, 0)
             appDao.insert(dailyData)
 
+            Log.i("testDBworker","worker do somthing")
+
             Result.success()
         } catch (e: Exception) {
+            Log.i("testDBworker","worker got exception $e")
             Result.failure()
         }
     }

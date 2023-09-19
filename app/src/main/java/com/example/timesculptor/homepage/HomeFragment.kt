@@ -56,6 +56,8 @@ class HomeFragment : Fragment() {
         viewModel.doWork(requireContext())
         viewModel.doDBWork(requireContext())
 
+//        viewModel.cancelWork(requireContext())
+
 //
         composeView.setContent {
             if(listItem.size >= 5){

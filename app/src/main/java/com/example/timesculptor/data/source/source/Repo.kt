@@ -33,7 +33,7 @@ class Repo @Inject constructor(private var dao: AppDao) : TimeSculptorRepository
         }
     }
 
-    override fun getYesterday(yesterday: Date): List<AppItem> {
+    override fun getYesterday(yesterday: Date): List<AppItem?> {
 
         return dao.getYesterday(yesterday)
     }
@@ -74,7 +74,7 @@ class Repo @Inject constructor(private var dao: AppDao) : TimeSculptorRepository
     override fun createAndEnqueueDBWorker(context: Context) {
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.HOUR_OF_DAY, 23)
-        calendar.set(Calendar.MINUTE, 58)
+        calendar.set(Calendar.MINUTE, 59)
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
 
@@ -96,7 +96,7 @@ class Repo @Inject constructor(private var dao: AppDao) : TimeSculptorRepository
             .build()
 
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-            "SendNotificationWorker",
+            "WriteDBWorker",
             ExistingPeriodicWorkPolicy.UPDATE,
             workRequest
         )
@@ -104,5 +104,9 @@ class Repo @Inject constructor(private var dao: AppDao) : TimeSculptorRepository
         Log.i("work", "called")
     }
 
+    override fun cancelAllWork(context: Context) {
+        WorkManager.getInstance(context).cancelAllWork()
+        Log.i("work","job canceled")
+    }
 
 }

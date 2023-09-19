@@ -3,6 +3,7 @@ package com.example.timesculptor.service
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
@@ -28,10 +29,6 @@ class NotiWorker(context: Context, params: WorkerParameters) : Worker(context, p
             //create instance and write things into database
             database = TimeSculptorDataBase.getInstance(applicationContext)
             appDao = database.TimeSculptorDao
-//        //get data
-//        val dataManager = DataManager()
-//        val dailyData = dataManager.getApps(applicationContext,0)
-//        appDao.insert(dailyData)
 
 
             //get date to get data
@@ -43,10 +40,13 @@ class NotiWorker(context: Context, params: WorkerParameters) : Worker(context, p
 
             val data = appDao.getYesterday(yesterday)
             data.forEach {
-                totalTime += it.mUsageTime
+                if (it != null){
+                    totalTime += it.mUsageTime
+                }
             }
             message = totalTime.toHoursMinutesSeconds()
 
+            Log.i("testnotification","notiworker do something")
 
             //notification
             notificationManager =
@@ -71,6 +71,7 @@ class NotiWorker(context: Context, params: WorkerParameters) : Worker(context, p
 
             return Result.success()
         } catch (e: Exception) {
+            Log.i("testnotification","worker got exception $e")
             return Result.failure()
         }
 

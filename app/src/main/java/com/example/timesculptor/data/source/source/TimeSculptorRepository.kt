@@ -16,9 +16,11 @@ interface TimeSculptorRepository {
     suspend fun insert(listAppItem: List<AppItem>){}
 
     @Query("SELECT * FROM app_item WHERE `date` = :yesterday")
-    fun getYesterday(yesterday: Date): List<AppItem>
+    fun getYesterday(yesterday: Date): List<AppItem?>
 
     fun createAndEnqueueWorker(context: Context){}
 
     fun createAndEnqueueDBWorker(context: Context){}
+
+    fun cancelAllWork(context: Context){}
 }

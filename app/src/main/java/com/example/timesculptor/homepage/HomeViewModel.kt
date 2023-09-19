@@ -4,6 +4,7 @@ import android.app.usage.EventStats
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.util.Log
+import androidx.appcompat.app.WindowDecorActionBar.TabImpl
 import androidx.lifecycle.ViewModel
 import com.example.timesculptor.data.source.NotificationHistory
 import com.example.timesculptor.data.source.source.AppItem
@@ -31,6 +32,9 @@ class HomeViewModel @Inject constructor(
         TimeSculptorRepository.createAndEnqueueDBWorker(context)
     }
 
+    fun cancelWork(context: Context){
+        TimeSculptorRepository.cancelAllWork(context)
+    }
 
     fun printEventStatsInfo(eventStats: EventStats) {
         val format = SimpleDateFormat("yyyy.MM.dd_HH:mm:ss", Locale.getDefault())

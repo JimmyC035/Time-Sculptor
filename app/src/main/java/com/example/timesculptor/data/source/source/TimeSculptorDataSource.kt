@@ -9,7 +9,7 @@ class TimeSculptorDataSource(private val dao: AppDao) : TimeSculptorRepository {
     //    override suspend fun insert(notificationHistory: NotificationHistory) {
 //        dao.insert(notificationHistory)
 //    }
-    override fun getYesterday(yesterday: Date): List<AppItem> {
+    override fun getYesterday(yesterday: Date): List<AppItem?> {
         TODO("Not yet implemented")
     }
 

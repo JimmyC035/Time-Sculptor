@@ -4,7 +4,9 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import kotlinx.parcelize.Parcelize
+import java.util.Date
 
 
 @Entity(tableName = "notification_history")
@@ -23,5 +25,10 @@ data class NotificationHistory(
     var createdTime : Long = 0L,
 
     @PrimaryKey(autoGenerate = true)
-    val id : Long = 0L
+    val id : Long = 0L,
+
+    @ColumnInfo(name = "date")
+    @TypeConverters(DateConverters::class)
+    var date : Date = Date(),
+
 ) : Parcelable

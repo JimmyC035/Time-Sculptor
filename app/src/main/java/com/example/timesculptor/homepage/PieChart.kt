@@ -2,6 +2,7 @@ package com.example.timesculptor.homepage
 
 
 import android.graphics.drawable.Drawable
+import android.view.View
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -30,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.timesculptor.R
@@ -51,6 +53,7 @@ fun PieChart(
     data: Map<String, Long>,
     icon: List<Drawable>,
     packageName: List<String>,
+    onClick: (String) -> Unit,
     radiusOuter: Dp = 100.dp,
     chartBarWidth: Dp = 20.dp,
     animDuration: Int = 1000,
@@ -142,7 +145,8 @@ fun PieChart(
             data = data,
             colors = colors,
             icon = icon,
-            packageName = packageName
+            packageName = packageName,
+            onClick = onClick
         )
 
     }
@@ -154,7 +158,8 @@ fun DetailsPieChart(
     data: Map<String, Long>,
     icon: List<Drawable>,
     packageName: List<String>,
-    colors: List<Color>
+    colors: List<Color>,
+    onClick: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -167,7 +172,8 @@ fun DetailsPieChart(
                 data = Pair(data.keys.elementAt(index), value),
                 color = colors[index],
                 icon = icon[index],
-                packageName = packageName[index]
+                packageName = packageName[index],
+                onClick = onClick
             )
         }
 
@@ -180,7 +186,7 @@ fun DetailsPieChartItem(
     icon: Drawable,
     packageName: String,
     color: Color,
-
+    onClick: (String) -> Unit
 ) {
     val navController = rememberNavController()
 
@@ -190,8 +196,9 @@ fun DetailsPieChartItem(
         modifier = Modifier
             .padding(vertical = 10.dp, horizontal = 40.dp)
             .clickable {
+                       onClick(packageName)
 //                val action = HomeFragmentDirections.actionNavigateToDetailFragment(packageName)
-//                findNavController().navigate(action)
+//                fragment.findNavController().navigate(action)
 
             },
         color = Color.Transparent

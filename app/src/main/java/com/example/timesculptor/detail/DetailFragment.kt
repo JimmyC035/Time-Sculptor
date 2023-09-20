@@ -2,6 +2,7 @@ package com.example.timesculptor.detail
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -27,6 +28,8 @@ class DetailFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
+        val packageName = DetailFragmentArgs.fromBundle(requireArguments()).packageName
+        Log.i("navigate?","$packageName")
 
 
         return binding.root

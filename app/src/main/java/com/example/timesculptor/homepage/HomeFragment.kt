@@ -39,6 +39,7 @@ class HomeFragment : Fragment() {
 
 
 
+
         //get data
         val listItem = viewModel.getHomePageData(requireContext())
         Log.i("session","$listItem")
@@ -50,8 +51,13 @@ class HomeFragment : Fragment() {
                 Log.i("noti", it.toString())
             }
 
+        val myClick : (String) -> Unit = { packageName: String ->
+            findNavController().navigate(HomeFragmentDirections.actionNavigateToDetailFragment(packageName))
+        }
 
-
+//        fun onClick(packageName:String){
+//            findNavController().navigate(HomeFragmentDirections.actionNavigateToDetailFragment(packageName))
+//        }
 
 
         //get total time
@@ -86,7 +92,10 @@ class HomeFragment : Fragment() {
                     },
                     packageName = listItem.take(5).map{
                         it.mPackageName
-                    }
+                    },
+                    myClick
+
+
                 )
             }else{
                 PieChart(
@@ -101,8 +110,8 @@ class HomeFragment : Fragment() {
                     packageName = listItem.indices.map{
                         val item = listItem[it]
                         item.mPackageName
-                    }
-
+                    },
+                    myClick
                 )
             }
 

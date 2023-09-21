@@ -30,6 +30,7 @@ class DbWorker(context: Context, params: WorkerParameters) : Worker(context, par
             //get data
 
             var dailyData = repo.getApps(applicationContext, 1)
+
             dailyData = dailyData.map { item ->
                 val calendar = Calendar.getInstance()
                 calendar.time = item.date

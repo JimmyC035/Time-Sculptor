@@ -39,6 +39,12 @@ class Repo @Inject constructor(private var dao: AppDao) : TimeSculptorRepository
         }
     }
 
+    override suspend fun updatOrInsert(listAppItem: List<AppItem>) {
+        withContext(Dispatchers.IO){
+            dao.updateOrInsert(listAppItem)
+        }
+    }
+
     override suspend fun getYesterday(yesterday: Date): List<AppItem?> {
 
         return withContext(Dispatchers.IO) {
@@ -70,8 +76,10 @@ class Repo @Inject constructor(private var dao: AppDao) : TimeSculptorRepository
 
         val workRequest = PeriodicWorkRequest.Builder(
             NotiWorker::class.java,
-            1,
-            TimeUnit.DAYS
+            24,
+            TimeUnit.HOURS,
+//            5,
+//            TimeUnit.MINUTES
         )
             .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
             .build()
@@ -87,8 +95,8 @@ class Repo @Inject constructor(private var dao: AppDao) : TimeSculptorRepository
 
     override fun createAndEnqueueDBWorker(context: Context) {
         val calendar = Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY, 0)
-        calendar.set(Calendar.MINUTE, 20)
+        calendar.set(Calendar.HOUR_OF_DAY, 9)
+        calendar.set(Calendar.MINUTE, 30)
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
 
@@ -103,8 +111,10 @@ class Repo @Inject constructor(private var dao: AppDao) : TimeSculptorRepository
 
         val workRequest = PeriodicWorkRequest.Builder(
             DbWorker::class.java,
-            1,
-            TimeUnit.DAYS
+            24,
+            TimeUnit.HOURS,
+//            5,
+//            TimeUnit.MINUTES
         )
             .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
             .build()
@@ -177,6 +187,7 @@ class Repo @Inject constructor(private var dao: AppDao) : TimeSculptorRepository
                         prevEndEvent = DataManager.ClonedEvent(event)
                         item.duration = prevEndEvent.timeStamp - start
                         if (item.duration <= 0) item.duration = 0
+                        item.eventType = eventType
                         items.add(item.copy())
                         start = 0
                     }

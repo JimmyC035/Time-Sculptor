@@ -12,6 +12,7 @@ import com.example.timesculptor.data.source.source.AppDao
 import com.example.timesculptor.data.source.source.Repo
 import com.example.timesculptor.data.source.source.TimeSculptorDataBase
 import com.example.timesculptor.util.AppUtil.toHoursMinutesSeconds
+import java.sql.Date
 import java.util.Calendar
 
 
@@ -44,6 +45,7 @@ class NotiWorker(context: Context, params: WorkerParameters) : Worker(context, p
             var totalTime = 0L
             var message = ""
 
+            // need solve
             val data = appDao.getYesterday(yesterday)
             data.forEach {
                 if (it != null){
@@ -51,6 +53,7 @@ class NotiWorker(context: Context, params: WorkerParameters) : Worker(context, p
                 }
             }
             message = totalTime.toHoursMinutesSeconds()
+            Log.i("testnotification","$data")
 
             Log.i("testnotification","notiworker do something")
 

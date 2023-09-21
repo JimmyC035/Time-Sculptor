@@ -7,6 +7,9 @@ import java.util.Date
 
 
 class TimeSculptorDataSource(private val dao: AppDao) : TimeSculptorRepository {
+    override suspend fun updatOrInsert(listAppItem: List<AppItem>) {
+        TODO("Not yet implemented")
+    }
 
     override suspend fun getYesterday(yesterday: Date): List<AppItem?> {
         TODO("Not yet implemented")

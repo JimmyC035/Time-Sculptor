@@ -188,7 +188,6 @@ fun DetailsPieChartItem(
     color: Color,
     onClick: (String) -> Unit
 ) {
-    val navController = rememberNavController()
 
 
 
@@ -196,10 +195,7 @@ fun DetailsPieChartItem(
         modifier = Modifier
             .padding(vertical = 10.dp, horizontal = 40.dp)
             .clickable {
-                       onClick(packageName)
-//                val action = HomeFragmentDirections.actionNavigateToDetailFragment(packageName)
-//                fragment.findNavController().navigate(action)
-
+                onClick(packageName)
             },
         color = Color.Transparent
     ) {

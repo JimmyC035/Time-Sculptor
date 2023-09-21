@@ -6,5 +6,6 @@
     <string name="pomodoro">pomodoro</string>
     <string name="service_name">NotificationListener</string>
     <string name="setting">Setting</string>
+    <string name="start">Start</string>
 
 </resources>

@@ -15,6 +15,8 @@ interface TimeSculptorRepository {
 
     suspend fun insert(listAppItem: List<AppItem>){}
 
+    suspend fun updatOrInsert(listAppItem: List<AppItem>)
+
     @Query("SELECT * FROM app_item WHERE DATE(`date`) = :yesterday")
     suspend fun getYesterday(yesterday: Date): List<AppItem?>
 

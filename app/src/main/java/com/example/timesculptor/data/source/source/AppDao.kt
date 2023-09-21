@@ -4,10 +4,9 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import androidx.room.Upsert
 import com.example.timesculptor.data.source.AppUsageData
 import com.example.timesculptor.data.source.NotificationHistory
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 import java.util.Date
 
 
@@ -20,7 +19,10 @@ interface AppDao {
     @Insert
     fun insert(notificationHistory: NotificationHistory)
 
-    @Query("SELECT * FROM app_item WHERE DATE(`date`) = :yesterday")
+    @Upsert
+    fun updateOrInsert(listAppItem: List<AppItem>)
+
+    @Query("SELECT * FROM app_item WHERE DATE(`date`) = DATE(:yesterday)")
     fun getYesterday(yesterday: Date): List<AppItem?>
 
     @Query("SELECT * FROM notification_history WHERE DATE(`date`) = DATE(:today)")

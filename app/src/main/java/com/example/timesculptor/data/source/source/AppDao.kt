@@ -28,6 +28,10 @@ interface AppDao {
     @Query("SELECT * FROM notification_history WHERE DATE(`date`) = DATE(:today)")
     fun getNotificationForToday(today: Date): List<NotificationHistory>
 
+    @Query("SELECT * FROM notification_history WHERE created_time >= :startTime AND created_time <= :endTime")
+    fun getNotificationForYesterday(startTime:Long, endTime:Long): List<NotificationHistory>
+
+
     /**
      * When updating a row with a value already set in a column,
      * replaces the old value with the new one.

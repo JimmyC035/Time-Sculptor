@@ -40,10 +40,10 @@ class HomeViewModel @Inject constructor(
     val notiCount :LiveData<Int> = _notiCount
 
     fun getNotification(today:Date){
-        viewModelScope.launch {
-            val notificationHistory= timeSculptorRepository.getNotificationForToday(today)
-            _notiCount.value = notificationHistory.size
-        }
+//        viewModelScope.launch {
+//            val notificationHistory= timeSculptorRepository.getNotificationForToday(today)
+//            _notiCount.value = notificationHistory.size
+//        }
     }
 
     fun getTodayDate() {

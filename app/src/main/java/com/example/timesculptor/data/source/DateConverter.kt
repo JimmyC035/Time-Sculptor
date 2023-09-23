@@ -1,5 +1,6 @@
 package com.example.timesculptor.data.source
 
+import android.util.Log
 import androidx.room.TypeConverter
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -10,11 +11,22 @@ class DateConverters {
 
     @TypeConverter
     fun dateToString(date: Date?): String? {
-        return date?.let { dateFormat.format(it) }
+
+            return date?.let { dateFormat.format(it) }
+
     }
 
     @TypeConverter
     fun stringToDate(dateString: String?): Date? {
-        return dateString?.let { dateFormat.parse(it) }
+
+        try{
+            return dateString?.let { dateFormat.parse(it) }
+        } catch (e: Exception){
+            Log.i("noti", "dateString: $dateString")
+            throw e
+        }
+
+
+
     }
 }

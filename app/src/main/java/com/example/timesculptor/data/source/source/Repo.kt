@@ -4,6 +4,7 @@ import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.util.Log
+import androidx.work.BackoffPolicy
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
@@ -58,6 +59,16 @@ class Repo @Inject constructor(private var dao: AppDao) : TimeSculptorRepository
         }
     }
 
+    override suspend fun getNotificationForYesterday(
+        startTime: Long,
+        endTime: Long
+    ): List<NotificationHistory> {
+        return withContext(Dispatchers.IO) {
+            dao.getNotificationForYesterday(startTime,endTime)
+
+        }
+    }
+
     override fun createAndEnqueueWorker(context: Context,hour:Int,min:Int) {
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.HOUR_OF_DAY, hour)
@@ -76,11 +87,14 @@ class Repo @Inject constructor(private var dao: AppDao) : TimeSculptorRepository
 
         val workRequest = PeriodicWorkRequest.Builder(
             NotiWorker::class.java,
-            24,
-            TimeUnit.HOURS,
-//            5,
-//            TimeUnit.MINUTES
-        )
+            20,
+            TimeUnit.MINUTES,
+            5,
+            TimeUnit.MINUTES
+        ).setBackoffCriteria(
+            backoffPolicy = BackoffPolicy.LINEAR,
+            15,
+            TimeUnit.SECONDS)
             .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
             .build()
 
@@ -95,8 +109,8 @@ class Repo @Inject constructor(private var dao: AppDao) : TimeSculptorRepository
 
     override fun createAndEnqueueDBWorker(context: Context) {
         val calendar = Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY, 9)
-        calendar.set(Calendar.MINUTE, 30)
+        calendar.set(Calendar.HOUR_OF_DAY, 5)
+        calendar.set(Calendar.MINUTE, 20)
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
 
@@ -113,8 +127,12 @@ class Repo @Inject constructor(private var dao: AppDao) : TimeSculptorRepository
             DbWorker::class.java,
             24,
             TimeUnit.HOURS,
-//            5,
-//            TimeUnit.MINUTES
+            15,
+            TimeUnit.MINUTES
+        ).setBackoffCriteria(
+            backoffPolicy = BackoffPolicy.LINEAR,
+            15,
+            TimeUnit.SECONDS
         )
             .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
             .build()
@@ -124,6 +142,7 @@ class Repo @Inject constructor(private var dao: AppDao) : TimeSculptorRepository
             ExistingPeriodicWorkPolicy.UPDATE,
             workRequest
         )
+
 
         Log.i("work", "called DB")
     }

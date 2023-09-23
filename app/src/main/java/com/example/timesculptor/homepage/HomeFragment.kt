@@ -55,10 +55,6 @@ class HomeFragment : Fragment() {
             findNavController().navigate(HomeFragmentDirections.actionNavigateToDetailFragment(packageName))
         }
 
-//        fun onClick(packageName:String){
-//            findNavController().navigate(HomeFragmentDirections.actionNavigateToDetailFragment(packageName))
-//        }
-
 
         //get total time
         viewModel.getUsage(requireContext())
@@ -82,6 +78,7 @@ class HomeFragment : Fragment() {
 
         composeView.setContent {
             if(listItem.size >= 5){
+
                 PieChart(
                     data = listItem.take(5).associate {
                         val item = it

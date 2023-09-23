@@ -35,7 +35,7 @@ class UserSettingFragment : Fragment() {
 
 
 
-        notificationTimePickBtn.setOnClickListener{
+        notificationTimePickBtn.setOnClickListener {
             // on below line we are getting
             // the instance of our calendar.
             val c = Calendar.getInstance()
@@ -51,11 +51,11 @@ class UserSettingFragment : Fragment() {
                 { _, hourOfDay, minute ->
 
                     notificationTime.text = "receive your daily report around $hourOfDay:$minute"
-                    editor.putInt("notification_hour",hourOfDay)
-                    editor.putInt("notification_minute",minute)
+                    editor.putInt("notification_hour", hourOfDay)
+                    editor.putInt("notification_minute", minute)
                     editor.apply()
 
-                   viewModel.updateWorker(requireContext(),hourOfDay,minute)
+                    viewModel.updateWorker(requireContext(), hourOfDay, minute)
 
                 },
                 hour,
@@ -67,20 +67,20 @@ class UserSettingFragment : Fragment() {
         }
 
 
-        goalPickerBtn.setOnClickListener{
-            if (goalPicker.text.toString() != ""){
-                val goalTime = goalPicker.text.toString().toLong()
-                editor.putLong("goal",goalTime)
-                editor.apply()
+        goalPickerBtn.setOnClickListener {
+
+            val goalTime = goalPicker.text.toString().toLong()
+            editor.putLong("goal", goalTime)
+            editor.apply()
 
 
-                val goal = pref.getLong("goal", 0)
-                val notiTime = pref.getInt("notification_hour", 0)
-                Log.i("goal", "goal = $goal")
-                Log.i("goal", "notification time  = $notiTime")
-            }
-
+            val goal = pref.getLong("goal", 0)
+            val notiTime = pref.getInt("notification_hour", 0)
+            Log.i("goal", "goal = $goal")
+            Log.i("goal", "notification time  = $notiTime")
         }
+
+
 
 
         return binding.root

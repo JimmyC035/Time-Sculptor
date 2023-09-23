@@ -38,10 +38,16 @@ import com.example.timesculptor.R
 import com.example.timesculptor.util.AppUtil.toHoursMinutesSeconds
 import com.example.timesculptor.util.azureBlue
 import com.example.timesculptor.util.coralBlush
+import com.example.timesculptor.util.darkBlue
+import com.example.timesculptor.util.darkGreen
 import com.example.timesculptor.util.goldenSunray
+import com.example.timesculptor.util.greyRed
 import com.example.timesculptor.util.lavenderMist
 import com.example.timesculptor.util.lightGreen
+import com.example.timesculptor.util.pink
+import com.example.timesculptor.util.sand
 import com.example.timesculptor.util.softLilac
+import com.example.timesculptor.util.tiffanyBlue
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 
 
@@ -72,12 +78,14 @@ fun PieChart(
     // add the colors as per the number of data(no. of pie chart entries)
     // so that each data will get a color
     val colors = listOf(
-        lavenderMist,
-        azureBlue,
-        goldenSunray,
-        coralBlush,
-        softLilac,
+        tiffanyBlue,
+        sand,
+        pink,
+        greyRed,
+        darkBlue,
         lightGreen
+
+
     )
 
     var animationPlayed by remember { mutableStateOf(false) }
@@ -132,7 +140,7 @@ fun PieChart(
                         lastValue,
                         value,
                         useCenter = false,
-                        style = Stroke(chartBarWidth.toPx(), cap = StrokeCap.Butt)
+                        style = Stroke(chartBarWidth.toPx(), cap = StrokeCap.Round)
                     )
                     lastValue += value
                 }

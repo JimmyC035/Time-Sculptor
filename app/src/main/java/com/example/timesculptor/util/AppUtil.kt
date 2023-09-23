@@ -201,5 +201,21 @@ object AppUtil {
     }
 
 
+    fun Long.toHoursMinutes(): String {
+        val totalSeconds = this / 1000
+        val hours = totalSeconds / 3600
+        val minutes = (totalSeconds % 3600) / 60
+        val seconds = totalSeconds % 60
+
+        val timeString = when {
+            hours > 0 -> String.format("%02dh %02dm", hours, minutes)
+            minutes > 0 -> String.format("%02dm", minutes)
+            else -> String.format("%02ds", seconds)
+        }
+        return timeString
+    }
+
+
+
 
 }

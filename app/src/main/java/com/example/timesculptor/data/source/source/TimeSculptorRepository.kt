@@ -23,6 +23,8 @@ interface TimeSculptorRepository {
     @Query("SELECT * FROM notification_history WHERE DATE(`date`) = DATE(:today)")
     suspend fun getNotificationForToday(today: Date): List<NotificationHistory>
 
+    @Query("SELECT * FROM notification_history WHERE created_time >= :startTime AND created_time <= :endTime")
+    suspend fun getNotificationForYesterday(startTime:Long, endTime:Long): List<NotificationHistory>
 
 
     //for work manager

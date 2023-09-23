@@ -168,6 +168,10 @@ dependencies {
     //workManager
     implementation("androidx.work:work-runtime-ktx:2.8.0")
 
+    //card view
+    implementation("androidx.cardview:cardview:1.0.0")
+
+
 
 
 

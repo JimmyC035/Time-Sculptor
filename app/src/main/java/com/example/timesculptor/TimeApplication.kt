@@ -3,6 +3,8 @@ package com.example.timesculptor
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.work.WorkManager
 import com.example.timesculptor.data.source.source.AppDao
 import com.example.timesculptor.data.source.source.Repo
 import com.example.timesculptor.data.source.source.ServiceLocator
@@ -40,6 +42,8 @@ class TimeApplication: Application() {
         repo.createAndEnqueueDBWorker(this)
         repo.createAndEnqueueWorker(this,hour,min)
         Log.i("work","workers call?")
+
+
 
 
     }

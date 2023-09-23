@@ -1,6 +1,7 @@
 package com.example.timesculptor
 
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -10,6 +11,14 @@ import com.example.timesculptor.data.source.DataManager
 import com.example.timesculptor.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import android.Manifest
+import android.content.Intent
+import android.provider.Settings
+import android.util.Log
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.LifecycleOwner
+import androidx.work.WorkManager
+import com.example.timesculptor.service.FloatingWindowService
 
 
 @AndroidEntryPoint
@@ -36,6 +45,26 @@ class MainActivity : AppCompatActivity() {
         if(!dataManager.isNotificationAccessGranted(this)){
             dataManager.requestNotificationAccess(this)
         }
+
+        val permission = Manifest.permission.SYSTEM_ALERT_WINDOW
+        if (!Settings.canDrawOverlays(this)) {
+            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + this.packageName))
+            startActivityForResult(intent, 123)
+        }
+
+
+        val lifecycleOwner: LifecycleOwner = this
+        WorkManager.getInstance(this).getWorkInfosForUniqueWorkLiveData("WriteDBWorker")
+            .observe(lifecycleOwner){
+                it.forEach{workInfo ->
+                    Log.i("MainWorker","${workInfo.state}")
+                    Log.i("MainWorker","${workInfo.progress}")
+                    Log.i("MainWorker","${workInfo.generation}")
+
+                }
+            }
+
+
 
 
         val navHostFragment =

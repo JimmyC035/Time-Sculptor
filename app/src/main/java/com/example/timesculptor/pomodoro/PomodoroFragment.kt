@@ -1,5 +1,6 @@
 package com.example.timesculptor.pomodoro
 
+import android.content.Intent
 import android.os.Binder
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -20,6 +21,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,6 +49,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.timesculptor.R
 import com.example.timesculptor.databinding.FragmentPomodoroBinding
 import com.example.timesculptor.databinding.FragmentTodayBinding
+import com.example.timesculptor.service.FloatingWindowService
 import com.example.timesculptor.today.TodayViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -64,6 +67,7 @@ class PomodoroFragment : Fragment() {
     ): View? {
         return ComposeView(requireContext()).apply {
             setContent {
+                val timerState by viewModel.timerState.collectAsState()
                 Surface(
                     color = Color(0xFF101010),
                     modifier = Modifier.fillMaxSize()
@@ -79,7 +83,7 @@ class PomodoroFragment : Fragment() {
                                 contentAlignment = Alignment.Center
                             ) {
 
-                                val totalTime = viewModel.currentTime
+                                val totalTime = timerState.totalTime
                                 val inactiveBarColor = Color.DarkGray
                                 val activeBarColor = Color(0xFFB3B5EE)
                                 val modifier = Modifier.size(250.dp)
@@ -91,24 +95,13 @@ class PomodoroFragment : Fragment() {
                                 var value by remember {
                                     mutableStateOf(initialValue)
                                 }
-                                var currentTime by remember {
-                                    mutableStateOf(totalTime)
-                                }
+
                                 var isTimerRunning by remember {
                                     mutableStateOf(false)
                                 }
 
-                                val onDecreaseClick = {
-                                    if (!isTimerRunning) {
-                                        currentTime -= 300000
-
-                                        if (currentTime < 0) currentTime = 0
-                                    }
-                                }
-                                val onIncreaseClick = {
-                                    if (!isTimerRunning) {
-                                        currentTime += 300000
-                                    }
+                                var currentTime by remember {
+                                    mutableStateOf(totalTime)
                                 }
 
                                 LaunchedEffect(key1 = currentTime, key2 = isTimerRunning) {
@@ -170,7 +163,7 @@ class PomodoroFragment : Fragment() {
                                         Canvas(
                                             modifier = modifier
                                                 .clickable {
-                                                    onDecreaseClick()
+                                                    viewModel.onDecreaseClicked()
                                                 }
                                                 .size(30.dp, 30.dp)) {
                                             val buttonSize = with(LocalDensity) { 10.dp.toPx() }
@@ -179,32 +172,32 @@ class PomodoroFragment : Fragment() {
                                             drawContext.canvas.save()
 
 
-                                                drawContext.canvas.rotate(
-                                                    rotationAngle,
+                                            drawContext.canvas.rotate(
+                                                rotationAngle,
+                                                center.x - offset,
+                                                center.y
+                                            )
+                                            val trianglePath = Path().apply {
+                                                moveTo(
                                                     center.x - offset,
-                                                    center.y
+                                                    center.y - buttonSize / 2
                                                 )
-                                                val trianglePath = Path().apply {
-                                                    moveTo(
-                                                        center.x - offset,
-                                                        center.y - buttonSize / 2
-                                                    )
-                                                    lineTo(
-                                                        center.x - offset - triangleHeight / 2,
-                                                        center.y + buttonSize / 2
-                                                    )
-                                                    lineTo(
-                                                        center.x - offset + triangleHeight / 2,
-                                                        center.y + buttonSize / 2
-                                                    )
-                                                    close()
-                                                }
-                                                drawPath(
-                                                    path = trianglePath,
-                                                    color = Color.White,
-                                                    style = Fill,
+                                                lineTo(
+                                                    center.x - offset - triangleHeight / 2,
+                                                    center.y + buttonSize / 2
+                                                )
+                                                lineTo(
+                                                    center.x - offset + triangleHeight / 2,
+                                                    center.y + buttonSize / 2
+                                                )
+                                                close()
+                                            }
+                                            drawPath(
+                                                path = trianglePath,
+                                                color = Color.White,
+                                                style = Fill,
 
-                                                    )
+                                                )
                                             drawContext.canvas.restore()
                                         }
                                         Text(
@@ -217,7 +210,7 @@ class PomodoroFragment : Fragment() {
                                         Canvas(
                                             modifier = modifier
                                                 .clickable {
-                                                    onIncreaseClick()
+                                                    viewModel.onIncreaseClicked()
                                                 }
                                                 .size(30.dp, 30.dp)) {
                                             val buttonSize = with(LocalDensity) { 10.dp.toPx() }
@@ -253,12 +246,7 @@ class PomodoroFragment : Fragment() {
 
                                     Button(
                                         onClick = {
-                                            if (currentTime <= 0L) {
-                                                currentTime = totalTime
-                                                isTimerRunning = true
-                                            } else {
-                                                isTimerRunning = !isTimerRunning
-                                            }
+                                            viewModel.onStartStopClicked()
                                         },
                                         modifier = Modifier
                                             .align(Alignment.BottomCenter)
@@ -285,6 +273,12 @@ class PomodoroFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onPause() {
+        val intent = Intent(requireContext(), FloatingWindowService::class.java)
+        requireContext().startService(intent)
+        super.onPause()
     }
 }
 

@@ -20,6 +20,13 @@ class TimeSculptorDataSource(private val dao: AppDao) : TimeSculptorRepository {
         TODO("Not yet implemented")
     }
 
+    override suspend fun getNotificationForYesterday(
+        startTime: Long,
+        endTime: Long
+    ): List<NotificationHistory> {
+        TODO("Not yet implemented")
+    }
+
     override fun createAndEnqueueWorker(context: Context,hour:Int,min:Int) {
         TODO("Not yet implemented")
     }

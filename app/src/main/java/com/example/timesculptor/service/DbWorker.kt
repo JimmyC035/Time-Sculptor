@@ -3,6 +3,7 @@ package com.example.timesculptor.service
 import android.app.NotificationManager
 import android.content.Context
 import android.util.Log
+import androidx.work.CoroutineWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.timesculptor.data.source.DataManager
@@ -12,7 +13,7 @@ import com.example.timesculptor.data.source.source.TimeSculptorDataBase
 import java.lang.Exception
 import java.util.Calendar
 
-class DbWorker(context: Context, params: WorkerParameters) : Worker(context, params) {
+class DbWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
 
 
     lateinit var database: TimeSculptorDataBase
@@ -20,7 +21,7 @@ class DbWorker(context: Context, params: WorkerParameters) : Worker(context, par
     private lateinit var repo: Repo
 
 
-    override fun doWork(): Result {
+    override suspend fun doWork(): Result {
 
         return try {
             //create instance and write things into database
@@ -28,8 +29,9 @@ class DbWorker(context: Context, params: WorkerParameters) : Worker(context, par
             appDao = database.TimeSculptorDao
             repo = Repo(appDao)
             //get data
+            val latest  = repo.getLatest()
 
-            var dailyData = repo.getApps(applicationContext, 1)
+            var dailyData = repo.getAppsForDB(applicationContext, latest!!)
 
             dailyData = dailyData.map { item ->
                 val calendar = Calendar.getInstance()
@@ -37,8 +39,8 @@ class DbWorker(context: Context, params: WorkerParameters) : Worker(context, par
                 calendar.add(Calendar.DAY_OF_MONTH, -1)
                 item.copy(date = calendar.time)
             }
-            appDao.insert(dailyData)
 
+            repo.insert(dailyData)
             Log.i("testDBworker","worker do somthing")
 
             Result.success()

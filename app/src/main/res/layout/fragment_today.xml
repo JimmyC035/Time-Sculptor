@@ -21,6 +21,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <androidx.compose.ui.platform.ComposeView
+                android:id="@+id/line_chart"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                app:layout_constraintBottom_toTopOf="@+id/most_used_cardview"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+            </androidx.compose.ui.platform.ComposeView>
+
+
             <TextView
                 android:id="@+id/today_date"
                 android:layout_width="wrap_content"
@@ -65,15 +76,16 @@
 
                     <TextView
                         android:id="@+id/used_time_title"
-                        android:layout_width="81dp"
+                        android:layout_width="0dp"
                         android:layout_height="24dp"
-                        android:layout_marginStart="18dp"
                         android:layout_marginTop="12dp"
                         android:fontFamily="@font/cabin"
+                        android:layout_marginStart="18dp"
                         android:text="Most Used"
                         android:textColor="@color/white"
                         android:textSize="20sp"
                         app:layout_constraintBottom_toTopOf="@id/most_used_icon"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 

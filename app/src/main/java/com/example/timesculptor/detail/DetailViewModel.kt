@@ -14,7 +14,7 @@ class DetailViewModel @Inject constructor(
     private val timeSculptorRepository: TimeSculptorRepository
 ) : ViewModel() {
 
-    fun getThisWeekMockData(context: Context,packageName:String):List<SessionData?>{
+    fun getTodayMockData(context: Context,packageName:String):List<SessionData?>{
        return timeSculptorRepository.getTargetAppTimeline(context,packageName,0)
     }
 

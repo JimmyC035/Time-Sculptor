@@ -73,6 +73,12 @@ class HomeFragment : Fragment() {
             }
         }
 
+        //testing
+        lifecycleScope.launch {
+            viewModel.updateDb(requireContext())
+
+        }
+
 
 
 

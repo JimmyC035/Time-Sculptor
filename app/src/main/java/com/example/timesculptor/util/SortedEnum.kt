@@ -11,6 +11,7 @@ enum class SortEnum(var sort: Int) {
                 2 -> return THIS_WEEK
                 3 -> return THIS_MONTH
                 4 -> return THIS_YEAR
+
             }
             return TODAY
         }

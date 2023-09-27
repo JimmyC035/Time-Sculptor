@@ -97,6 +97,7 @@ object AppUtil {
             SortEnum.THIS_WEEK -> getThisWeek()
             SortEnum.THIS_MONTH -> getThisMonth()
             SortEnum.THIS_YEAR -> getThisYear()
+
             else -> getTodayRange()
         }
         Log.d("**********", range[0].toString() + " ~ " + range[1])
@@ -111,6 +112,11 @@ object AppUtil {
         cal[Calendar.SECOND] = 0
         cal[Calendar.MILLISECOND] = 0
         return longArrayOf(cal.timeInMillis, timeNow)
+    }
+
+     fun getTillNow(latest:Long): LongArray {
+        val timeNow = System.currentTimeMillis()
+        return longArrayOf(latest, timeNow)
     }
 
     fun getYesterdayTimestamp(): Long {

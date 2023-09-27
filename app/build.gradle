@@ -163,6 +163,8 @@ dependencies {
     implementation "androidx.compose.material:material:1.0.5"
     implementation "androidx.compose.runtime:runtime:1.0.5"
     implementation "com.google.accompanist:accompanist-drawablepainter:0.28.0" //0.28.0
+    implementation "androidx.compose.material3:material3:1.0.5"
+
 
 
     //workManager
@@ -170,6 +172,13 @@ dependencies {
 
     //card view
     implementation("androidx.cardview:cardview:1.0.0")
+
+    //YCharts
+    implementation 'co.yml:ycharts:2.1.0'
+
+    //MPAndroid
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
 
 
 

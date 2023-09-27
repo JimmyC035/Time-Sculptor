@@ -14,8 +14,10 @@ import com.example.timesculptor.data.source.source.AppItem
 import com.example.timesculptor.data.source.source.TimeSculptorRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
@@ -43,11 +45,14 @@ class TodayViewModel @Inject constructor(
     private val _notiYesterdayCount = MutableLiveData<Int>()
     val notiYesterdayCount : LiveData<Int> = _notiYesterdayCount
 
-    private val _pickUpCount = MutableLiveData<Int>()
+    private val _pickUpCount = MutableLiveData<Int>(0)
     val pickUpCount : LiveData<Int> = _pickUpCount
 
-    private val _pickUpCountYesterday = MutableLiveData<Int>()
+    private val _pickUpCountYesterday = MutableLiveData<Int>(0)
     val pickUpCountYesterday : LiveData<Int> = _pickUpCountYesterday
+
+    private val _charTillNow = MutableLiveData<List<AppItem>>()
+    val charTillNow : LiveData<List<AppItem>> = _charTillNow
 
     private suspend fun getNotification(today: Date){
         val notificationHistory= timeSculptorRepository.getNotificationForToday(today)
@@ -74,6 +79,7 @@ class TodayViewModel @Inject constructor(
         _totalTime.value = calculateTime
     }
 
+    //out of bound if no
     fun getMostUsedApp(context: Context):AppItem{
         return timeSculptorRepository.getApps(context,0)[0]
     }
@@ -119,7 +125,7 @@ class TodayViewModel @Inject constructor(
         val lastEventTime = format.format(Date(eventStats.lastEventTime))
         val totalTime = eventStats.totalTime / 1000
 
-        Log.i("bqt", "| ${pickUpCount.value} | $eventType | $beginningTime | $endTime | $lastEventTime | $totalTime | ")
+        Log.i("bqtToday", "| ${_pickUpCount.value} | $eventType | $beginningTime | $endTime | $lastEventTime | $totalTime | ")
     }
 
 
@@ -135,7 +141,7 @@ class TodayViewModel @Inject constructor(
         val beginTime = calendar.timeInMillis
 
         val manager = context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
-        val usageStatsList = manager.queryEventStats(UsageStatsManager.INTERVAL_BEST,beginTime, endTime)
+        val usageStatsList = manager.queryEventStats(UsageStatsManager.INTERVAL_DAILY,beginTime, endTime)
 
 
         for (eventStats in usageStatsList) {
@@ -143,6 +149,9 @@ class TodayViewModel @Inject constructor(
                 printEventStatsInfo(eventStats)
             }
         }
+    }
+    suspend fun getTillNow(startOfDay: Long, current: Long) {
+        _charTillNow.value =  timeSculptorRepository.getItemsTillNow(startOfDay,current)
     }
 
     fun testEventStatsForYesterday(context: Context) {
@@ -158,7 +167,7 @@ class TodayViewModel @Inject constructor(
         val endTime = calendar.timeInMillis
 
         val manager = context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
-        val usageStatsList = manager.queryEventStats(UsageStatsManager.INTERVAL_BEST,startTime, endTime)
+        val usageStatsList = manager.queryEventStats(UsageStatsManager.INTERVAL_DAILY,startTime, endTime)
 
 
         for (eventStats in usageStatsList) {

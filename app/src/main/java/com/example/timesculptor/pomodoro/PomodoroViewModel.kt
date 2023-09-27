@@ -19,6 +19,8 @@ class PomodoroViewModel @Inject constructor(
     private val _timerState = MutableStateFlow(TimerViewState())
     val timerState: StateFlow<TimerViewState> = _timerState.asStateFlow()
 
+    var currentTime:Long = 60000L
+
     fun onDecreaseClicked() {
         if (!timerState.value.isRunning) {
             val newTime = timerState.value.currentTime - 300000 // 减少300秒（300000毫秒）

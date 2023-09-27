@@ -79,6 +79,13 @@ class HomeViewModel @Inject constructor(
         return null
     }
 
+    suspend fun updateDb(context: Context){
+       val latest =  timeSculptorRepository.getLatest()
+        val items = timeSculptorRepository.getAppsForDB(context,latest!!)
+        timeSculptorRepository.insert(items)
+        Log.i("update",latest.toString())
+    }
+
 
     init {
         val calendar = Calendar.getInstance()

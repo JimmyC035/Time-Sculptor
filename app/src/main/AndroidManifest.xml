@@ -4,6 +4,7 @@
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
@@ -30,6 +31,32 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
+        <receiver
+            android:name="com.example.timesculptor.service.UnlockReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.example.timesculptor.service.RebootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <service
+            android:name=".service.DbService"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name=".service.RebootService"
+            android:enabled="true"
+            android:exported="false" />
+<!--        <service-->
+<!--            android:name=".service.TimerService"-->
+<!--            android:enabled="true"-->
+<!--            android:exported="false" />-->
         <service
             android:name="com.example.timesculptor.service.FloatingWindowService"
             android:enabled="true"

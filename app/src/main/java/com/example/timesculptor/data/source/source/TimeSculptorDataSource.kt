@@ -1,8 +1,11 @@
 package com.example.timesculptor.data.source.source
 
 import android.content.Context
+import android.graphics.LinearGradient
+import androidx.lifecycle.LiveData
 import com.example.timesculptor.data.source.NotificationHistory
 import com.example.timesculptor.data.source.SessionData
+import com.example.timesculptor.data.source.TotalUsage
 import java.util.Date
 
 
@@ -27,6 +30,15 @@ class TimeSculptorDataSource(private val dao: AppDao) : TimeSculptorRepository {
         TODO("Not yet implemented")
     }
 
+    override suspend fun getItemsTillNow(startOfDay: Long, current: Long): List<AppItem> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getTotalUsageForDate(startOfDay: Long, endOfDay: Long): LiveData<TotalUsage> {
+        TODO("Not yet implemented")
+    }
+
+
     override fun createAndEnqueueWorker(context: Context,hour:Int,min:Int) {
         TODO("Not yet implemented")
     }
@@ -50,6 +62,16 @@ class TimeSculptorDataSource(private val dao: AppDao) : TimeSculptorRepository {
     override fun getApps(context: Context, offset: Int): List<AppItem> {
         TODO("Not yet implemented")
     }
+
+    override fun getAppsForDB(context: Context,latest:Long): List<AppItem> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getLatest(): Long {
+        TODO("Not yet implemented")
+    }
+
+
 
 
 

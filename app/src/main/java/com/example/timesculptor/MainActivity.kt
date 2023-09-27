@@ -12,13 +12,17 @@ import com.example.timesculptor.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.provider.Settings
 import android.util.Log
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.LifecycleOwner
 import androidx.work.WorkManager
 import com.example.timesculptor.service.FloatingWindowService
+import com.example.timesculptor.service.RebootService
+import com.example.timesculptor.service.UnlockReceiver
 
 
 @AndroidEntryPoint
@@ -35,6 +39,18 @@ class MainActivity : AppCompatActivity() {
 
         val dataManager = DataManager()
 
+
+        //start service when first launch
+        val pref = this.getSharedPreferences("my_setting", Context.MODE_PRIVATE)
+        val isFirstRun = pref.getBoolean("first",true)
+        val editor = pref.edit()
+
+        if(isFirstRun){
+            val serviceIntent = Intent(this, RebootService::class.java)
+            startService(serviceIntent)
+            editor.putBoolean("first",false)
+            editor.apply()
+        }
 
 
 
@@ -63,6 +79,9 @@ class MainActivity : AppCompatActivity() {
 
                 }
             }
+
+
+
 
 
 
@@ -106,4 +125,6 @@ class MainActivity : AppCompatActivity() {
             false
         }
     }
+
+
 }

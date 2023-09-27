@@ -10,9 +10,24 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import co.yml.charts.common.model.Point
+import co.yml.charts.ui.linechart.model.GridLines
+import co.yml.charts.ui.linechart.model.IntersectionPoint
+import co.yml.charts.ui.linechart.model.Line
+import co.yml.charts.ui.linechart.model.LineChartData
+import co.yml.charts.ui.linechart.model.LinePlotData
+import co.yml.charts.ui.linechart.model.LineStyle
+import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
+import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
+import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import com.example.timesculptor.R
 import com.example.timesculptor.databinding.FragmentHomeBinding
 import com.example.timesculptor.databinding.FragmentTodayBinding
@@ -25,6 +40,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 import kotlin.math.abs
 
 @AndroidEntryPoint
@@ -54,6 +70,7 @@ class TodayFragment : Fragment() {
         val composeView = binding.composeView
         val goalAndUsage = binding.goalUsage
         val goalPickUP = binding.pickUpGoal
+        val lineChart = binding.lineChart
 
 
         //get total time
@@ -88,8 +105,11 @@ class TodayFragment : Fragment() {
         }
 
         viewModel.pickUpCount.observe(viewLifecycleOwner){
+            Log.i("pick up",it.toString())
             pickUpCount.text = it.toString()
         }
+
+
 
         viewModel.pickUpCountYesterday.observe(viewLifecycleOwner){
             pickUpCountYesterday.text = it.toString()
@@ -111,10 +131,16 @@ class TodayFragment : Fragment() {
         Log.i("goal",viewModel.totalTime.value.toString())
         val percentage:Float = viewModel.totalTime.value.toFloat() / goal.toFloat()
         val timeLeft = goal - viewModel.totalTime.value
+        var percentageForPickup = 0f
+        percentageForPickup = if(viewModel.pickUpCount.value == null){
+            0f
+        } else {
+            viewModel.pickUpCount.value!!.toFloat().div(60f)
+        }
 
 
         composeView.setContent {
-            AnimatedCircle(percentage = percentage, timeLeft)
+            AnimatedCircle(percentage = percentage, timeLeft,percentageForPickup)
             Log.i("goal",goal.toHoursMinutesSeconds())
             Log.i("goal", percentage.toString())
 
@@ -127,11 +153,13 @@ class TodayFragment : Fragment() {
 
 
 
-            lifecycleScope.launch {
-                viewModel.totalTime.collect{
+
+
+        lifecycleScope.launch {
+            viewModel.totalTime.collect{
                 usageTime.text = it.toHoursMinutesSeconds()
-                }
             }
+        }
 
         //get today date
         lifecycleScope.launch {
@@ -139,6 +167,44 @@ class TodayFragment : Fragment() {
                 todayDate.text = it
             }
         }
+        lifecycleScope.launch {
+            val calendar = Calendar.getInstance()
+            calendar.set(Calendar.HOUR_OF_DAY, 0)
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 0)
+            calendar.set(Calendar.MILLISECOND, 0)
+            val startOfDay = calendar.timeInMillis
+            val current = System.currentTimeMillis()
+            viewModel.getTillNow(startOfDay,current)
+        }
+
+
+      viewModel.charTillNow.observe(viewLifecycleOwner){ it ->
+          val usageMap = mutableMapOf<Int, Float>()
+          val sdf = SimpleDateFormat("HH", Locale.getDefault())
+          sdf.timeZone = TimeZone.getTimeZone("GMT+8:00")
+
+          it.forEach {item ->
+              val date = Date(item.mEventTime)
+              val eventHour = sdf.format(date).toInt()
+              val usageTimeInMinutes = item.mUsageTime.toFloat() / (1000 * 60)
+              usageMap[eventHour] = usageMap.getOrDefault(eventHour, 0f) + usageTimeInMinutes
+          }
+
+          val pointsData = (0..23).map { hour ->
+              Point(x = hour.toFloat(), y = usageMap.getOrDefault(hour, 0f))
+          }
+          lineChart.setContent {
+              LineChartUI(pointsData,2)
+//            BarCharUI()
+          }
+      }
+
+
+
+
+
+
 
 
 

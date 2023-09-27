@@ -66,8 +66,8 @@ class PomodoroFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return ComposeView(requireContext()).apply {
+
             setContent {
-                val timerState by viewModel.timerState.collectAsState()
                 Surface(
                     color = Color(0xFF101010),
                     modifier = Modifier.fillMaxSize()
@@ -83,7 +83,7 @@ class PomodoroFragment : Fragment() {
                                 contentAlignment = Alignment.Center
                             ) {
 
-                                val totalTime = timerState.totalTime
+                                val totalTime = viewModel.currentTime
                                 val inactiveBarColor = Color.DarkGray
                                 val activeBarColor = Color(0xFFB3B5EE)
                                 val modifier = Modifier.size(250.dp)
@@ -95,13 +95,24 @@ class PomodoroFragment : Fragment() {
                                 var value by remember {
                                     mutableStateOf(initialValue)
                                 }
-
+                                var currentTime by remember {
+                                    mutableStateOf(totalTime)
+                                }
                                 var isTimerRunning by remember {
                                     mutableStateOf(false)
                                 }
 
-                                var currentTime by remember {
-                                    mutableStateOf(totalTime)
+                                val onDecreaseClick = {
+                                    if (!isTimerRunning) {
+                                        currentTime -= 300000
+
+                                        if (currentTime < 0) currentTime = 0
+                                    }
+                                }
+                                val onIncreaseClick = {
+                                    if (!isTimerRunning) {
+                                        currentTime += 300000
+                                    }
                                 }
 
                                 LaunchedEffect(key1 = currentTime, key2 = isTimerRunning) {
@@ -163,7 +174,7 @@ class PomodoroFragment : Fragment() {
                                         Canvas(
                                             modifier = modifier
                                                 .clickable {
-                                                    viewModel.onDecreaseClicked()
+                                                    onDecreaseClick()
                                                 }
                                                 .size(30.dp, 30.dp)) {
                                             val buttonSize = with(LocalDensity) { 10.dp.toPx() }
@@ -210,7 +221,7 @@ class PomodoroFragment : Fragment() {
                                         Canvas(
                                             modifier = modifier
                                                 .clickable {
-                                                    viewModel.onIncreaseClicked()
+                                                    onIncreaseClick()
                                                 }
                                                 .size(30.dp, 30.dp)) {
                                             val buttonSize = with(LocalDensity) { 10.dp.toPx() }
@@ -246,7 +257,12 @@ class PomodoroFragment : Fragment() {
 
                                     Button(
                                         onClick = {
-                                            viewModel.onStartStopClicked()
+                                            if (currentTime <= 0L) {
+                                                currentTime = totalTime
+                                                isTimerRunning = true
+                                            } else {
+                                                isTimerRunning = !isTimerRunning
+                                            }
                                         },
                                         modifier = Modifier
                                             .align(Alignment.BottomCenter)

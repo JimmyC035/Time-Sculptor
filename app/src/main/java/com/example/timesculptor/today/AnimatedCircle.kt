@@ -44,6 +44,7 @@ import kotlin.math.round
 fun AnimatedCircle(
     percentage: Float,
     timeLeft: Long,
+    percentageForPickup: Float,
     fontSize: TextUnit = 14.sp,
     radius: Dp = 50.dp,
     strokeWidth: Dp = 8.dp,
@@ -57,6 +58,13 @@ fun AnimatedCircle(
     }
     val curPercentage = animateFloatAsState(
         targetValue = if (animationPlayed) percentage else 0f,
+        animationSpec = tween(
+            durationMillis = animDuration,
+            delayMillis = animDelay
+        )
+    )
+    val curPercentageForPickup = animateFloatAsState(
+        targetValue = if (animationPlayed) percentageForPickup else 0f,
         animationSpec = tween(
             durationMillis = animDuration,
             delayMillis = animDelay
@@ -84,7 +92,7 @@ fun AnimatedCircle(
             drawArc(
                 color = greyOrange,
                 -90f,
-                360 * curPercentage.value,
+                360 * curPercentageForPickup.value,
                 useCenter = false,
                 style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
 

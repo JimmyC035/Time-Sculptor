@@ -124,9 +124,6 @@ class HomeFragment : Fragment() {
 
 //        viewModel.testEventStats(requireContext())
 
-        Log.i("bbt","call?")
-
-
 
 
         return binding.root

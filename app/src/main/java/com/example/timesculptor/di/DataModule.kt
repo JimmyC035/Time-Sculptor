@@ -13,8 +13,7 @@ import com.example.timesculptor.data.source.source.AppDao
 import com.example.timesculptor.data.source.source.Repo
 import com.example.timesculptor.data.source.source.TimeSculptorDataBase
 import com.example.timesculptor.data.source.source.TimeSculptorRepository
-import com.example.timesculptor.service.ACTION_SHOW_TIMER_FRAGMENT
-import com.example.timesculptor.service.NOTIFICATION_CHANNEL_ID
+
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -60,33 +59,33 @@ object DaoModule {
 //    fun provideRepoImpl(dataBase: TimeSculptorDataBase) = Repo(dataBase.TimeSculptorDao)
 }
 
-@Module
-@InstallIn(ServiceComponent::class)
-object ServiceModule{
-    @Provides
-    @ServiceScoped
-    fun provideMainActivityPendingIntent(
-        @ApplicationContext app: Context
-    ) = PendingIntent.getActivity(
-        app,
-        0,
-        Intent(app, MainActivity::class.java).also {
-            it.action = ACTION_SHOW_TIMER_FRAGMENT
-        },
-        FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-    )
-
-    @Provides
-    @ServiceScoped
-    fun provideBaseNotificationBuilder(
-        @ApplicationContext app: Context,
-        pendingIntent: PendingIntent
-    ) = NotificationCompat.Builder(app, NOTIFICATION_CHANNEL_ID)
-        .setAutoCancel(false)
-        .setOngoing(true)
-        .setSmallIcon(R.drawable.pomodoro)
-        .setContentTitle("pomodoro")
-        .setContentText("00:00:00")
-        .setContentIntent(pendingIntent)
-
-}
+//@Module
+//@InstallIn(ServiceComponent::class)
+//object ServiceModule{
+//    @Provides
+//    @ServiceScoped
+//    fun provideMainActivityPendingIntent(
+//        @ApplicationContext app: Context
+//    ) = PendingIntent.getActivity(
+//        app,
+//        0,
+//        Intent(app, MainActivity::class.java).also {
+//            it.action = ACTION_SHOW_TIMER_FRAGMENT
+//        },
+//        FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+//    )
+//
+//    @Provides
+//    @ServiceScoped
+//    fun provideBaseNotificationBuilder(
+//        @ApplicationContext app: Context,
+//        pendingIntent: PendingIntent
+//    ) = NotificationCompat.Builder(app, NOTIFICATION_CHANNEL_ID)
+//        .setAutoCancel(false)
+//        .setOngoing(true)
+//        .setSmallIcon(R.drawable.pomodoro)
+//        .setContentTitle("pomodoro")
+//        .setContentText("00:00:00")
+//        .setContentIntent(pendingIntent)
+//
+//}

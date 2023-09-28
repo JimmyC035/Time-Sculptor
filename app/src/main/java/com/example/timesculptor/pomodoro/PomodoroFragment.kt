@@ -45,20 +45,28 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.timesculptor.R
 import com.example.timesculptor.databinding.FragmentPomodoroBinding
 import com.example.timesculptor.databinding.FragmentTodayBinding
 import com.example.timesculptor.service.FloatingWindowService
+import com.example.timesculptor.service.TimerService.Companion.timeLeftFlow
+import com.example.timesculptor.service.TimerService.Companion.totalTime
 import com.example.timesculptor.today.TodayViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.sqrt
 
 @AndroidEntryPoint
 class PomodoroFragment : Fragment() {
 
     private val viewModel: PomodoroViewModel by viewModels()
+
+    private var isTimerRunning  = false
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,6 +76,7 @@ class PomodoroFragment : Fragment() {
         return ComposeView(requireContext()).apply {
 
             setContent {
+
                 Surface(
                     color = Color(0xFF101010),
                     modifier = Modifier.fillMaxSize()
@@ -82,8 +91,8 @@ class PomodoroFragment : Fragment() {
                             Box(
                                 contentAlignment = Alignment.Center
                             ) {
-
-                                val totalTime = viewModel.currentTime
+                                val state = totalTime.collectAsState()
+                                val totalTime = state.value
                                 val inactiveBarColor = Color.DarkGray
                                 val activeBarColor = Color(0xFFB3B5EE)
                                 val modifier = Modifier.size(250.dp)
@@ -95,33 +104,30 @@ class PomodoroFragment : Fragment() {
                                 var value by remember {
                                     mutableStateOf(initialValue)
                                 }
-                                var currentTime by remember {
-                                    mutableStateOf(totalTime)
-                                }
-                                var isTimerRunning by remember {
-                                    mutableStateOf(false)
-                                }
+                                var currentTime = timeLeftFlow.collectAsState().value
+
+
 
                                 val onDecreaseClick = {
                                     if (!isTimerRunning) {
-                                        currentTime -= 300000
-
-                                        if (currentTime < 0) currentTime = 0
+//                                        currentTime -= 300000
+                                        viewModel.minusTime()
+                                        if (totalTime < 0) viewModel.resetTimer()
                                     }
                                 }
                                 val onIncreaseClick = {
                                     if (!isTimerRunning) {
-                                        currentTime += 300000
+//                                        currentTime += 300000
+                                        viewModel.addTime()
                                     }
                                 }
 
                                 LaunchedEffect(key1 = currentTime, key2 = isTimerRunning) {
                                     if (currentTime > 0 && isTimerRunning) {
-                                        delay(100L)
-                                        currentTime -= 100L
+//                                        delay(100L)
+//                                        currentTime -= 100L
                                         value = currentTime / totalTime.toFloat()
                                     }
-
                                 }
 
 
@@ -152,7 +158,7 @@ class PomodoroFragment : Fragment() {
                                         drawArc(
                                             color = activeBarColor,
                                             startAngle = 0f,
-                                            sweepAngle = 360f * value,
+                                            sweepAngle = 360f  * value,
                                             useCenter = false,
                                             size = Size(
                                                 size.width.toFloat(),
@@ -257,9 +263,15 @@ class PomodoroFragment : Fragment() {
 
                                     Button(
                                         onClick = {
+                                            if(isTimerRunning){
+                                                viewModel.pauseTimer(requireContext())
+                                            }else{
+                                                viewModel.startTimer(requireContext())
+                                            }
                                             if (currentTime <= 0L) {
                                                 currentTime = totalTime
                                                 isTimerRunning = true
+
                                             } else {
                                                 isTimerRunning = !isTimerRunning
                                             }
@@ -283,7 +295,6 @@ class PomodoroFragment : Fragment() {
                                     }
                                 }
                             }
-
                         }
                     }
                 }
@@ -292,8 +303,10 @@ class PomodoroFragment : Fragment() {
     }
 
     override fun onPause() {
-        val intent = Intent(requireContext(), FloatingWindowService::class.java)
-        requireContext().startService(intent)
+        if(isTimerRunning){
+            val intent = Intent(requireContext(), FloatingWindowService::class.java)
+            requireContext().startService(intent)
+        }
         super.onPause()
     }
 }

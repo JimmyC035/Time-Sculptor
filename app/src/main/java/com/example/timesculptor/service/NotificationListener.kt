@@ -49,12 +49,14 @@ class NotificationListener : NotificationListenerService() {
         notificationHistory.name = AppUtil.parsePackageName(this.packageManager,packageName)
         notificationHistory.createdTime = notificationTime
         notificationHistory.packageName = packageName
-
-        GlobalScope.launch{
-            withContext(Dispatchers.IO){
-                appDao.insert(notificationHistory)
+        if(notificationHistory.packageName != "com.example.timesculptor"){
+            GlobalScope.launch{
+                withContext(Dispatchers.IO){
+                    appDao.insert(notificationHistory)
+                }
             }
         }
+
 
     }
 

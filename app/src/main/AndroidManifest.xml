@@ -17,9 +17,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/time_sculptor"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/time_sculptor"
         android:supportsRtl="true"
         android:theme="@style/Theme.TimeSculptor"
         tools:targetApi="31">
@@ -50,13 +50,15 @@
             android:enabled="true"
             android:exported="false" />
         <service
+            android:name=".service.TimerService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <service
             android:name=".service.RebootService"
             android:enabled="true"
             android:exported="false" />
-<!--        <service-->
-<!--            android:name=".service.TimerService"-->
-<!--            android:enabled="true"-->
-<!--            android:exported="false" />-->
+
         <service
             android:name="com.example.timesculptor.service.FloatingWindowService"
             android:enabled="true"

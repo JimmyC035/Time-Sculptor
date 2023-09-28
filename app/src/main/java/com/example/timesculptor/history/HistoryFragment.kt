@@ -21,15 +21,8 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.timesculptor.R
-import com.example.timesculptor.databinding.DialogAddBinding
 import com.example.timesculptor.databinding.FragmentBottomSheetDialogBinding
 import com.example.timesculptor.databinding.FragmentHistoryBinding
-import com.example.timesculptor.databinding.FragmentHomeBinding
-import com.example.timesculptor.databinding.FragmentTodayBinding
-import com.example.timesculptor.homepage.HomeViewModel
-import com.example.timesculptor.service.ACTION_START_SERVICE
-import com.example.timesculptor.service.TimerService
-import com.example.timesculptor.today.TodayViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -50,6 +43,9 @@ class HistoryFragment : Fragment() {
         binding.viewModel = viewModel
         val calendar = binding.calendarView
 
+
+
+
         calendar.setOnDateChangeListener { view, year, month, dayOfMonth ->
             val calendar = Calendar.getInstance()
             calendar.set(year, month, dayOfMonth, 0, 0, 0)
@@ -60,19 +56,21 @@ class HistoryFragment : Fragment() {
 
             lifecycleScope.launch {
                 viewModel.getTotalUsageForDate(startOfDay,endOfDay)
+                Log.i("total usage","$startOfDay    |  $endOfDay")
                 Log.i("total usage", "function called")
             }
 
 
 
+
         }
         viewModel.totalUsageSelectedDate.observe(viewLifecycleOwner) { totalUsage ->
-//            if (totalUsage != null) {
-//                Log.i("total usage", totalUsage.toString())
-//
-//            } else {
-//                Log.i("total usage", " NO DATA")
-//            }
+            if (totalUsage != null) {
+                Log.i("total usage", totalUsage.toString())
+
+            } else {
+                Log.i("total usage", " NO DATA")
+            }
             val bottomSheetDialog = BottomSheetDialog(requireContext())
             val binding = FragmentBottomSheetDialogBinding.inflate(inflater, container, false)
             if(totalUsage != null){

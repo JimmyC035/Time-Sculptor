@@ -31,8 +31,11 @@ interface TimeSculptorRepository {
     @Query("SELECT * FROM app_item WHERE event_time BETWEEN :startOfDay AND :current")
     suspend fun getItemsTillNow(startOfDay: Long, current: Long): List<AppItem>
 
-    @Query("SELECT COALESCE(SUM(usage_time), 0) AS total_time FROM app_item WHERE event_time BETWEEN :startOfDay AND :endOfDay")
-    suspend fun getTotalUsageForDate(startOfDay: Long, endOfDay: Long): LiveData<TotalUsage>
+    @Query("SELECT *  FROM app_item WHERE event_time BETWEEN :startOfDay AND :endOfDay")
+    suspend fun getTotalUsageForDateItem(startOfDay: Long, endOfDay: Long): List<AppItem>
+
+    @Query("SELECT SUM(usage_time) AS total_time FROM app_item WHERE event_time BETWEEN :startOfDay AND :endOfDay")
+    suspend fun getTotalUsageForDate(startOfDay: Long, endOfDay: Long): Long
 
 
     //for work manager

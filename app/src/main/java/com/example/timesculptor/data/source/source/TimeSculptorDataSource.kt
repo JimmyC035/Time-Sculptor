@@ -34,7 +34,11 @@ class TimeSculptorDataSource(private val dao: AppDao) : TimeSculptorRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getTotalUsageForDate(startOfDay: Long, endOfDay: Long): LiveData<TotalUsage> {
+    override suspend fun getTotalUsageForDateItem(startOfDay: Long, endOfDay: Long): List<AppItem> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getTotalUsageForDate(startOfDay: Long, endOfDay: Long): Long {
         TODO("Not yet implemented")
     }
 

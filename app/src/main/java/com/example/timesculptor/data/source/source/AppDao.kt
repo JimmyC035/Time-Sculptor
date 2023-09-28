@@ -27,8 +27,11 @@ interface AppDao {
     @Query("SELECT * FROM app_item WHERE DATE(`date`) = DATE(:yesterday)")
     fun getYesterday(yesterday: Date): List<AppItem?>
 
-    @Query("SELECT COALESCE(SUM(usage_time), 0) AS total_time FROM app_item WHERE event_time BETWEEN :startOfDay AND :endOfDay")
-    fun getTotalUsageForDate(startOfDay: Long, endOfDay: Long): LiveData<TotalUsage>
+    @Query("SELECT SUM(usage_time) AS total_time FROM app_item WHERE event_time BETWEEN :startOfDay AND :endOfDay")
+    fun getTotalUsageForDate(startOfDay: Long, endOfDay: Long): Long
+
+    @Query("SELECT *  FROM app_item WHERE event_time BETWEEN :startOfDay AND :endOfDay")
+    fun getTotalUsageForDateItem(startOfDay: Long, endOfDay: Long): List<AppItem>
 
     @Query("SELECT * FROM notification_history WHERE DATE(`date`) = DATE(:today)")
     fun getNotificationForToday(today: Date): List<NotificationHistory>

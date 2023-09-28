@@ -74,10 +74,17 @@ class Repo @Inject constructor(private var dao: AppDao) : TimeSculptorRepository
         }
     }
 
-    override suspend fun getTotalUsageForDate(startOfDay: Long, endOfDay: Long): LiveData<TotalUsage> {
+    override suspend fun getTotalUsageForDateItem(startOfDay: Long, endOfDay: Long): List<AppItem> {
         return withContext(Dispatchers.IO) {
-            val time = dao.getTotalUsageForDate(startOfDay, endOfDay)
-            time
+
+            val items = dao.getTotalUsageForDateItem(startOfDay,endOfDay)
+            items
+        }
+    }
+
+    override suspend fun getTotalUsageForDate(startOfDay: Long, endOfDay: Long): Long {
+        return withContext(Dispatchers.IO) {
+            dao.getTotalUsageForDate(startOfDay, endOfDay)
         }
     }
 

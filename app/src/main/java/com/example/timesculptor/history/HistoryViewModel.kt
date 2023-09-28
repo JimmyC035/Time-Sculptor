@@ -14,12 +14,18 @@ class HistoryViewModel @Inject constructor(
     private val timeSculptorRepository: TimeSculptorRepository
 ) : ViewModel() {
 
-    private val  _totalUsageSelectedDate = MutableLiveData<Long>()
-    val totalUsageSelectedDate :LiveData<Long> = _totalUsageSelectedDate
+    private val _totalUsageSelectedDate = MutableLiveData<Long>()
+    val totalUsageSelectedDate: LiveData<Long> = _totalUsageSelectedDate
+
+    //    val test: LiveData<Long> = timeSculptorRepository.getTotalUsageForDate(1695657600000,1695743999999)
     suspend fun getTotalUsageForDate(startOfDay: Long, endOfDay: Long) {
-        val totalUsage = timeSculptorRepository.getTotalUsageForDate(startOfDay, endOfDay).value?.total_time
-        _totalUsageSelectedDate.postValue(totalUsage)
-        Log.i("total usage", _totalUsageSelectedDate.value.toString())
+        _totalUsageSelectedDate.postValue(
+            timeSculptorRepository.getTotalUsageForDate(
+                startOfDay,
+                endOfDay
+            )
+        )
+        Log.i("total usage viewModel", totalUsageSelectedDate.toString())
     }
 
 

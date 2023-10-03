@@ -1,25 +1,26 @@
 package com.example.timesculptor.pomodoro
 
 import android.content.Intent
-import android.os.Binder
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -28,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -35,28 +37,22 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.rotate
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.min
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.timesculptor.R
-import com.example.timesculptor.databinding.FragmentPomodoroBinding
-import com.example.timesculptor.databinding.FragmentTodayBinding
 import com.example.timesculptor.service.FloatingWindowService
 import com.example.timesculptor.service.TimerService.Companion.timeLeftFlow
 import com.example.timesculptor.service.TimerService.Companion.totalTime
-import com.example.timesculptor.today.TodayViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlin.math.sqrt
 
 @AndroidEntryPoint
@@ -64,8 +60,7 @@ class PomodoroFragment : Fragment() {
 
     private val viewModel: PomodoroViewModel by viewModels()
 
-    private var isTimerRunning  = false
-
+    private var isTimerRunning = false
 
 
     override fun onCreateView(
@@ -78,14 +73,15 @@ class PomodoroFragment : Fragment() {
             setContent {
 
                 Surface(
-                    color = Color(0xFF101010),
+                    color = Color(0xFF222627),
                     modifier = Modifier.fillMaxSize()
                 ) {
                     Box(
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.padding(bottom = 90.dp)
                     ) {
                         Surface(
-                            color = Color(0xFF101010),
+                            color = Color(0xFF222627),
                             modifier = Modifier.fillMaxSize()
                         ) {
                             Box(
@@ -94,7 +90,7 @@ class PomodoroFragment : Fragment() {
                                 val state = totalTime.collectAsState()
                                 val totalTime = state.value
                                 val inactiveBarColor = Color.DarkGray
-                                val activeBarColor = Color(0xFFB3B5EE)
+                                val activeBarColor = Color(0xBBFF6347)
                                 val modifier = Modifier.size(250.dp)
                                 val initialValue: Float = 1f
                                 val strokeWidth: Dp = 20.dp
@@ -104,35 +100,45 @@ class PomodoroFragment : Fragment() {
                                 var value by remember {
                                     mutableStateOf(initialValue)
                                 }
-                                var currentTime = timeLeftFlow.collectAsState().value
 
+                                var isRunning by remember {
+                                    mutableStateOf(isTimerRunning)
+                                }
+                                val currentTime = timeLeftFlow.collectAsState().value
 
 
                                 val onDecreaseClick = {
-                                    if (!isTimerRunning) {
-//                                        currentTime -= 300000
+                                    if (!isRunning) {
                                         viewModel.minusTime()
-                                        if (totalTime < 0) viewModel.resetTimer()
+                                        if (viewModel.currentTime.value < 0) viewModel.resetTimer()
                                     }
                                 }
                                 val onIncreaseClick = {
-                                    if (!isTimerRunning) {
-//                                        currentTime += 300000
+                                    if (!isRunning) {
                                         viewModel.addTime()
                                     }
                                 }
 
-                                LaunchedEffect(key1 = currentTime, key2 = isTimerRunning) {
-                                    if (currentTime > 0 && isTimerRunning) {
-//                                        delay(100L)
-//                                        currentTime -= 100L
+                                LaunchedEffect(key1 = currentTime, key2 = isRunning) {
+                                    if (currentTime > 0L && isRunning) {
                                         value = currentTime / totalTime.toFloat()
+                                        Log.i("launnched", "$currentTime | $totalTime")
                                     }
+                                    if (currentTime <= 100L) {
+                                        isRunning = false
+                                        isTimerRunning = false
+                                        value = 1f
+                                    }
+
                                 }
 
 
                                 val minutes = (currentTime % 3600000) / 60000
                                 val seconds = (currentTime % 60000) / 1000
+                                val viewModelTimeState = viewModel.currentTime.collectAsState()
+                                val minutesInViewModel =
+                                    (viewModelTimeState.value % 3600000) / 60000
+                                val secondsInViewModel = (viewModelTimeState.value % 60000) / 1000
                                 Box(
                                     contentAlignment = Alignment.Center,
                                     modifier = modifier
@@ -158,7 +164,7 @@ class PomodoroFragment : Fragment() {
                                         drawArc(
                                             color = activeBarColor,
                                             startAngle = 0f,
-                                            sweepAngle = 360f  * value,
+                                            sweepAngle = 360f * value,
                                             useCenter = false,
                                             size = Size(
                                                 size.width.toFloat(),
@@ -218,7 +224,15 @@ class PomodoroFragment : Fragment() {
                                             drawContext.canvas.restore()
                                         }
                                         Text(
-                                            text = String.format("%02d:%02d", minutes, seconds),
+                                            text = if (isRunning.not()) {
+                                                String.format(
+                                                    "%02d:%02d",
+                                                    minutesInViewModel,
+                                                    secondsInViewModel
+                                                )
+                                            } else {
+                                                String.format("%02d:%02d", minutes, seconds)
+                                            },
                                             fontSize = 44.sp,
                                             fontWeight = FontWeight.Bold,
                                             color = Color.White
@@ -260,37 +274,106 @@ class PomodoroFragment : Fragment() {
                                             drawContext.canvas.restore()
                                         }
                                     }
+                                }
+                                Row(
+                                    modifier = Modifier
+                                        .align(Alignment.BottomCenter)
+                                        .padding(top = 32.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Button(
+                                        onClick = {
+                                            viewModel.cancelTimer(requireContext())
+                                            viewModel.resetTimer()
+                                            value = 1f
+                                            isRunning = false
+                                            isTimerRunning = false
+                                        },
+                                        modifier = Modifier
+                                            .size(48.dp)
+                                            .clip(CircleShape),
+                                        colors = ButtonDefaults.buttonColors(
+                                            backgroundColor = Color.White,
+                                            contentColor = Color.Black
+                                        )
+                                    ) {
+                                        Image(
+                                            painter = painterResource(id = R.drawable.baseline_stop_24),
+                                            contentDescription = null,
+                                            contentScale = ContentScale.Crop,
+                                            modifier = Modifier.fillMaxSize()
+
+                                        )
+                                    }
+
+                                    Spacer(modifier = Modifier.size(32.dp))
 
                                     Button(
                                         onClick = {
-                                            if(isTimerRunning){
+                                            if (isRunning) {
+                                                isRunning = false
+                                                isTimerRunning = false
                                                 viewModel.pauseTimer(requireContext())
-                                            }else{
-                                                viewModel.startTimer(requireContext())
-                                            }
-                                            if (currentTime <= 0L) {
-                                                currentTime = totalTime
-                                                isTimerRunning = true
 
                                             } else {
-                                                isTimerRunning = !isTimerRunning
+                                                isRunning = true
+                                                isTimerRunning = true
+                                                viewModel.startTimer(requireContext())
                                             }
+
                                         },
                                         modifier = Modifier
-                                            .align(Alignment.BottomCenter)
-                                            .padding(bottom = 32.dp),
+                                            .size(64.dp)
+                                            .clip(CircleShape),
                                         colors = ButtonDefaults.buttonColors(
-                                            backgroundColor = if (!isTimerRunning || currentTime <= 0L) {
-                                                Color(0xFFB3B5EE)
+                                            backgroundColor = if (!isRunning || currentTime <= 0L) {
+                                                Color(0xBBFF6347)
                                             } else {
                                                 Color(0xFF4777AF)
                                             }
                                         )
                                     ) {
-                                        Text(
-                                            text = if (isTimerRunning && currentTime >= 0L) "Stop"
-                                            else if (!isTimerRunning && currentTime >= 0L) "Start"
-                                            else "Restart"
+                                        val imageResource =
+                                            if (isRunning) {
+                                                R.drawable.baseline_pause_24
+                                            } else {
+                                                R.drawable.baseline_play_arrow_24
+                                            }
+
+                                        Image(
+                                            painter = painterResource(id = imageResource),
+                                            contentDescription = null,
+                                            contentScale = ContentScale.Crop,
+                                            modifier = Modifier.fillMaxSize()
+
+                                        )
+                                    }
+
+                                    Spacer(modifier = Modifier.size(32.dp))
+
+                                    Button(
+                                        onClick = {
+                                            viewModel.resetTimer()
+                                            viewModel.cancelTimer(requireContext())
+                                            value = 1f
+                                            isRunning = false
+                                            isTimerRunning = false
+                                        },
+                                        modifier = Modifier
+                                            .size(48.dp)
+                                            .clip(CircleShape),
+                                        colors = ButtonDefaults.buttonColors(
+                                            backgroundColor = Color.White,
+                                            contentColor = Color.Black
+                                        ),
+
+                                    ) {
+                                        Image(
+                                            painter = painterResource(id = R.drawable.baseline_refresh_24),
+                                            contentDescription = null,
+                                            contentScale = ContentScale.Crop,
+                                            modifier = Modifier
+
                                         )
                                     }
                                 }
@@ -303,7 +386,7 @@ class PomodoroFragment : Fragment() {
     }
 
     override fun onPause() {
-        if(isTimerRunning){
+        if (isTimerRunning) {
             val intent = Intent(requireContext(), FloatingWindowService::class.java)
             requireContext().startService(intent)
         }

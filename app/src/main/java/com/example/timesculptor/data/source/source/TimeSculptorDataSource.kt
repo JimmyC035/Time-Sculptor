@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import com.example.timesculptor.data.source.NotificationHistory
 import com.example.timesculptor.data.source.SessionData
 import com.example.timesculptor.data.source.TotalUsage
+import com.example.timesculptor.data.source.UsageStatsSummary
 import java.util.Date
 
 
@@ -35,6 +36,14 @@ class TimeSculptorDataSource(private val dao: AppDao) : TimeSculptorRepository {
     }
 
     override suspend fun getTotalUsageForDateItem(startOfDay: Long, endOfDay: Long): List<AppItem> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getTopAppByDate(startOfDay: Long, endOfDay: Long): UsageStatsSummary {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getNotificationCountForTimeRange(startTime: Long, endTime: Long): Int {
         TODO("Not yet implemented")
     }
 

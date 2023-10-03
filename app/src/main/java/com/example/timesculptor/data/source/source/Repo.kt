@@ -13,6 +13,7 @@ import com.example.timesculptor.data.source.DataManager
 import com.example.timesculptor.data.source.NotificationHistory
 import com.example.timesculptor.data.source.SessionData
 import com.example.timesculptor.data.source.TotalUsage
+import com.example.timesculptor.data.source.UsageStatsSummary
 import com.example.timesculptor.service.DbWorker
 import com.example.timesculptor.service.NotiWorker
 import com.example.timesculptor.util.AppConst
@@ -79,6 +80,20 @@ class Repo @Inject constructor(private var dao: AppDao) : TimeSculptorRepository
 
             val items = dao.getTotalUsageForDateItem(startOfDay,endOfDay)
             items
+        }
+    }
+
+    override suspend fun getTopAppByDate(startOfDay: Long, endOfDay: Long): UsageStatsSummary {
+        return withContext(Dispatchers.IO) {
+
+            val items = dao.getTopAppByDate(startOfDay,endOfDay)
+            items
+        }
+    }
+
+    override suspend fun getNotificationCountForTimeRange(startTime: Long, endTime: Long): Int {
+        return withContext(Dispatchers.IO) {
+            dao.getNotificationCountForTimeRange(startTime, endTime)
         }
     }
 

@@ -8,4 +8,11 @@
 
     </style>
     <style name="Theme.TimeSculptor" parent="Base.Theme.TimeSculptor" />
+    <style name="MyDateTextAppearance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <style name="MyWeekDayTextAppearance" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
 </resources>

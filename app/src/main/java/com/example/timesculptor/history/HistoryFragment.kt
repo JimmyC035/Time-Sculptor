@@ -5,6 +5,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.graphics.Canvas
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.os.IBinder
@@ -23,6 +24,9 @@ import androidx.lifecycle.lifecycleScope
 import com.example.timesculptor.R
 import com.example.timesculptor.databinding.FragmentBottomSheetDialogBinding
 import com.example.timesculptor.databinding.FragmentHistoryBinding
+import com.example.timesculptor.util.AppUtil.getPackageIcon
+import com.example.timesculptor.util.AppUtil.toHoursMinutes
+import com.example.timesculptor.util.AppUtil.toMonthAbbreviation
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -46,7 +50,12 @@ class HistoryFragment : Fragment() {
 
 
 
-        calendar.setOnDateChangeListener { view, year, month, dayOfMonth ->
+
+
+
+
+
+        calendar.setOnDateChangeListener { _, year, month, dayOfMonth ->
             val calendar = Calendar.getInstance()
             calendar.set(year, month, dayOfMonth, 0, 0, 0)
             calendar.set(Calendar.MILLISECOND, 0)
@@ -54,34 +63,44 @@ class HistoryFragment : Fragment() {
             val startOfDay = calendar.timeInMillis
             val endOfDay = startOfDay + 24 * 60 * 60 * 1000 - 1
 
-            lifecycleScope.launch {
-                viewModel.getTotalUsageForDate(startOfDay,endOfDay)
-                Log.i("total usage","$startOfDay    |  $endOfDay")
-                Log.i("total usage", "function called")
-            }
-
-
-
+            viewModel.monthAndDate ="${month.toMonthAbbreviation()} $dayOfMonth"
+            viewModel.loadDataForDate(startOfDay,endOfDay)
 
         }
-        viewModel.totalUsageSelectedDate.observe(viewLifecycleOwner) { totalUsage ->
-            if (totalUsage != null) {
-                Log.i("total usage", totalUsage.toString())
+        viewModel.topUsed.observe(viewLifecycleOwner) { topUsed ->
 
-            } else {
-                Log.i("total usage", " NO DATA")
-            }
+
             val bottomSheetDialog = BottomSheetDialog(requireContext())
             val binding = FragmentBottomSheetDialogBinding.inflate(inflater, container, false)
-            if(totalUsage != null){
-                binding.totalUsage.text = totalUsage.toString()
+            val mostUsedIcon = binding.mostUsedIcon
+            if(topUsed != null){
+                val drawables = getPackageIcon(requireContext(),topUsed.packageName)
+                mostUsedIcon.setImageDrawable(drawables)
+                binding.displayTime.text = topUsed.totalUsageTime.toHoursMinutes()
+                binding.launchCount.text = (if(topUsed.totalUsageCount == 0){
+                    "1"
+                }else{
+                    (topUsed.totalUsageCount + 1).toString()
+                })
+            }else{
+                binding.displayTime.text = 0L.toHoursMinutes()
+                binding.launchCount.text = "0"
             }
-            binding.textView3.text = "SEP 26"
+            if(viewModel.totalUsageSelectedDate.value != null){
+                binding.totalUsage.text = viewModel.totalUsageSelectedDate.value!!.toHoursMinutes()
+            }
+            if(viewModel.notificationCount.value != null){
+                binding.notiCount.text = viewModel.notificationCount.value.toString()
+            }else{
+                binding.notiCount.text = "0"
+            }
+            binding.date.text = viewModel.monthAndDate
+
+
 
 
             bottomSheetDialog.setContentView(binding.root)
             bottomSheetDialog.show()
-
         }
 
 

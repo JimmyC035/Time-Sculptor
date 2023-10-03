@@ -1,4 +1,4 @@
-package com.example.timesculptor.history
+package com.example.timesculptor.welcome
 
 import androidx.lifecycle.ViewModel
 import com.example.timesculptor.data.source.source.TimeSculptorRepository
@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class BottomSheetDialogViewModel @Inject constructor(
+class WelcomeViewModel@Inject constructor(
     private val timeSculptorRepository: TimeSculptorRepository
 ) : ViewModel() {
 

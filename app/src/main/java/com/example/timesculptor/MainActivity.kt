@@ -37,6 +37,12 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.myNavHostFragment) as NavHostFragment
+        val navBottomView: BottomNavigationView = findViewById(R.id.BottomNavigationView)
+        val navController = navHostFragment.navController
+        navBottomView.setupWithNavController(navController)
+
         val dataManager = DataManager()
 
 
@@ -45,28 +51,31 @@ class MainActivity : AppCompatActivity() {
         val isFirstRun = pref.getBoolean("first",true)
         val editor = pref.edit()
 
-        if(isFirstRun){
+        if(isFirstRun || true){
             val serviceIntent = Intent(this, RebootService::class.java)
             startService(serviceIntent)
-            editor.putBoolean("first",false)
-            editor.apply()
+            navController.navigate(R.id.action_navigate_to_welcome_Fragment)
+
+//            editor.putBoolean("first",false)
+//            editor.apply()
+            Log.i("sharepref", pref.getBoolean("first",true).toString())
         }
 
 
-
-        if (!dataManager.hasUsagePermissionGranted(this)) {
-            dataManager.requestUsagePermission(this)
-        }
-
-        if(!dataManager.isNotificationAccessGranted(this)){
-            dataManager.requestNotificationAccess(this)
-        }
-
-        val permission = Manifest.permission.SYSTEM_ALERT_WINDOW
-        if (!Settings.canDrawOverlays(this)) {
-            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + this.packageName))
-            startActivityForResult(intent, 123)
-        }
+//
+//        if (!dataManager.hasUsagePermissionGranted(this)) {
+//            dataManager.requestUsagePermission(this)
+//        }
+//
+//        if(!dataManager.isNotificationAccessGranted(this)){
+//            dataManager.requestNotificationAccess(this)
+//        }
+//
+//        val permission = Manifest.permission.SYSTEM_ALERT_WINDOW
+//        if (!Settings.canDrawOverlays(this)) {
+//            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + this.packageName))
+//            startActivityForResult(intent, 123)
+//        }
 
 
         val lifecycleOwner: LifecycleOwner = this
@@ -86,11 +95,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.myNavHostFragment) as NavHostFragment
-        val navBottomView: BottomNavigationView = findViewById(R.id.BottomNavigationView)
-        val navController = navHostFragment.navController
-        navBottomView.setupWithNavController(navController)
+
 
         setupBottomNav()
     }

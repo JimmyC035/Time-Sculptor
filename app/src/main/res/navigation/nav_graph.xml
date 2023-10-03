@@ -35,6 +35,12 @@
         app:popUpToInclusive="true" />
 
     <action
+        android:id="@+id/action_navigate_to_welcome_Fragment"
+        app:destination="@id/welcomeFragment"
+        app:popUpTo="@id/nav_graph"
+        app:popUpToInclusive="true" />
+
+    <action
         android:id="@+id/action_navigate_to_pomodoro_Fragment"
         app:destination="@id/pomodoroFragment"
         app:popUpTo="@id/nav_graph"
@@ -80,6 +86,10 @@
         android:id="@+id/bottomSheetDialogFragment"
         android:name="com.example.timesculptor.history.BottomSheetDialogFragment"
         android:label="BottomSheetDialogFragment" />
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="com.example.timesculptor.welcome.WelcomeFragment"
+        android:label="WelcomeFragment" />
 
 
 </navigation>

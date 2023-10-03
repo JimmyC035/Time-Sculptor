@@ -160,9 +160,11 @@ dependencies {
 
 //    jetpack compose
     implementation "androidx.compose.ui:ui:1.0.5"
+    implementation "androidx.compose.ui:ui-tooling:1.0.5"
     implementation "androidx.compose.foundation:foundation:1.0.5"
     implementation "androidx.compose.material:material:1.0.5"
     implementation "androidx.compose.runtime:runtime:1.0.5"
+    implementation "androidx.compose.animation:animation:1.0.5"
     implementation "com.google.accompanist:accompanist-drawablepainter:0.28.0" //0.28.0
     implementation "androidx.compose.material3:material3:1.0.5"
 
@@ -179,6 +181,10 @@ dependencies {
 
     //MPAndroid
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+
+
+
 
 
 

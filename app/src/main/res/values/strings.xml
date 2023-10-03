@@ -7,5 +7,18 @@
     <string name="service_name">NotificationListener</string>
     <string name="setting">Setting</string>
     <string name="start">Start</string>
+    <string name="Intro_permission">Enable access permission for Time Sculptor</string>
+    <string name="usage_access">Usage access</string>
+    <string name="usage_permission">Time Sculptor requires usage data to analyze screen time.
+        Please grant access.</string>
+    <string name="overlay_permission">Show on top of other apps</string>
+    <string name="overlay_permission_content">Time Sculptor requires overlay permission to securely lock and show focus progress on your device.</string>
+    <string name="notification_permission">Notification Permission</string>
+    <string name="notification_permission_content">Time Sculptor will provide daily usage summaries and maintain a service for live tracking during timer use.</string>
+    <string name="get_started">Get Started</string>
+    <string name="welcome_to">Welcome to</string>
+    <string name="time_sculptor">Time Sculptor</string>
+    <string name="monitor_and_manage_your">Monitor and manage your</string>
+    <string name="screen_time">Screen Time</string>
 
 </resources>

@@ -9,20 +9,28 @@ import android.os.Build
 import android.os.CountDownTimer
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.LifecycleCoroutineScope
 import com.example.timesculptor.R
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+
+private  const val DEFAULT_TIME = 10000L
 
 class TimerService : Service() {
     companion object {
-        val timeLeftFlow = MutableStateFlow(60000L)
-        val totalTime = MutableStateFlow(60000L)
+        val timeLeftFlow = MutableStateFlow(DEFAULT_TIME)
+        val totalTime = MutableStateFlow(DEFAULT_TIME)
     }
-    var timerCount:CountDownTimer? = null
+    private var timerCount:CountDownTimer? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when(intent?.action){
             "START_TIMER" -> startTimer(intent)
             "PAUSE_TIMER" -> pauseTimer(intent)
+            "RESUME" -> resumeTimer(intent)
+            "CANCEL_TIMER" -> cancelTimer(intent)
         }
 
         return START_NOT_STICKY
@@ -35,9 +43,20 @@ class TimerService : Service() {
         startCountdownTimer()
     }
 
-    fun pauseTimer(intent: Intent?){
+    private fun resumeTimer(intent: Intent?){
+        timeLeftFlow.value = intent?.getLongExtra("TIME_LEFT_IN_MILLIS", 60000L) ?: 60000L
+        startForegroundNotification()
+        startCountdownTimer()
+    }
+
+    private fun pauseTimer(intent: Intent?){
 //        timeLeftFlow.value = intent?.getLongExtra("TIME_LEFT_IN_MILLIS", 0) ?: 0
 //        totalTime.value = intent?.getLongExtra("TIME_LEFT_IN_MILLIS", 0) ?: 0
+        stopService()
+        pause()
+    }
+    private fun cancelTimer(intent: Intent?){
+        timeLeftFlow.value = DEFAULT_TIME //set to default
         stopService()
         pause()
     }
@@ -74,8 +93,30 @@ class TimerService : Service() {
             }
 
             override fun onFinish() {
-                stopService()
+               val notificationManager =
+                    applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
+                val channel = NotificationChannel(
+                    "Time_up",
+                    "Time's Up",
+                    NotificationManager.IMPORTANCE_HIGH
+                )
+                notificationManager.createNotificationChannel(channel)
+
+                val notificationBuilder =
+                    NotificationCompat.Builder(applicationContext, "Time_up")
+                        .setContentTitle("Time's up")
+                        .setContentText("Time's up take a five minutes break")
+                        .setSmallIcon(R.drawable.pomodoro)
+
+                val notification = notificationBuilder.build()
+                notificationManager.notify(8, notification)
+                GlobalScope.launch {
+                    delay(500L)
+                    timeLeftFlow.value = 10000L
+                    totalTime.value = 10000L
+                    stopService()
+                }
             }
         }.start()
     }
@@ -97,7 +138,7 @@ class TimerService : Service() {
         stopSelf()
     }
 
-    fun pause(){
+    private fun pause(){
         timerCount?.cancel()
     }
 }

@@ -24,6 +24,7 @@ class PomodoroViewModel @Inject constructor(
 
     private val _currentTime = MutableStateFlow(0L)
     val currentTime: StateFlow<Long> = _currentTime
+    var isPause = false
 
 
 
@@ -31,7 +32,21 @@ class PomodoroViewModel @Inject constructor(
         val intent = Intent(context, TimerService::class.java)
         intent.also {
             it.putExtra("TIME_LEFT_IN_MILLIS", _currentTime.value)
-            it.action = "START_TIMER"
+            if(isPause){
+                it.action = "RESUME"
+            }else{
+                it.action = "START_TIMER"
+                isPause = false
+            }
+        }
+        context.startService(intent)
+    }
+
+    fun cancelTimer(context: Context) {
+        val intent = Intent(context, TimerService::class.java)
+        intent.also {
+            it.putExtra("TIME_LEFT_IN_MILLIS", 10000L)
+            it.action = "CANCEL_TIMER"
         }
         context.startService(intent)
     }
@@ -42,17 +57,20 @@ class PomodoroViewModel @Inject constructor(
             it.putExtra("TIME_LEFT_IN_MILLIS", _currentTime.value)
             it.action = "PAUSE_TIMER"
         }
+        isPause = true
         context.startService(intent)
     }
     fun addTime(){
         _currentTime.value += 60000L
+        isPause = false
     }
 
     fun minusTime(){
-        _currentTime.value -= 300000L
+        _currentTime.value -= 60000L
+        isPause = false
     }
     fun resetTimer(){
-        _currentTime.value = 600000L
+        _currentTime.value = 10000L
     }
 
     private fun collectFlow(){

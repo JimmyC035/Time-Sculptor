@@ -1,37 +1,17 @@
 package com.example.timesculptor.today
 
-import android.app.usage.EventStats
-import android.app.usage.UsageStatsManager
 import android.content.Context
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import co.yml.charts.common.model.Point
-import co.yml.charts.ui.linechart.model.GridLines
-import co.yml.charts.ui.linechart.model.IntersectionPoint
-import co.yml.charts.ui.linechart.model.Line
-import co.yml.charts.ui.linechart.model.LineChartData
-import co.yml.charts.ui.linechart.model.LinePlotData
-import co.yml.charts.ui.linechart.model.LineStyle
-import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
-import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
-import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import com.example.timesculptor.R
-import com.example.timesculptor.databinding.FragmentHomeBinding
 import com.example.timesculptor.databinding.FragmentTodayBinding
-import com.example.timesculptor.homepage.HomeViewModel
 import com.example.timesculptor.util.AppUtil.toHoursMinutes
 import com.example.timesculptor.util.AppUtil.toHoursMinutesSeconds
 import dagger.hilt.android.AndroidEntryPoint
@@ -194,9 +174,22 @@ class TodayFragment : Fragment() {
           val pointsData = (0..23).map { hour ->
               Point(x = hour.toFloat(), y = usageMap.getOrDefault(hour, 0f))
           }
+
+          val yValuesList: List<Float> = pointsData.map {
+              val value = it.y / 60f
+              if (value > 1f) 1f else value
+          }
+          val xAxisScale = listOf("12AM", "1", "2", "3", "4", "5", "6AM", "7", "8", "9", "10", "11", "12PM", "1", "2", "3", "4", "5", "6PM", "7", "8", "9", "10", "11","12AM")
+
+
+
           lineChart.setContent {
-              LineChartUI(pointsData,2)
-//            BarCharUI()
+//              LineChartUI(pointsData,2)
+              CustomChart(
+                  barValue = yValuesList,
+                  xAxisScale = xAxisScale,
+                  total_amount = 60
+              )
           }
       }
 

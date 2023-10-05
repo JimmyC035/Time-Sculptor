@@ -14,6 +14,7 @@
     </data>
 
     <ScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#222627">
@@ -277,14 +278,18 @@
                 app:layout_constraintTop_toBottomOf="@id/permission3"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="16dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="32dp"
                 android:textColor="@color/white"
                 android:background="@drawable/button"
                 android:text="@string/get_started"
                 android:layout_marginEnd="16dp">
 
             </androidx.appcompat.widget.AppCompatButton>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/go"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

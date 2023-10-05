@@ -10,7 +10,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.widget.ScrollView
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -18,6 +24,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.timesculptor.R
 import com.example.timesculptor.data.source.DataManager
 import com.example.timesculptor.databinding.Intro3FragmentBinding
+import com.example.timesculptor.util.AppUtil.scrollToBottom
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -45,6 +52,63 @@ class Intro3Fragment : Fragment() {
         val pref = requireContext().getSharedPreferences("my_setting", Context.MODE_PRIVATE)
         val isFirstRun = pref.getBoolean("first",true)
         val editor = pref.edit()
+        val scrollView = binding.scrollView
+
+        val permission1 = binding.permission1
+        val permission2 = binding.permission2
+        val permission3 = binding.permission3
+        permission2.visibility = GONE
+        permission3.visibility = GONE
+        go.visibility = GONE
+
+
+        val fadeIn1 = AnimationUtils.loadAnimation(context, R.anim.fade_in)
+        val fadeIn2 = AnimationUtils.loadAnimation(context, R.anim.fade_in)
+        val fadeIn3 = AnimationUtils.loadAnimation(context, R.anim.fade_in)
+
+        fadeIn1.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation?) {}
+
+            override fun onAnimationEnd(animation: Animation?) {
+                permission2.visibility = VISIBLE
+                permission2.startAnimation(fadeIn2)
+            }
+
+            override fun onAnimationRepeat(animation: Animation?) {}
+        })
+
+        fadeIn2.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation?) {}
+
+            override fun onAnimationEnd(animation: Animation?) {
+                permission3.visibility = VISIBLE
+                permission3.startAnimation(fadeIn3)
+            }
+
+            override fun onAnimationRepeat(animation: Animation?) {}
+        })
+
+        fadeIn3.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation?) {}
+
+            override fun onAnimationEnd(animation: Animation?) {
+               go.visibility = VISIBLE
+                scrollView.scrollToBottom()
+
+            }
+
+            override fun onAnimationRepeat(animation: Animation?) {}
+        })
+
+
+
+
+        permission1.startAnimation(fadeIn1)
+
+
+
+
+
         usagePermission.setOnClickListener{
             Log.i("userPermission","clicked!")
             if (!dataManager.hasUsagePermissionGranted(requireContext()) ||true) {

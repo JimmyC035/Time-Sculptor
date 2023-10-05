@@ -2,11 +2,17 @@ package com.example.timesculptor.today
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import co.yml.charts.common.model.Point
@@ -16,6 +22,7 @@ import com.example.timesculptor.util.AppUtil.toHoursMinutes
 import com.example.timesculptor.util.AppUtil.toHoursMinutesSeconds
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import org.jetbrains.annotations.VisibleForTesting
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -51,6 +58,46 @@ class TodayFragment : Fragment() {
         val goalAndUsage = binding.goalUsage
         val goalPickUP = binding.pickUpGoal
         val lineChart = binding.lineChart
+        val barChart = binding.barChart
+        val mostUsedCard = binding.mostUsedCardview
+        val pickUpCard = binding.pickUps
+        val notificationCard = binding.notificationCard
+        val goalAndPickUpCard = binding.goalAndPickUp
+        notificationCard.visibility = GONE
+        pickUpCard.visibility = GONE
+        val slideInLeft = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_left)
+        val slideInRight = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_right)
+        val slideInTop = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_top)
+        val slideInLeftFast = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_left_fast)
+        val slideInRightFast = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_right_fast)
+
+        val animationDuration = 900L
+
+        mostUsedCard.startAnimation(slideInLeft)
+        goalAndPickUpCard.startAnimation(slideInRight)
+        barChart.startAnimation(slideInTop)
+
+        slideInLeft.setAnimationListener(object :Animation.AnimationListener{
+            override fun onAnimationStart(animation: Animation?) {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    notificationCard.visibility = VISIBLE
+                    pickUpCard.visibility = VISIBLE
+                    notificationCard.startAnimation(slideInRightFast)
+                    pickUpCard.startAnimation(slideInLeftFast)
+                }, animationDuration / 2)
+            }
+
+            override fun onAnimationEnd(animation: Animation?) {
+               Log.i("animation", "end")
+            }
+
+            override fun onAnimationRepeat(animation: Animation?) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+
 
 
         //get total time

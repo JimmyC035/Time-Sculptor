@@ -5,6 +5,8 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.util.Log
+import android.widget.ScrollView
+import androidx.core.view.children
 import com.example.timesculptor.R
 import java.util.Calendar
 import java.util.Locale
@@ -226,6 +228,19 @@ object AppUtil {
         val minutes = (totalSeconds % 3600) / 60
         val seconds = totalSeconds % 60
         return String.format("%02d : %02d", minutes, seconds)
+    }
+
+    fun ScrollView.scrollToBottom() {
+        val lastChild = children.lastOrNull() ?: return
+        val bottom = lastChild.bottom + paddingBottom
+        val currentY = height + scrollY
+        val alreadyAtBottom = bottom <= currentY
+        if (!alreadyAtBottom) {
+            val delta = bottom - currentY
+            smoothScrollBy(0, delta)
+        } else {
+            // already at bottom, do nothing
+        }
     }
 
     fun Int.toMonthAbbreviation(): String {

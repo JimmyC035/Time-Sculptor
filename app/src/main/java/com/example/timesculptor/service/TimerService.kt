@@ -11,6 +11,7 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.example.timesculptor.R
+import com.example.timesculptor.util.AppUtil.toMinutesSeconds
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +23,7 @@ class TimerService : Service() {
     companion object {
         val timeLeftFlow = MutableStateFlow(DEFAULT_TIME)
         val totalTime = MutableStateFlow(DEFAULT_TIME)
+        val isTimerRunningFlow = MutableStateFlow(false)
     }
     private var timerCount:CountDownTimer? = null
 
@@ -38,7 +40,9 @@ class TimerService : Service() {
 
     private fun startTimer(intent: Intent?){
         timeLeftFlow.value = intent?.getLongExtra("TIME_LEFT_IN_MILLIS", 60000L) ?: 60000L
+        totalTime.value = 0L
         totalTime.value = intent?.getLongExtra("TIME_LEFT_IN_MILLIS", 60000L) ?: 60000L
+//        isTimerRunningFlow.value = true
         startForegroundNotification()
         startCountdownTimer()
     }
@@ -46,17 +50,22 @@ class TimerService : Service() {
     private fun resumeTimer(intent: Intent?){
         timeLeftFlow.value = intent?.getLongExtra("TIME_LEFT_IN_MILLIS", 60000L) ?: 60000L
         startForegroundNotification()
+//        isTimerRunningFlow.value = true
         startCountdownTimer()
     }
 
     private fun pauseTimer(intent: Intent?){
 //        timeLeftFlow.value = intent?.getLongExtra("TIME_LEFT_IN_MILLIS", 0) ?: 0
 //        totalTime.value = intent?.getLongExtra("TIME_LEFT_IN_MILLIS", 0) ?: 0
+//        isTimerRunningFlow.value = false
         stopService()
         pause()
     }
     private fun cancelTimer(intent: Intent?){
         timeLeftFlow.value = DEFAULT_TIME //set to default
+        totalTime.value = 0L
+        totalTime.value = DEFAULT_TIME
+//        isTimerRunningFlow.value = false
         stopService()
         pause()
     }
@@ -76,7 +85,7 @@ class TimerService : Service() {
 
         val notification = NotificationCompat.Builder(this, notificationChannelId)
             .setContentTitle("Timer Running")
-            .setContentText("Time left: ${timeLeftFlow.value}")
+            .setContentText("Time left: ${timeLeftFlow.value.toMinutesSeconds()}")
             .setSmallIcon(R.drawable.pomodoro)
             .build()
 

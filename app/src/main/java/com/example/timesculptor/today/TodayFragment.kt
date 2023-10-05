@@ -65,8 +65,10 @@ class TodayFragment : Fragment() {
         val mostUsed = viewModel.getMostUsedApp(requireContext())
 
         //set most used app icon
-        val drawables = viewModel.getAppIcon(requireContext(),mostUsed.mPackageName)
-        mostUsedIcon.setImageDrawable(drawables)
+        if(mostUsed.mPackageName != ""){
+            val drawables = viewModel.getAppIcon(requireContext(),mostUsed.mPackageName)
+            mostUsedIcon.setImageDrawable(drawables)
+        }
 
         mostUsedTime.text = mostUsed.mUsageTime.toHoursMinutesSeconds()
 
@@ -107,7 +109,7 @@ class TodayFragment : Fragment() {
 
 
 
-        viewModel.getUsage(requireContext())
+//        viewModel.getUsage(requireContext())
         Log.i("goal",viewModel.totalTime.value.toString())
         val percentage:Float = viewModel.totalTime.value.toFloat() / goal.toFloat()
         val timeLeft = goal - viewModel.totalTime.value

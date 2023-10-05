@@ -50,6 +50,8 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.viewModels
 import com.example.timesculptor.R
 import com.example.timesculptor.service.FloatingWindowService
+import com.example.timesculptor.service.TimerService
+import com.example.timesculptor.service.TimerService.Companion.isTimerRunningFlow
 import com.example.timesculptor.service.TimerService.Companion.timeLeftFlow
 import com.example.timesculptor.service.TimerService.Companion.totalTime
 import dagger.hilt.android.AndroidEntryPoint
@@ -149,7 +151,7 @@ class PomodoroFragment : Fragment() {
                                     Canvas(modifier = modifier) {
                                         drawArc(
                                             color = inactiveBarColor,
-                                            startAngle = 0f,
+                                            startAngle = -90f,
                                             sweepAngle = 360f,
                                             useCenter = false,
                                             size = Size(
@@ -163,7 +165,7 @@ class PomodoroFragment : Fragment() {
                                         )
                                         drawArc(
                                             color = activeBarColor,
-                                            startAngle = 0f,
+                                            startAngle = -90f,
                                             sweepAngle = 360f * value,
                                             useCenter = false,
                                             size = Size(

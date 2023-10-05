@@ -99,7 +99,7 @@ fun CustomChart(
             barValue.forEach {
                 Box(
                     modifier = Modifier
-                        .padding(start = barGraphWidth, bottom = 5.dp)
+                        .padding(start = 5.dp, bottom = 5.dp)
                         .clip(CircleShape)
                         .width(barGraphWidth)
                         .fillMaxHeight(it)

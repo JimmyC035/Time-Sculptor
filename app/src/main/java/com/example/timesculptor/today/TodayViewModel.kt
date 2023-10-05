@@ -81,7 +81,11 @@ class TodayViewModel @Inject constructor(
 
     //out of bound if no
     fun getMostUsedApp(context: Context):AppItem{
-        return timeSculptorRepository.getApps(context,0)[0]
+        return try {
+            timeSculptorRepository.getApps(context,0)[0]
+        }catch (e :Exception){
+            AppItem()
+        }
     }
 
     fun getHomePageData(context: Context):List<AppItem>{

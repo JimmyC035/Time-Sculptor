@@ -18,4 +18,7 @@ class UserSettingViewModel@Inject constructor(
         Log.i("work in setting","called")
     }
 
+
+
+
 }

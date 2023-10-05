@@ -20,5 +20,7 @@
     <string name="time_sculptor">Time Sculptor</string>
     <string name="monitor_and_manage_your">Monitor and manage your</string>
     <string name="screen_time">Screen Time</string>
+    <string name="retained_on_this_device">Retained on this device</string>
+    <string name="your_information_remains_secure_and_is_solely">Your information remains secure and is solely</string>
 
 </resources>

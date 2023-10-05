@@ -221,6 +221,13 @@ object AppUtil {
         return timeString
     }
 
+    fun Long.toMinutesSeconds(): String {
+        val totalSeconds = this / 1000
+        val minutes = (totalSeconds % 3600) / 60
+        val seconds = totalSeconds % 60
+        return String.format("%02d : %02d", minutes, seconds)
+    }
+
     fun Int.toMonthAbbreviation(): String {
         return when (this) {
             0 -> "JAN"

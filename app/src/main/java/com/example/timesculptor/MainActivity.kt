@@ -19,6 +19,7 @@ import android.provider.Settings
 import android.util.Log
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.ui.NavigationUI.navigateUp
 import androidx.work.WorkManager
 import com.example.timesculptor.service.FloatingWindowService
 import com.example.timesculptor.service.RebootService
@@ -43,39 +44,35 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
         navBottomView.setupWithNavController(navController)
 
-        val dataManager = DataManager()
+
+        if(intent != null){
+//            val fragmentToLoad = intent.getStringExtra("LOAD_FRAGMENT")
+//            if (fragmentToLoad == "pomodoro" && savedInstanceState == null) {
+//                navController.navigate(R.id.action_navigate_to_pomodoro_Fragment)
+//            }
+        }
 
 
         //start service when first launch
         val pref = this.getSharedPreferences("my_setting", Context.MODE_PRIVATE)
         val isFirstRun = pref.getBoolean("first",true)
+        val isFirstLaunch = pref.getBoolean("launch",false)
         val editor = pref.edit()
 
-        if(isFirstRun || true){
+        if(isFirstLaunch){
             val serviceIntent = Intent(this, RebootService::class.java)
             startService(serviceIntent)
-            navController.navigate(R.id.action_navigate_to_welcome_Fragment)
 
-//            editor.putBoolean("first",false)
-//            editor.apply()
-            Log.i("sharepref", pref.getBoolean("first",true).toString())
+            editor.putBoolean("launch",false)
+            editor.apply()
         }
 
+        if(isFirstRun || true){
 
-//
-//        if (!dataManager.hasUsagePermissionGranted(this)) {
-//            dataManager.requestUsagePermission(this)
-//        }
-//
-//        if(!dataManager.isNotificationAccessGranted(this)){
-//            dataManager.requestNotificationAccess(this)
-//        }
-//
-//        val permission = Manifest.permission.SYSTEM_ALERT_WINDOW
-//        if (!Settings.canDrawOverlays(this)) {
-//            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + this.packageName))
-//            startActivityForResult(intent, 123)
-//        }
+            navController.navigate(R.id.action_navigate_to_welcome_Fragment)
+
+            Log.i("share pref", pref.getBoolean("first",true).toString())
+        }
 
 
         val lifecycleOwner: LifecycleOwner = this
@@ -88,13 +85,6 @@ class MainActivity : AppCompatActivity() {
 
                 }
             }
-
-
-
-
-
-
-
 
 
         setupBottomNav()
@@ -130,6 +120,7 @@ class MainActivity : AppCompatActivity() {
             false
         }
     }
+
 
 
 }

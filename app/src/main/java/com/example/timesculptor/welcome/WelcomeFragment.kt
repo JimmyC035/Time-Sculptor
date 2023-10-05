@@ -13,6 +13,7 @@ import com.example.timesculptor.R
 import com.example.timesculptor.databinding.FragmentUserSettingBinding
 import com.example.timesculptor.databinding.FragmentWelcomeBinding
 import com.example.timesculptor.setting.UserSettingViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -36,6 +37,9 @@ class WelcomeFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
         val viewPager  = binding.viewPager2
+        val bottomNavigationView: BottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.BottomNavigationView)
+        bottomNavigationView.visibility = View.GONE
+
 
         viewPager.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount() = 3
@@ -57,6 +61,12 @@ class WelcomeFragment : Fragment() {
 
 
         return binding.root
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        val bottomNavigationView: BottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.BottomNavigationView)
+        bottomNavigationView.visibility = View.VISIBLE
     }
 
 }

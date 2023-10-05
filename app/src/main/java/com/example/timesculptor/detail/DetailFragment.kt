@@ -18,7 +18,10 @@ import com.example.timesculptor.databinding.FragmentDetailBinding
 import com.example.timesculptor.databinding.FragmentPomodoroBinding
 import com.example.timesculptor.pomodoro.PomodoroViewModel
 import com.example.timesculptor.util.AppUtil
+import com.example.timesculptor.util.AppUtil.getPackageIcon
+import com.example.timesculptor.util.AppUtil.parsePackageName
 import com.example.timesculptor.util.SortEnum
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
@@ -40,6 +43,7 @@ class DetailFragment : Fragment() {
         val binding = FragmentDetailBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        val appIcon = binding.appIcon
         val chart = binding.lineChart
         val packageName = DetailFragmentArgs.fromBundle(requireArguments()).packageName
         Log.i("navigate?", packageName)
@@ -47,7 +51,9 @@ class DetailFragment : Fragment() {
         Log.i("session", sessionData.toString())
 
         val entries = mutableListOf<BarEntry>()
-
+        val drawables = getPackageIcon(requireContext(),packageName)
+        appIcon.setImageDrawable(drawables)
+        binding.appName.text = parsePackageName(requireContext().packageManager,packageName)
 
 
         val dataMap = mutableMapOf<Int, Float>().apply {
@@ -73,11 +79,22 @@ class DetailFragment : Fragment() {
         }
 
         val barDataSet = BarDataSet(entries, "Usage Time")
+        barDataSet.setDrawValues(false)
         val barData = BarData(barDataSet)
         val xAxis = chart.xAxis
         val yAxis = chart.axisLeft
+        chart.legend.isEnabled = false
+        chart.description.isEnabled = false
         xAxis.textColor = Color.WHITE
         yAxis.textColor = Color.WHITE
+        xAxis.setDrawGridLines(false)
+        xAxis.setDrawLabels(true)
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+        yAxis.axisMaximum = 60f
+        chart.axisRight.isEnabled = false
+
+
+
 
         chart.data = barData
         chart.invalidate() // refresh chart

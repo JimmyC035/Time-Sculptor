@@ -28,7 +28,7 @@ class UserSettingFragment : Fragment() {
         binding.viewModel = viewModel
         val notificationTimePickBtn = binding.button2
         val notificationTime = binding.textView2
-        val goalPicker = binding.setGoal
+//        val goalPicker = binding.setGoal
         val goalPickerBtn = binding.button
         val pref = requireContext().getSharedPreferences("my_setting", Context.MODE_PRIVATE)
         val editor = pref.edit()
@@ -44,8 +44,8 @@ class UserSettingFragment : Fragment() {
             val hour = c.get(Calendar.HOUR_OF_DAY)
             val minute = c.get(Calendar.MINUTE)
 
-            // on below line we are initializing
-            // our Time Picker Dialog
+
+            // initialize our Time Picker Dialog
             val timePickerDialog = TimePickerDialog(
                 requireContext(),
                 { _, hourOfDay, minute ->
@@ -67,17 +67,35 @@ class UserSettingFragment : Fragment() {
         }
 
 
-        goalPickerBtn.setOnClickListener {
+        val hourPicker = binding.timePickHour
+        hourPicker.minValue = 0
+        hourPicker.maxValue = 24
+        hourPicker.value = 0
 
-            val goalTime = goalPicker.text.toString().toLong()
-            editor.putLong("goal", goalTime)
+
+        val minutePicker =  binding.timePickMin
+        minutePicker.minValue = 0
+        minutePicker.maxValue = 59
+        minutePicker.value = 30
+
+
+
+        fun saveToSharedPreferences() {
+            val selectedHour = hourPicker.value
+            val selectedMinute = minutePicker.value
+
+            val selectedToLong = (selectedHour.toLong() * 1000 * 60 * 60) + (selectedMinute.toLong() * 1000 * 60)
+
+            editor.putLong("goal", selectedToLong)
+
             editor.apply()
+        }
 
 
-            val goal = pref.getLong("goal", 0)
-            val notiTime = pref.getInt("notification_hour", 0)
-            Log.i("goal", "goal = $goal")
-            Log.i("goal", "notification time  = $notiTime")
+
+
+        goalPickerBtn.setOnClickListener {
+            saveToSharedPreferences()
         }
 
 

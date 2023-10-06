@@ -30,9 +30,9 @@ class TimerService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when(intent?.action){
             "START_TIMER" -> startTimer(intent)
-            "PAUSE_TIMER" -> pauseTimer(intent)
+            "PAUSE_TIMER" -> pauseTimer()
             "RESUME" -> resumeTimer(intent)
-            "CANCEL_TIMER" -> cancelTimer(intent)
+            "CANCEL_TIMER" -> cancelTimer()
         }
 
         return START_NOT_STICKY
@@ -42,7 +42,7 @@ class TimerService : Service() {
         timeLeftFlow.value = intent?.getLongExtra("TIME_LEFT_IN_MILLIS", 60000L) ?: 60000L
         totalTime.value = 0L
         totalTime.value = intent?.getLongExtra("TIME_LEFT_IN_MILLIS", 60000L) ?: 60000L
-//        isTimerRunningFlow.value = true
+        isTimerRunningFlow.value = true
         startForegroundNotification()
         startCountdownTimer()
     }
@@ -50,22 +50,20 @@ class TimerService : Service() {
     private fun resumeTimer(intent: Intent?){
         timeLeftFlow.value = intent?.getLongExtra("TIME_LEFT_IN_MILLIS", 60000L) ?: 60000L
         startForegroundNotification()
-//        isTimerRunningFlow.value = true
+        isTimerRunningFlow.value = true
         startCountdownTimer()
     }
 
-    private fun pauseTimer(intent: Intent?){
-//        timeLeftFlow.value = intent?.getLongExtra("TIME_LEFT_IN_MILLIS", 0) ?: 0
-//        totalTime.value = intent?.getLongExtra("TIME_LEFT_IN_MILLIS", 0) ?: 0
-//        isTimerRunningFlow.value = false
+    private fun pauseTimer(){
+        isTimerRunningFlow.value = false
         stopService()
         pause()
     }
-    private fun cancelTimer(intent: Intent?){
+    private fun cancelTimer(){
         timeLeftFlow.value = DEFAULT_TIME //set to default
         totalTime.value = 0L
         totalTime.value = DEFAULT_TIME
-//        isTimerRunningFlow.value = false
+        isTimerRunningFlow.value = false
         stopService()
         pause()
     }

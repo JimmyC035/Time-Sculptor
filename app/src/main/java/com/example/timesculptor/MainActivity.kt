@@ -46,10 +46,10 @@ class MainActivity : AppCompatActivity() {
 
 
         if(intent != null){
-//            val fragmentToLoad = intent.getStringExtra("LOAD_FRAGMENT")
-//            if (fragmentToLoad == "pomodoro" && savedInstanceState == null) {
-//                navController.navigate(R.id.action_navigate_to_pomodoro_Fragment)
-//            }
+            val fragmentToLoad = intent.getStringExtra("LOAD_FRAGMENT")
+            if (fragmentToLoad == "pomodoro" && savedInstanceState == null) {
+                navController.navigate(R.id.action_navigate_to_pomodoro_Fragment)
+            }
         }
 
 
@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
             editor.apply()
         }
 
-        if(isFirstRun ||true){
+        if(isFirstRun || true){
 
             navController.navigate(R.id.action_navigate_to_welcome_Fragment)
 

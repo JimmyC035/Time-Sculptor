@@ -48,6 +48,9 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.timesculptor.R
 import com.example.timesculptor.service.FloatingWindowService
 import com.example.timesculptor.service.TimerService
@@ -55,6 +58,8 @@ import com.example.timesculptor.service.TimerService.Companion.isTimerRunningFlo
 import com.example.timesculptor.service.TimerService.Companion.timeLeftFlow
 import com.example.timesculptor.service.TimerService.Companion.totalTime
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import kotlin.math.sqrt
 
 @AndroidEntryPoint
@@ -70,6 +75,15 @@ class PomodoroFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                isTimerRunningFlow.collectLatest {
+                    isTimerRunning = it
+                }
+            }
+        }
+
         return ComposeView(requireContext()).apply {
 
             setContent {
@@ -103,9 +117,7 @@ class PomodoroFragment : Fragment() {
                                     mutableStateOf(initialValue)
                                 }
 
-                                var isRunning by remember {
-                                    mutableStateOf(isTimerRunning)
-                                }
+                                var isRunning = isTimerRunningFlow.collectAsState().value
                                 val currentTime = timeLeftFlow.collectAsState().value
 
 
@@ -127,8 +139,6 @@ class PomodoroFragment : Fragment() {
                                         Log.i("launnched", "$currentTime | $totalTime")
                                     }
                                     if (currentTime <= 100L) {
-                                        isRunning = false
-                                        isTimerRunning = false
                                         value = 1f
                                     }
 
@@ -288,8 +298,6 @@ class PomodoroFragment : Fragment() {
                                             viewModel.cancelTimer(requireContext())
                                             viewModel.resetTimer()
                                             value = 1f
-                                            isRunning = false
-                                            isTimerRunning = false
                                         },
                                         modifier = Modifier
                                             .size(48.dp)
@@ -313,13 +321,8 @@ class PomodoroFragment : Fragment() {
                                     Button(
                                         onClick = {
                                             if (isRunning) {
-                                                isRunning = false
-                                                isTimerRunning = false
                                                 viewModel.pauseTimer(requireContext())
-
                                             } else {
-                                                isRunning = true
-                                                isTimerRunning = true
                                                 viewModel.startTimer(requireContext())
                                             }
 
@@ -358,8 +361,6 @@ class PomodoroFragment : Fragment() {
                                             viewModel.resetTimer()
                                             viewModel.cancelTimer(requireContext())
                                             value = 1f
-                                            isRunning = false
-                                            isTimerRunning = false
                                         },
                                         modifier = Modifier
                                             .size(48.dp)

@@ -152,7 +152,8 @@ class TodayFragment : Fragment() {
         }
 
         val pref = requireContext().getSharedPreferences("my_setting", Context.MODE_PRIVATE)
-        val goal = pref.getLong("goal",2400000)
+        val goal = pref.getLong("goal",2400000L)
+        val pickUp = pref.getInt("pickup",60)
 
 
 
@@ -164,7 +165,7 @@ class TodayFragment : Fragment() {
         percentageForPickup = if(viewModel.pickUpCount.value == null){
             0f
         } else {
-            viewModel.pickUpCount.value!!.toFloat().div(60f)
+            viewModel.pickUpCount.value!!.toFloat().div(pickUp.toFloat())
         }
 
 
@@ -177,7 +178,7 @@ class TodayFragment : Fragment() {
 
         goalAndUsage.text = "${viewModel.totalTime.value.toHoursMinutes()}" + " /" + goal.toHoursMinutes()
 
-        goalPickUP.text = viewModel.pickUpCount.value.toString() + " /60"
+        goalPickUP.text = viewModel.pickUpCount.value.toString() + " / $pickUp"
 
 
 
@@ -233,7 +234,6 @@ class TodayFragment : Fragment() {
 
 
           lineChart.setContent {
-//              LineChartUI(pointsData,2)
               CustomChart(
                   barValue = yValuesList,
                   xAxisScale = xAxisScale,

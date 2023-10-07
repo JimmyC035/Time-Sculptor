@@ -1,16 +1,19 @@
 package com.example.timesculptor.setting
 
+import android.app.AlertDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
-import android.content.SharedPreferences
 import android.util.Log
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import com.example.timesculptor.R
 import com.example.timesculptor.databinding.FragmentUserSettingBinding
+import com.example.timesculptor.databinding.GoalPickerBinding
+import com.example.timesculptor.databinding.PickUpGoalSettingBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 
@@ -18,7 +21,6 @@ import java.util.Calendar
 class UserSettingFragment : Fragment() {
 
     private val viewModel: UserSettingViewModel by viewModels()
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -26,16 +28,38 @@ class UserSettingFragment : Fragment() {
         val binding = FragmentUserSettingBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
-        val notificationTimePickBtn = binding.button2
-        val notificationTime = binding.textView2
-//        val goalPicker = binding.setGoal
-        val goalPickerBtn = binding.button
+        val dailyReportSetting = binding.dailyReportSetting
+        val dailyReportResult = binding.dailyReportResult
+        val goalPickerBtn = binding.goalSetting
         val pref = requireContext().getSharedPreferences("my_setting", Context.MODE_PRIVATE)
         val editor = pref.edit()
 
+        val goalDialogView = GoalPickerBinding.inflate(inflater, container, false)
+        val hourPicker = goalDialogView.hourPicker
+        val minPicker = goalDialogView.minutePicker
+        hourPicker.minValue = 1
+        hourPicker.maxValue = 24
+        minPicker.minValue = 0
+        minPicker.maxValue = 59
+        val dialogUsage = AlertDialog.Builder(context)
+            .setView(goalDialogView.root)
+            .create()
+
+        val pickUpGoalSetting = binding.pickUpSetting
+        val pickUpGoalDialog = PickUpGoalSettingBinding.inflate(inflater,container,false)
+        val pickUpGoal = pickUpGoalDialog.pickUpPicker
+        pickUpGoal.minValue = 1
+        pickUpGoal.maxValue = 300
+        pickUpGoal.value = 60
+        val dialogPickUp = AlertDialog.Builder(context)
+            .setView(pickUpGoalDialog.root)
+            .create()
 
 
-        notificationTimePickBtn.setOnClickListener {
+
+
+
+        dailyReportSetting.setOnClickListener {
             // on below line we are getting
             // the instance of our calendar.
             val c = Calendar.getInstance()
@@ -50,7 +74,8 @@ class UserSettingFragment : Fragment() {
                 requireContext(),
                 { _, hourOfDay, minute ->
 
-                    notificationTime.text = "receive your daily report around $hourOfDay:$minute"
+                    dailyReportResult.text =
+                        "Your daily report will arrive around $hourOfDay:$minute"
                     editor.putInt("notification_hour", hourOfDay)
                     editor.putInt("notification_minute", minute)
                     editor.apply()
@@ -66,37 +91,43 @@ class UserSettingFragment : Fragment() {
             timePickerDialog.show()
         }
 
-
-        val hourPicker = binding.timePickHour
-        hourPicker.minValue = 0
-        hourPicker.maxValue = 24
-        hourPicker.value = 0
-
-
-        val minutePicker =  binding.timePickMin
-        minutePicker.minValue = 0
-        minutePicker.maxValue = 59
-        minutePicker.value = 30
-
-
-
-        fun saveToSharedPreferences() {
-            val selectedHour = hourPicker.value
-            val selectedMinute = minutePicker.value
-
-            val selectedToLong = (selectedHour.toLong() * 1000 * 60 * 60) + (selectedMinute.toLong() * 1000 * 60)
-
-            editor.putLong("goal", selectedToLong)
-
-            editor.apply()
-        }
-
-
-
-
         goalPickerBtn.setOnClickListener {
-            saveToSharedPreferences()
+            dialogUsage.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+            dialogUsage.show()
+
+            goalDialogView.confirmBtn.setOnClickListener {
+                val selectedHour = hourPicker.value
+                val selectedMinute = minPicker.value
+                val selectedToLong =
+                    (selectedHour.toLong() * 1000 * 60 * 60) + (selectedMinute.toLong() * 1000 * 60)
+                editor.putLong("goal", selectedToLong)
+                Log.i("goal setting", "$selectedToLong")
+                editor.apply()
+                dialogUsage.dismiss()
+            }
+
+
         }
+
+        pickUpGoalSetting.setOnClickListener {
+            dialogPickUp.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+            dialogPickUp.show()
+
+            pickUpGoalDialog.confirmBtn.setOnClickListener {
+               val pickUpGoal = pickUpGoal.value
+                editor.putInt("pickup", pickUpGoal)
+                Log.i("goal pick up setting", "$pickUpGoal")
+                editor.apply()
+                dialogPickUp.dismiss()
+            }
+        }
+
+
+
+
+
+
+
 
 
 

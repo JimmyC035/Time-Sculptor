@@ -33,7 +33,7 @@ class DbService : Service() {
             var dailyData = repo.getAppsForDB(applicationContext,latest!!)
             repo.insert(dailyData)
         }
-        return START_STICKY
+        return START_NOT_STICKY
     }
 
     override fun onBind(intent: Intent?): IBinder? {

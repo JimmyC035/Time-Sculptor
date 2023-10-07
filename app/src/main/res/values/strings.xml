@@ -22,5 +22,14 @@
     <string name="screen_time">Screen Time</string>
     <string name="retained_on_this_device">Retained on this device</string>
     <string name="your_information_remains_secure_and_is_solely">Your information remains secure and is solely</string>
+    <string name="daily_report_title">Daily Report</string>
+    <string name="daily_report_content">Pick a time for your daily app use summary</string>
+    <string name="setting_title">Settings</string>
+    <string name="minutes">Minutes</string>
+    <string name="hour">Hour</string>
+    <string name="set_goal">Set Goal</string>
+    <string name="daily_goal_setting_title">Choose your daily usage goal</string>
+    <string name="pick_up_times">Times</string>
+    <string name="pick_up_goal">Choose your daily pick ups</string>
 
 </resources>

@@ -63,12 +63,6 @@ interface AppDao {
     fun getItemsTillNow(startOfDay: Long, current: Long): List<AppItem>
 
 
-    /**
-     * When updating a row with a value already set in a column,
-     * replaces the old value with the new one.
-     *
-     * @param product: [Product]
-     */
     @Update
     fun update(AppUsageData: AppUsageData)
 }

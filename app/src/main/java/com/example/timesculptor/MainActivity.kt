@@ -62,12 +62,11 @@ class MainActivity : AppCompatActivity() {
         if(isFirstLaunch){
             val serviceIntent = Intent(this, RebootService::class.java)
             startService(serviceIntent)
-
             editor.putBoolean("launch",false)
             editor.apply()
         }
 
-        if(isFirstRun || true){
+        if(isFirstRun){
 
             navController.navigate(R.id.action_navigate_to_welcome_Fragment)
 

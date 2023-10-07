@@ -15,4 +15,6 @@
     <style name="MyWeekDayTextAppearance" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">#FFFFFF</item>
     </style>
+
+
 </resources>

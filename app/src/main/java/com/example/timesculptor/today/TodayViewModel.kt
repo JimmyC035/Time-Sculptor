@@ -152,6 +152,7 @@ class TodayViewModel @Inject constructor(
             if (eventStats.eventType == 18 && eventStats.firstTimeStamp >= beginTime && eventStats.lastTimeStamp <= endTime) {
                 printEventStatsInfo(eventStats)
             }
+            Log.i("bqt today","${_pickUpCount.value}")
         }
     }
     suspend fun getTillNow(startOfDay: Long, current: Long) {

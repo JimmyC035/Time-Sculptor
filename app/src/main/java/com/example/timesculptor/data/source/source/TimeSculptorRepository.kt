@@ -53,7 +53,6 @@ interface TimeSculptorRepository {
     @Query("SELECT SUM(usage_time) AS total_time FROM app_item WHERE event_time BETWEEN :startOfDay AND :endOfDay")
     suspend fun getTotalUsageForDate(startOfDay: Long, endOfDay: Long): Long
 
-
     //for work manager
     fun createAndEnqueueWorker(context: Context,hour:Int,min:Int)
 

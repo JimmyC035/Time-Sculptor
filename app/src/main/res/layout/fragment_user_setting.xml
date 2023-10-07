@@ -10,68 +10,287 @@
 
     </data>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#222627"
         tools:context=".setting.UserSettingFragment">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button2"
+        <TextView
+            android:id="@+id/setting_title"
             android:layout_width="wrap_content"
-            android:background="@drawable/button"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="Set Time"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/cabin"
+            android:text="@string/setting_title"
             android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textSize="32sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-        <TextView
-            android:id="@+id/textView2"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:text="Receive your report"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="150dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="@drawable/rectangle_2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/setting_title"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/daily_report_setting"
+                android:layout_width="0dp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginBottom="4dp"
+                android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/daily_report_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="@font/cabin"
+            android:text="@string/daily_report_title"
+            android:textStyle="bold"
             android:textColor="@color/white"
             android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@+id/button2"
-            app:layout_constraintEnd_toStartOf="@+id/button2"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/button2" />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/daily_report_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/button"
-            android:text="Set Goal"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="16dp"
+            android:textSize="14sp"
+            android:text="@string/daily_report_content"
             android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="@+id/time_pick_min"
-            app:layout_constraintStart_toStartOf="@+id/time_pick_hour"
-            app:layout_constraintTop_toBottomOf="@+id/time_pick_hour" />
-
-        <NumberPicker
-            android:id="@+id/time_pick_hour"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="100dp"
-            android:layout_marginTop="32dp"
+            android:fontFamily="@font/cabin"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+            app:layout_constraintTop_toBottomOf="@+id/daily_report_title" />
 
-        <NumberPicker
-            android:id="@+id/time_pick_min"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="32dp"
-            app:layout_constraintStart_toEndOf="@+id/time_pick_hour"
-            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+            <TextView
+                android:id="@+id/daily_report_result"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your daily report will arrive at xx:xx."
+                android:textColor="@color/white"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/cabin"
+                android:layout_marginStart="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/daily_report_content"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="#2C2C2C"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintTop_toBottomOf="@+id/daily_report_result"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintTop_toTopOf="@+id/daily_report_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:background="@drawable/baseline_arrow_forward_ios_24"/>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/goal_setting"
+                android:layout_width="0dp"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:layout_constraintTop_toBottomOf="@+id/daily_report_setting"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginBottom="4dp"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/goal_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:fontFamily="@font/cabin"
+                    android:text="Daily Usage Goal"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+
+                <TextView
+                    android:id="@+id/goal_content"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="16dp"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/cabin"
+                    android:text="Set up your usage goal"
+                    android:textColor="@color/white"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/goal_title" />
+
+                <TextView
+                    android:id="@+id/goal_result"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4h 30m per day"
+                    android:fontFamily="@font/cabin"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/goal_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="#2C2C2C"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintTop_toBottomOf="@+id/goal_result"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintTop_toTopOf="@+id/goal_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:background="@drawable/baseline_arrow_forward_ios_24"/>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/pick_up_setting"
+                android:layout_width="0dp"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:layout_constraintTop_toBottomOf="@+id/goal_setting"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginBottom="4dp"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/pick_up_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:fontFamily="@font/cabin"
+                    android:text="Daily Pick Ups Goal"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+
+                <TextView
+                    android:id="@+id/pick_up_content"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/cabin"
+                    android:layout_marginEnd="16dp"
+                    android:textSize="14sp"
+                    android:text="Set up your pick-ups goal"
+                    android:textColor="@color/white"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/pick_up_title" />
+
+                <TextView
+                    android:id="@+id/pick_up_result"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="60 times per day"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/cabin"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/pick_up_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="#2C2C2C"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintTop_toBottomOf="@+id/pick_up_result"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintTop_toTopOf="@+id/pick_up_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:background="@drawable/baseline_arrow_forward_ios_24"/>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ImageView
+                android:layout_width="300dp"
+                android:layout_height="200dp"
+                app:layout_constraintStart_toStartOf="parent"
+                android:background="@drawable/setting_cover"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/pick_up_setting"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </layout>

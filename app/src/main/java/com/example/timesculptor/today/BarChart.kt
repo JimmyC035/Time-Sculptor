@@ -1,6 +1,8 @@
 package com.example.timesculptor.today
 
+import android.graphics.DashPathEffect
 import android.widget.Toast
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,7 +13,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -24,14 +28,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.PaintingStyle
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import co.yml.charts.common.model.Point
-import com.example.timesculptor.util.Purple500
+import androidx.compose.ui.zIndex
+import com.example.timesculptor.util.tiffanyBlue
 
 @Composable
 fun CustomChart(
@@ -53,6 +60,20 @@ fun CustomChart(
         verticalArrangement = Arrangement.Top
     ) {
 
+        Box( modifier = Modifier
+            .height(1.dp)
+            .padding(start = 16.dp)
+            .padding(top = 26.dp),) {
+            DashedDivider()
+        }
+
+        Box( modifier = Modifier
+            .height(1.dp)
+            .padding(start = 16.dp)
+            .padding(top = 82.dp),) {
+            DashedDivider()
+        }
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -68,20 +89,26 @@ fun CustomChart(
                 contentAlignment = Alignment.BottomCenter
             ) {
                 Column(
-                    modifier = Modifier.fillMaxHeight(),
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(start = 16.dp)
+                        .padding(top = 8.dp),
                     verticalArrangement = Arrangement.Bottom
                 ) {
                     Text(text = total_amount.toString(),
-                    color = Color.Transparent)
+                        color = Color.White, fontSize = 12.sp)
                     Spacer(modifier = Modifier.fillMaxHeight())
                 }
 
                 Column(
-                    modifier = Modifier.fillMaxHeight(),
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(start = 16.dp)
+                        .padding(top = 8.dp),
                     verticalArrangement = Arrangement.Bottom
                 ) {
                     Text(text = (total_amount / 2).toString(),
-                        color = Color.Transparent)
+                        color = Color.White, fontSize = 12.sp)
                     Spacer(modifier = Modifier.fillMaxHeight(0.5f))
                 }
 
@@ -99,14 +126,20 @@ fun CustomChart(
             barValue.forEach {
                 Box(
                     modifier = Modifier
-                        .padding(start = 5.dp, bottom = 5.dp)
+                        .padding(start = 5.dp)
+                        .padding(bottom = 4.dp)
+                        .offset(y = 4.dp)
                         .clip(CircleShape)
                         .width(barGraphWidth)
                         .fillMaxHeight(it)
-                        .background(Purple500)
+                        .background(tiffanyBlue)
                         .clickable {
                             Toast
-                                .makeText(context, "${(it * 60f).toInt()} minutes", Toast.LENGTH_SHORT)
+                                .makeText(
+                                    context,
+                                    "${(it * 60f).toInt()} minutes",
+                                    Toast.LENGTH_SHORT
+                                )
                                 .show()
                         }
                 )
@@ -114,12 +147,15 @@ fun CustomChart(
 
         }
 
+
+
+
         // X-Axis Line
         Box(
             modifier = Modifier
                 .padding(start = scaleYAxisWidth)
                 .padding(end = 24.dp)
-                .padding(bottom = 8.dp)
+                .padding(bottom = 4.dp)
                 .fillMaxWidth()
                 .height(scaleLineWidth)
                 .background(Color.White)
@@ -128,7 +164,7 @@ fun CustomChart(
         // Scale X-Axis
         Row(
             modifier = Modifier
-                .padding(start = scaleYAxisWidth + barGraphWidth + scaleLineWidth)
+                .padding(start = scaleYAxisWidth  + scaleLineWidth)
                 .padding(end = 8.dp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(barGraphWidth)
@@ -150,4 +186,23 @@ fun CustomChart(
         }
     }
 }
+
+@Composable
+fun DashedDivider() {
+    val pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
+    Canvas(
+        Modifier
+            .fillMaxWidth()
+            .height(1.dp)
+    ) {
+
+        drawLine(
+            color = Color.White,
+            start = Offset(0f, 0f),
+            end = Offset(size.width, 0f),
+            pathEffect = pathEffect
+        )
+    }
+}
+
 

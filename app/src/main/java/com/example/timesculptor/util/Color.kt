@@ -25,5 +25,6 @@ val darkBlue = Color(0xFF027db9)
 val tiffanyBlue = Color(0xFF91d2de)
 val mint = Color(0xFFCAE9E0)
 val backgroundColor = Color(0xFF222627)
+val pantone = Color(0xFFf4d046)
 
 

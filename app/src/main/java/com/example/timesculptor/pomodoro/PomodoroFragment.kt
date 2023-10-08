@@ -57,6 +57,7 @@ import com.example.timesculptor.service.TimerService
 import com.example.timesculptor.service.TimerService.Companion.isTimerRunningFlow
 import com.example.timesculptor.service.TimerService.Companion.timeLeftFlow
 import com.example.timesculptor.service.TimerService.Companion.totalTime
+import com.example.timesculptor.util.AppConst.DEFAULT_TIME
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -139,6 +140,10 @@ class PomodoroFragment : Fragment() {
                                         Log.i("launnched", "$currentTime | $totalTime")
                                     }
                                     if (currentTime <= 100L) {
+                                        value = 1f
+                                    }
+                                    // problem solved but little chance of encounter error
+                                    if(isRunning.not() && currentTime == DEFAULT_TIME){
                                         value = 1f
                                     }
 

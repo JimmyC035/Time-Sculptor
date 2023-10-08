@@ -11,9 +11,11 @@ import android.util.Log
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.example.timesculptor.R
+import android.app.Dialog
 import com.example.timesculptor.databinding.FragmentUserSettingBinding
 import com.example.timesculptor.databinding.GoalPickerBinding
 import com.example.timesculptor.databinding.PickUpGoalSettingBinding
+import com.example.timesculptor.util.AppConst.DEFAULT_WIDTH
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 
@@ -46,7 +48,7 @@ class UserSettingFragment : Fragment() {
             .create()
 
         val pickUpGoalSetting = binding.pickUpSetting
-        val pickUpGoalDialog = PickUpGoalSettingBinding.inflate(inflater,container,false)
+        val pickUpGoalDialog = PickUpGoalSettingBinding.inflate(inflater, container, false)
         val pickUpGoal = pickUpGoalDialog.pickUpPicker
         pickUpGoal.minValue = 1
         pickUpGoal.maxValue = 300
@@ -92,47 +94,52 @@ class UserSettingFragment : Fragment() {
         }
 
         goalPickerBtn.setOnClickListener {
-            dialogUsage.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
-            dialogUsage.show()
-
-            goalDialogView.confirmBtn.setOnClickListener {
-                val selectedHour = hourPicker.value
-                val selectedMinute = minPicker.value
-                val selectedToLong =
-                    (selectedHour.toLong() * 1000 * 60 * 60) + (selectedMinute.toLong() * 1000 * 60)
-                editor.putLong("goal", selectedToLong)
-                Log.i("goal setting", "$selectedToLong")
-                editor.apply()
-                dialogUsage.dismiss()
+            dialogUsage.setOnShowListener {
+                val window = (it as Dialog).window
+                window?.attributes = window?.attributes?.apply {
+                    width =
+                        (context?.resources?.displayMetrics?.widthPixels?.times(0.85))?.toInt()?: DEFAULT_WIDTH
+                }
+                window?.setBackgroundDrawableResource(R.drawable.dialog_background)
             }
 
+        dialogUsage.show()
 
+        goalDialogView.confirmBtn.setOnClickListener {
+            val selectedHour = hourPicker.value
+            val selectedMinute = minPicker.value
+            val selectedToLong =
+                (selectedHour.toLong() * 1000 * 60 * 60) + (selectedMinute.toLong() * 1000 * 60)
+            editor.putLong("goal", selectedToLong)
+            Log.i("goal setting", "$selectedToLong")
+            editor.apply()
+            dialogUsage.dismiss()
         }
-
-        pickUpGoalSetting.setOnClickListener {
-            dialogPickUp.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
-            dialogPickUp.show()
-
-            pickUpGoalDialog.confirmBtn.setOnClickListener {
-               val pickUpGoal = pickUpGoal.value
-                editor.putInt("pickup", pickUpGoal)
-                Log.i("goal pick up setting", "$pickUpGoal")
-                editor.apply()
-                dialogPickUp.dismiss()
-            }
-        }
-
-
-
-
-
-
-
-
-
-
-
-        return binding.root
     }
+
+    pickUpGoalSetting.setOnClickListener{
+        dialogPickUp.setOnShowListener {
+            val window = (it as Dialog).window
+            window?.attributes = window?.attributes?.apply {
+                width = (context?.resources?.displayMetrics?.widthPixels?.times(0.75))?.toInt()?: DEFAULT_WIDTH
+            }
+            window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+        }
+        dialogPickUp.show()
+
+        pickUpGoalDialog.confirmBtn.setOnClickListener {
+            val pickUpGoal = pickUpGoal.value
+            editor.putInt("pickup", pickUpGoal)
+            Log.i("goal pick up setting", "$pickUpGoal")
+            editor.apply()
+            dialogPickUp.dismiss()
+        }
+    }
+
+
+
+
+    return binding.root
+}
 
 }

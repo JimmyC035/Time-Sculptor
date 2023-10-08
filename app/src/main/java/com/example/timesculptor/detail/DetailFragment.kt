@@ -21,10 +21,13 @@ import com.example.timesculptor.util.AppUtil
 import com.example.timesculptor.util.AppUtil.getPackageIcon
 import com.example.timesculptor.util.AppUtil.parsePackageName
 import com.example.timesculptor.util.SortEnum
+import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.IAxisValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 
@@ -89,9 +92,14 @@ class DetailFragment : Fragment() {
         yAxis.textColor = Color.WHITE
         xAxis.setDrawGridLines(false)
         xAxis.setDrawLabels(true)
+        chart.axisRight.setDrawGridLines(false)
+        chart.axisRight.textColor = Color.TRANSPARENT
+        chart.axisRight.isEnabled = true
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         yAxis.axisMaximum = 60f
-        chart.axisRight.isEnabled = false
+        chart.animateXY(0, 2000)
+        chart.setScaleEnabled(false)
+
 
 
 
@@ -105,5 +113,4 @@ class DetailFragment : Fragment() {
 
         return binding.root
     }
-
 }

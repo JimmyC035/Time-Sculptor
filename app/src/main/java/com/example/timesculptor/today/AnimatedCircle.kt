@@ -49,7 +49,7 @@ fun AnimatedCircle(
     radius: Dp = 50.dp,
     strokeWidth: Dp = 8.dp,
     animDuration: Int = 1000,
-    animDelay: Int = 0
+    animDelay: Int = 1000
 ) {
     val cabinFontFamily = FontFamily(
         Font(R.font.cabin))

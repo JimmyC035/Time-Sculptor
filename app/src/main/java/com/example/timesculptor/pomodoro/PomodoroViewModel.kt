@@ -70,7 +70,7 @@ class PomodoroViewModel @Inject constructor(
         isPause = false
     }
     fun resetTimer(){
-        _currentTime.value = 10000L
+        _currentTime.value = 20000L
     }
 
     private fun collectFlow(){

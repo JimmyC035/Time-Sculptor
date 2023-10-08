@@ -2,6 +2,7 @@ package com.example.timesculptor.service
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -10,14 +11,16 @@ import android.os.CountDownTimer
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleCoroutineScope
+import com.example.timesculptor.MainActivity
 import com.example.timesculptor.R
+import com.example.timesculptor.util.AppConst.DEFAULT_TIME
 import com.example.timesculptor.util.AppUtil.toMinutesSeconds
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-private  const val DEFAULT_TIME = 10000L
+//private  const val DEFAULT_TIME = 20000L
 
 class TimerService : Service() {
     companion object {
@@ -110,18 +113,25 @@ class TimerService : Service() {
                 )
                 notificationManager.createNotificationChannel(channel)
 
+                val pendingIntent : PendingIntent = PendingIntent.getActivity(this@TimerService,8,
+                    Intent(this@TimerService, MainActivity::class.java),
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+
                 val notificationBuilder =
                     NotificationCompat.Builder(applicationContext, "Time_up")
                         .setContentTitle("Time's up")
                         .setContentText("Time's up take a five minutes break")
                         .setSmallIcon(R.drawable.pomodoro)
+                        .setContentIntent(pendingIntent)
+                        .setAutoCancel(true)
 
                 val notification = notificationBuilder.build()
                 notificationManager.notify(8, notification)
                 GlobalScope.launch {
                     delay(500L)
-                    timeLeftFlow.value = 10000L
-                    totalTime.value = 10000L
+                    timeLeftFlow.value = 20000L
+                    totalTime.value = 20000L
+                    isTimerRunningFlow.value = false
                     stopService()
                 }
             }

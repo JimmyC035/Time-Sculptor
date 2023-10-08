@@ -2,11 +2,15 @@ package com.example.timesculptor.service
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.example.timesculptor.MainActivity
 import com.example.timesculptor.R
 import com.example.timesculptor.data.source.source.AppDao
 import com.example.timesculptor.data.source.source.Repo
@@ -17,7 +21,7 @@ import java.util.Calendar
 
 
 
-class NotiWorker(context: Context, params: WorkerParameters) : Worker(context, params) {
+class NotiWorker(val context: Context, params: WorkerParameters) : Worker(context, params) {
 
 
     lateinit var database: TimeSculptorDataBase
@@ -29,7 +33,7 @@ class NotiWorker(context: Context, params: WorkerParameters) : Worker(context, p
 
         try {
             //create instance and write things into database
-            database = TimeSculptorDataBase.getInstance(applicationContext)
+            database = TimeSculptorDataBase.getInstance(context)
             appDao = database.TimeSculptorDao
 
 
@@ -68,11 +72,16 @@ class NotiWorker(context: Context, params: WorkerParameters) : Worker(context, p
             )
             notificationManager.createNotificationChannel(channel)
 
+            val pendingIntent : PendingIntent = PendingIntent.getActivity(context,0,
+                Intent(context,MainActivity::class.java),FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+
             val notificationBuilder =
                 NotificationCompat.Builder(applicationContext, "usage_channel")
                     .setContentTitle("Time Spend On APPs")
                     .setContentText("You spend $message on your phone yesterday")
                     .setSmallIcon(R.drawable.pomodoro)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true)
 
             val notification = notificationBuilder.build()
             notificationManager.notify(1, notification)

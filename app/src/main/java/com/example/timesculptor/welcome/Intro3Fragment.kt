@@ -25,6 +25,7 @@ import com.example.timesculptor.R
 import com.example.timesculptor.data.source.DataManager
 import com.example.timesculptor.databinding.Intro3FragmentBinding
 import com.example.timesculptor.util.AppUtil.scrollToBottom
+import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -35,6 +36,8 @@ class Intro3Fragment : Fragment() {
 
     private val viewModel: Intro3ViewModel by viewModels()
     private val dataManager = DataManager()
+    lateinit var permission1:MaterialCardView
+    lateinit var fadeIn1:Animation
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,11 +53,11 @@ class Intro3Fragment : Fragment() {
         go.alpha = 0.5f
         go.isEnabled = false
         val pref = requireContext().getSharedPreferences("my_setting", Context.MODE_PRIVATE)
-        val isFirstRun = pref.getBoolean("first",true)
+//        val isFirstRun = pref.getBoolean("first",true)
         val editor = pref.edit()
         val scrollView = binding.scrollView
 
-        val permission1 = binding.permission1
+         permission1 = binding.permission1
         val permission2 = binding.permission2
         val permission3 = binding.permission3
         permission2.visibility = GONE
@@ -62,12 +65,16 @@ class Intro3Fragment : Fragment() {
         go.visibility = GONE
 
 
-        val fadeIn1 = AnimationUtils.loadAnimation(context, R.anim.fade_in)
+         fadeIn1 = AnimationUtils.loadAnimation(context, R.anim.fade_in)
         val fadeIn2 = AnimationUtils.loadAnimation(context, R.anim.fade_in)
         val fadeIn3 = AnimationUtils.loadAnimation(context, R.anim.fade_in)
 
         fadeIn1.setAnimationListener(object : Animation.AnimationListener {
-            override fun onAnimationStart(animation: Animation?) {}
+            override fun onAnimationStart(animation: Animation?) {
+                permission2.visibility = GONE
+                permission3.visibility = GONE
+                go.visibility = GONE
+            }
 
             override fun onAnimationEnd(animation: Animation?) {
                 permission2.visibility = VISIBLE
@@ -103,7 +110,7 @@ class Intro3Fragment : Fragment() {
 
 
 
-        permission1.startAnimation(fadeIn1)
+
 
 
 
@@ -181,6 +188,11 @@ class Intro3Fragment : Fragment() {
 
         return binding.root
     }
+
+    fun startAnimationSequence() {
+        permission1.startAnimation(fadeIn1)
+    }
+
 
     override fun onResume() {
         super.onResume()

@@ -71,6 +71,8 @@ interface TimeSculptorRepository {
     @Query("SELECT MAX(event_time) FROM app_item")
     suspend fun getLatest(): Long?
 
+    suspend fun getTodayNotificationsCount(startOfDay: Long, endOfDay: Long, packageName: String): Int
+
 
 
 

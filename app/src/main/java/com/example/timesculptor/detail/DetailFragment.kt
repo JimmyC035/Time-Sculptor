@@ -12,6 +12,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.timesculptor.R
 import com.example.timesculptor.data.source.HomeItem
 import com.example.timesculptor.databinding.FragmentDetailBinding
@@ -28,7 +30,11 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Calendar
 
 @AndroidEntryPoint
@@ -36,6 +42,7 @@ import java.util.Calendar
 class DetailFragment : Fragment() {
 
     private val viewModel: DetailViewModel by viewModels()
+    lateinit var bottomNavigationView:BottomNavigationView
 
 
 
@@ -46,17 +53,37 @@ class DetailFragment : Fragment() {
         val binding = FragmentDetailBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.BottomNavigationView)
+        bottomNavigationView.visibility = View.GONE
         val appIcon = binding.appIcon
         val chart = binding.lineChart
+        val backBtn = binding.backBtn
+        val launchCount = binding.launchCount
+        val notificationCount = binding.notificationCount
         val packageName = DetailFragmentArgs.fromBundle(requireArguments()).packageName
         Log.i("navigate?", packageName)
         val sessionData = viewModel.getTodayMockData(requireContext(),packageName)
         Log.i("session", sessionData.toString())
+        Log.i("session", sessionData.size.toString())
+
+        lifecycleScope.launch {
+            val notiCount = viewModel.getNotificationCount(packageName)
+            withContext(Dispatchers.Main){
+                notificationCount.text = notiCount.toString()
+            }
+        }
+        launchCount.text = sessionData.size.div(2).toString()
 
         val entries = mutableListOf<BarEntry>()
         val drawables = getPackageIcon(requireContext(),packageName)
         appIcon.setImageDrawable(drawables)
         binding.appName.text = parsePackageName(requireContext().packageManager,packageName)
+
+
+
+        backBtn.setOnClickListener{
+            findNavController().navigateUp()
+        }
 
 
         val dataMap = mutableMapOf<Int, Float>().apply {
@@ -112,5 +139,10 @@ class DetailFragment : Fragment() {
 
 
         return binding.root
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        bottomNavigationView.visibility = View.VISIBLE
     }
 }

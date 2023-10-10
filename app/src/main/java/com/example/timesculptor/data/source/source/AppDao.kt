@@ -46,6 +46,9 @@ interface AppDao {
     """)
     suspend fun getTopAppByDate(startOfDay: Long, endOfDay: Long): UsageStatsSummary
 
+    @Query("SELECT COUNT(*) FROM notification_history WHERE created_time BETWEEN :startOfDay AND :endOfDay AND package_name = :packageName")
+    fun getTodayNotificationsCount(startOfDay: Long, endOfDay: Long, packageName: String): Int
+
 
     @Query("SELECT * FROM notification_history WHERE DATE(`date`) = DATE(:today)")
     fun getNotificationForToday(today: Date): List<NotificationHistory>

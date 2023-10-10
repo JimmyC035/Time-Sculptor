@@ -126,9 +126,9 @@ fun CustomChart(
             barValue.forEach {
                 Box(
                     modifier = Modifier
-                        .padding(start = 5.dp)
+                        .padding(start = 4.dp)
                         .padding(bottom = 4.dp)
-                        .offset(y = 4.dp)
+                        .offset(y = 12.dp)
                         .clip(CircleShape)
                         .width(barGraphWidth)
                         .fillMaxHeight(it)
@@ -153,6 +153,7 @@ fun CustomChart(
         // X-Axis Line
         Box(
             modifier = Modifier
+                .padding(top = 8.dp)
                 .padding(start = scaleYAxisWidth)
                 .padding(end = 24.dp)
                 .padding(bottom = 4.dp)

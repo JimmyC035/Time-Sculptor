@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.example.timesculptor.R
 import com.example.timesculptor.databinding.FragmentUserSettingBinding
 import com.example.timesculptor.databinding.FragmentWelcomeBinding
@@ -23,6 +24,7 @@ private const val PAGE_COUNT = 3
 private const val PAGE_ONE = 0
 private const val PAGE_TWO = 1
 private const val PAGE_THREE = 2
+lateinit var bottomNavigationView:BottomNavigationView
 
 @AndroidEntryPoint
 class WelcomeFragment : Fragment() {
@@ -37,7 +39,7 @@ class WelcomeFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
         val viewPager  = binding.viewPager2
-        val bottomNavigationView: BottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.BottomNavigationView)
+        bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.BottomNavigationView)
         bottomNavigationView.visibility = View.GONE
 
 
@@ -58,6 +60,23 @@ class WelcomeFragment : Fragment() {
         }.attach()
 
 
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                if (position == PAGE_THREE) {
+                    val fragmentManager = childFragmentManager
+                    val tag = "f$position"
+                    val thirdFragment = fragmentManager.findFragmentByTag(tag) as? Intro3Fragment
+                    thirdFragment?.startAnimationSequence()
+                }
+            }
+        })
+        viewPager.offscreenPageLimit = 3
+
+
+
+
+
 
 
         return binding.root
@@ -65,7 +84,6 @@ class WelcomeFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        val bottomNavigationView: BottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.BottomNavigationView)
         bottomNavigationView.visibility = View.VISIBLE
     }
 

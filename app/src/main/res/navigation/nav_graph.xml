@@ -61,7 +61,7 @@
         android:id="@+id/action_navigate_to_history_Fragment"
         app:destination="@id/historyFragment"
         app:popUpTo="@id/nav_graph"
-        app:popUpToInclusive="true" />
+        app:popUpToInclusive="false" />
 
     <action
         android:id="@+id/action_navigate_to_user_setting_Fragment"
@@ -72,7 +72,11 @@
     <action
         android:id="@+id/action_navigate_to_detail_Fragment"
         app:destination="@id/detailFragment"
-        app:popUpToInclusive="true" />
+        app:popUpToInclusive="true"
+        app:enterAnim="@anim/slide_in_from_right"
+        app:exitAnim="@anim/slide_out_to_left"
+        app:popEnterAnim="@anim/slide_in_from_left"
+        app:popExitAnim="@anim/slide_out_to_right"/>
 
     <fragment
         android:id="@+id/detailFragment"

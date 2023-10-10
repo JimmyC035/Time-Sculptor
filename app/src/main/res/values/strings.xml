@@ -32,5 +32,9 @@
     <string name="pick_up_times">Times</string>
     <string name="pick_up_goal">Choose your daily pick ups</string>
     <string name="slogan">Craft Your Time, Focus Your Mind.</string>
+    <string name="back">BACK</string>
+    <string name="app_usage_timeline">APP Usage TimeLine</string>
+    <string name="launched">Launched</string>
+    <string name="usage_stats">Usage Stats</string>
 
 </resources>

@@ -16,6 +16,8 @@ import com.example.timesculptor.databinding.FragmentUserSettingBinding
 import com.example.timesculptor.databinding.GoalPickerBinding
 import com.example.timesculptor.databinding.PickUpGoalSettingBinding
 import com.example.timesculptor.util.AppConst.DEFAULT_WIDTH
+import com.example.timesculptor.util.AppUtil.toHoursMinutes
+import com.example.timesculptor.util.AppUtil.toMinutesSeconds
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 
@@ -33,6 +35,8 @@ class UserSettingFragment : Fragment() {
         val dailyReportSetting = binding.dailyReportSetting
         val dailyReportResult = binding.dailyReportResult
         val goalPickerBtn = binding.goalSetting
+        val usageGoalResult = binding.goalResult
+        val pickUpResult = binding.pickUpResult
         val pref = requireContext().getSharedPreferences("my_setting", Context.MODE_PRIVATE)
         val editor = pref.edit()
 
@@ -53,6 +57,20 @@ class UserSettingFragment : Fragment() {
         pickUpGoal.minValue = 1
         pickUpGoal.maxValue = 300
         pickUpGoal.value = 60
+
+
+        val hourOfDay = pref.getInt("notification_hour",8)
+        val minutes = pref.getInt("notification_minute",30)
+        dailyReportResult.text = "Your daily report will arrive around $hourOfDay:$minutes"
+
+        val hours = pref.getLong("goal",240000L)
+        usageGoalResult.text = "${hours.toHoursMinutes()} per day"
+
+
+        val pickResult = pref.getInt("pickup",60)
+        pickUpResult.text = "$pickResult times per day"
+
+
         val dialogPickUp = AlertDialog.Builder(context)
             .setView(pickUpGoalDialog.root)
             .create()
@@ -71,6 +89,9 @@ class UserSettingFragment : Fragment() {
             val minute = c.get(Calendar.MINUTE)
 
 
+
+
+
             // initialize our Time Picker Dialog
             val timePickerDialog = TimePickerDialog(
                 requireContext(),
@@ -83,6 +104,7 @@ class UserSettingFragment : Fragment() {
                     editor.apply()
 
                     viewModel.updateWorker(requireContext(), hourOfDay, minute)
+                    dailyReportResult.text = "Your daily report will arrive around $hourOfDay:$minutes"
 
                 },
                 hour,
@@ -112,6 +134,7 @@ class UserSettingFragment : Fragment() {
                 (selectedHour.toLong() * 1000 * 60 * 60) + (selectedMinute.toLong() * 1000 * 60)
             editor.putLong("goal", selectedToLong)
             Log.i("goal setting", "$selectedToLong")
+            usageGoalResult.text = "${selectedToLong.toHoursMinutes()} per day"
             editor.apply()
             dialogUsage.dismiss()
         }
@@ -131,6 +154,7 @@ class UserSettingFragment : Fragment() {
             val pickUpGoal = pickUpGoal.value
             editor.putInt("pickup", pickUpGoal)
             Log.i("goal pick up setting", "$pickUpGoal")
+            pickUpResult.text = "$pickUpGoal times per day"
             editor.apply()
             dialogPickUp.dismiss()
         }

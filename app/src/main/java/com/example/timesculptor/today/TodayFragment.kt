@@ -15,11 +15,13 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import co.yml.charts.common.model.Point
 import com.example.timesculptor.R
 import com.example.timesculptor.databinding.FragmentTodayBinding
 import com.example.timesculptor.util.AppUtil.toHoursMinutes
 import com.example.timesculptor.util.AppUtil.toHoursMinutesSeconds
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.jetbrains.annotations.VisibleForTesting
@@ -97,6 +99,12 @@ class TodayFragment : Fragment() {
 
         })
 
+        goalAndPickUpCard.setOnClickListener{
+            findNavController().navigate(R.id.action_navigate_to_user_setting_Fragment)
+            val bottomNav = requireActivity().findViewById<BottomNavigationView>(R.id.BottomNavigationView)
+            bottomNav.selectedItemId = R.id.setting
+        }
+
 
 
 
@@ -115,6 +123,10 @@ class TodayFragment : Fragment() {
         if(mostUsed.mPackageName != ""){
             val drawables = viewModel.getAppIcon(requireContext(),mostUsed.mPackageName)
             mostUsedIcon.setImageDrawable(drawables)
+
+            mostUsedCard.setOnClickListener{
+                findNavController().navigate(TodayFragmentDirections.actionNavigateToDetailFragment(mostUsed.mPackageName))
+            }
         }
 
         mostUsedTime.text = mostUsed.mUsageTime.toHoursMinutesSeconds()

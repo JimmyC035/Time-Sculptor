@@ -84,9 +84,13 @@ class TimeSculptorDataSource(private val dao: AppDao) : TimeSculptorRepository {
         TODO("Not yet implemented")
     }
 
-
-
-
+    override suspend fun getTodayNotificationsCount(
+        startOfDay: Long,
+        endOfDay: Long,
+        packageName: String
+    ): Int {
+        TODO("Not yet implemented")
+    }
 
 
 }

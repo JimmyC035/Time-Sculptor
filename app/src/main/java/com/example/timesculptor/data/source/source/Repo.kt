@@ -67,6 +67,16 @@ class Repo @Inject constructor(private var dao: AppDao) : TimeSculptorRepository
         }
     }
 
+    override suspend fun getTodayNotificationsCount(
+        startOfDay: Long,
+        endOfDay: Long,
+        packageName: String
+    ): Int {
+        return withContext(Dispatchers.IO) {
+            dao.getTodayNotificationsCount(startOfDay, endOfDay,packageName)
+        }
+    }
+
     override suspend fun getItemsTillNow(startOfDay: Long, current: Long): List<AppItem> {
         return withContext(Dispatchers.IO) {
 

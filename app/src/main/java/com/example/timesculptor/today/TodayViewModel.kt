@@ -153,7 +153,9 @@ class TodayViewModel @Inject constructor(
                 printEventStatsInfo(eventStats)
             }
             Log.i("bqt today","${_pickUpCount.value}")
+            Log.i("bqt today","${eventStats.firstTimeStamp}")
         }
+//        _pickUpCount.value = 12
     }
     suspend fun getTillNow(startOfDay: Long, current: Long) {
         _charTillNow.value =  timeSculptorRepository.getItemsTillNow(startOfDay,current)

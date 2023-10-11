@@ -109,7 +109,11 @@ fun AnimatedCircle(
                 }else{
                     timeLeft.toHoursMinutes()
                 },
-                color = Color.White,
+                color = if (timeLeft < 0) {
+                    Color.Red
+                } else {
+                    Color.White
+                },
                 fontSize = fontSize
 
             )
@@ -118,7 +122,11 @@ fun AnimatedCircle(
                     "exceeded"
                 }else{
                     "Left"},
-                color = Color.White,
+                color = if (timeLeft < 0) {
+                    Color.Red
+                } else {
+                    Color.White
+                },
                 fontSize = fontSize
             )
         }

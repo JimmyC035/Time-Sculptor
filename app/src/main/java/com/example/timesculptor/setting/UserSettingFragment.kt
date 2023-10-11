@@ -104,7 +104,7 @@ class UserSettingFragment : Fragment() {
                     editor.apply()
 
                     viewModel.updateWorker(requireContext(), hourOfDay, minute)
-                    dailyReportResult.text = "Your daily report will arrive around $hourOfDay:$minutes"
+//                    dailyReportResult.text = "Your daily report will arrive around $hourOfDay:$minutes"
 
                 },
                 hour,

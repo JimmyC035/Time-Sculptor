@@ -1,6 +1,7 @@
 package com.example.timesculptor.today
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -23,6 +24,7 @@ import com.example.timesculptor.util.AppUtil.toHoursMinutes
 import com.example.timesculptor.util.AppUtil.toHoursMinutesSeconds
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.jetbrains.annotations.VisibleForTesting
 import java.text.SimpleDateFormat
@@ -188,9 +190,24 @@ class TodayFragment : Fragment() {
 
         }
 
-        goalAndUsage.text = "${viewModel.totalTime.value.toHoursMinutes()}" + " /" + goal.toHoursMinutes()
 
-        goalPickUP.text = viewModel.pickUpCount.value.toString() + " / $pickUp"
+        lifecycleScope.launch {
+            viewModel.totalTime.collectLatest {
+                if(it < 0L){
+                    goalAndUsage.text = it.toHoursMinutes()  + " /" + goal.toHoursMinutes()
+                }else{
+                    goalAndUsage.text = it.toHoursMinutes()  + " /" + goal.toHoursMinutes()
+                }
+            }
+        }
+//        goalAndUsage.text = "${viewModel.totalTime.value.toHoursMinutes()}" + " /" + goal.toHoursMinutes()
+
+
+        viewModel.pickUpCount.observe(viewLifecycleOwner){
+            goalPickUP.text = it.toString() + " / $pickUp"
+        }
+
+//        goalPickUP.text = viewModel.pickUpCount.value.toString() + " / $pickUp"
 
 
 
@@ -241,6 +258,18 @@ class TodayFragment : Fragment() {
               val value = it.y / 60f
               if (value > 1f) 1f else value
           }
+//          val yValuesList: List<Float> = pointsData.fold(emptyList()) { acc, point ->
+//              val value = point.y / 60f
+//              val newValue = if (value > 1f) 1f else value
+//              if (acc.isNotEmpty()) {
+//                  val previousValue = acc.last()
+//                  acc + (previousValue + newValue - 1f)
+//              } else {
+//                  acc + newValue
+//              }
+//          }
+          Log.i("accumulator","$yValuesList")
+
           val xAxisScale = listOf("12AM", "1", "2", "3", "4", "5", "6AM", "7", "8", "9", "10", "11", "12PM", "1", "2", "3", "4", "5", "6PM", "7", "8", "9", "10", "11","12AM")
 
 
@@ -253,13 +282,6 @@ class TodayFragment : Fragment() {
               )
           }
       }
-
-
-
-
-
-
-
 
 
         return binding.root

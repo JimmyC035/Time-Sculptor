@@ -144,5 +144,6 @@ class DetailFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         bottomNavigationView.visibility = View.VISIBLE
+
     }
 }

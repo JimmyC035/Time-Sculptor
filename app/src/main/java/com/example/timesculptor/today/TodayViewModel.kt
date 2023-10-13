@@ -61,7 +61,7 @@ class TodayViewModel @Inject constructor(
         }
     }
 
-    fun getTodayDate() {
+    private fun getTodayDate() {
         val today = LocalDate.now()
         _todayDate.value = formatDate(today)
     }
@@ -120,7 +120,7 @@ class TodayViewModel @Inject constructor(
     }
 
 
-    fun printEventStatsInfo(eventStats: EventStats) {
+    private fun printEventStatsInfo(eventStats: EventStats) {
         val format = SimpleDateFormat("yyyy.MM.dd_HH:mm:ss", Locale.getDefault())
         _pickUpCount.value = eventStats.count
         val eventType = eventStats.eventType
@@ -194,6 +194,24 @@ class TodayViewModel @Inject constructor(
             }
         }
     }
+
+    fun processList(inputList: List<Float>): List<Float> {
+        val resultList = inputList.toMutableList()
+
+        for (i in 0 until resultList.size - 1) {
+            val currentValue = resultList[i]
+
+            if (currentValue > 1f) {
+                resultList[i] = 1f
+                val carryOver = currentValue - 1f
+                Log.i("accumulator","$carryOver")
+                resultList[i + 1] += carryOver
+            }
+        }
+
+        return resultList
+    }
+
 
 
     init {

@@ -241,34 +241,24 @@ class TodayFragment : Fragment() {
       viewModel.charTillNow.observe(viewLifecycleOwner){ it ->
           val usageMap = mutableMapOf<Int, Float>()
           val sdf = SimpleDateFormat("HH", Locale.getDefault())
-          sdf.timeZone = TimeZone.getTimeZone("GMT+8:00")
+          sdf.timeZone = TimeZone.getDefault()
+
+
 
           it.forEach {item ->
-              val date = Date(item.mEventTime)
+              val date = Date(item.mEventTime - item.mUsageTime)
               val eventHour = sdf.format(date).toInt()
-              val usageTimeInMinutes = item.mUsageTime.toFloat() / (1000 * 60)
+              val usageTimeInMinutes = item.mUsageTime.toFloat()
+
               usageMap[eventHour] = usageMap.getOrDefault(eventHour, 0f) + usageTimeInMinutes
           }
 
           val pointsData = (0..23).map { hour ->
-              Point(x = hour.toFloat(), y = usageMap.getOrDefault(hour, 0f))
+               usageMap.getOrDefault(hour, 0f) / (1000f * 60f * 60f)
           }
 
-          val yValuesList: List<Float> = pointsData.map {
-              val value = it.y / 60f
-              if (value > 1f) 1f else value
-          }
-//          val yValuesList: List<Float> = pointsData.fold(emptyList()) { acc, point ->
-//              val value = point.y / 60f
-//              val newValue = if (value > 1f) 1f else value
-//              if (acc.isNotEmpty()) {
-//                  val previousValue = acc.last()
-//                  acc + (previousValue + newValue - 1f)
-//              } else {
-//                  acc + newValue
-//              }
-//          }
-          Log.i("accumulator","$yValuesList")
+
+          val yValuesList: List<Float> = viewModel.processList(pointsData)
 
           val xAxisScale = listOf("12AM", "1", "2", "3", "4", "5", "6AM", "7", "8", "9", "10", "11", "12PM", "1", "2", "3", "4", "5", "6PM", "7", "8", "9", "10", "11","12AM")
 

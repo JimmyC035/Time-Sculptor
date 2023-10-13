@@ -17,4 +17,16 @@
     </style>
 
 
+
+
+    <style name="CalenderViewCustom" parent="Theme.AppCompat">
+        <item name="colorAccent">#DD111111</item>
+        <item name="colorPrimary">#FFFFFF</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+    </style>
+
+
+
+
+
 </resources>

@@ -14,16 +14,16 @@ import com.example.timesculptor.R
 import com.example.timesculptor.databinding.FragmentUserSettingBinding
 import com.example.timesculptor.databinding.FragmentWelcomeBinding
 import com.example.timesculptor.setting.UserSettingViewModel
+import com.example.timesculptor.util.AppConst.PAGE_ONE
+import com.example.timesculptor.util.AppConst.PAGE_THREE
+import com.example.timesculptor.util.AppConst.PAGE_TWO
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
-private const val PAGE_COUNT = 3
 
 
-private const val PAGE_ONE = 0
-private const val PAGE_TWO = 1
-private const val PAGE_THREE = 2
+
 lateinit var bottomNavigationView:BottomNavigationView
 
 @AndroidEntryPoint

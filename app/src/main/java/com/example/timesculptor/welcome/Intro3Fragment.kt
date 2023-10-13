@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ScrollView
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -36,8 +37,11 @@ class Intro3Fragment : Fragment() {
 
     private val viewModel: Intro3ViewModel by viewModels()
     private val dataManager = DataManager()
-    lateinit var permission1:MaterialCardView
-    lateinit var fadeIn1:Animation
+    private lateinit var usagePermission: MaterialCardView
+    private lateinit var overlayPermission: MaterialCardView
+    private lateinit var notificationPermission: MaterialCardView
+    lateinit var go: AppCompatButton
+    lateinit var fadeIn1: Animation
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,10 +50,10 @@ class Intro3Fragment : Fragment() {
         val binding = Intro3FragmentBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
-        val usagePermission = binding.permission1
-        val overlayPermission = binding.permission2
-        val notificationPermission = binding.permission3
-        val go = binding.go
+        usagePermission = binding.permission1
+        overlayPermission = binding.permission2
+        notificationPermission = binding.permission3
+        go = binding.go
         go.alpha = 0.5f
         go.isEnabled = false
         val pref = requireContext().getSharedPreferences("my_setting", Context.MODE_PRIVATE)
@@ -57,28 +61,22 @@ class Intro3Fragment : Fragment() {
         val editor = pref.edit()
         val scrollView = binding.scrollView
 
-         permission1 = binding.permission1
-        val permission2 = binding.permission2
-        val permission3 = binding.permission3
-        permission2.visibility = GONE
-        permission3.visibility = GONE
-        go.visibility = GONE
 
 
-         fadeIn1 = AnimationUtils.loadAnimation(context, R.anim.fade_in)
+        fadeIn1 = AnimationUtils.loadAnimation(context, R.anim.fade_in)
         val fadeIn2 = AnimationUtils.loadAnimation(context, R.anim.fade_in)
         val fadeIn3 = AnimationUtils.loadAnimation(context, R.anim.fade_in)
 
         fadeIn1.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation?) {
-                permission2.visibility = GONE
-                permission3.visibility = GONE
+                overlayPermission.visibility = GONE
+                notificationPermission.visibility = GONE
                 go.visibility = GONE
             }
 
             override fun onAnimationEnd(animation: Animation?) {
-                permission2.visibility = VISIBLE
-                permission2.startAnimation(fadeIn2)
+                overlayPermission.visibility = VISIBLE
+                overlayPermission.startAnimation(fadeIn2)
             }
 
             override fun onAnimationRepeat(animation: Animation?) {}
@@ -88,8 +86,8 @@ class Intro3Fragment : Fragment() {
             override fun onAnimationStart(animation: Animation?) {}
 
             override fun onAnimationEnd(animation: Animation?) {
-                permission3.visibility = VISIBLE
-                permission3.startAnimation(fadeIn3)
+                notificationPermission.visibility = VISIBLE
+                notificationPermission.startAnimation(fadeIn3)
             }
 
             override fun onAnimationRepeat(animation: Animation?) {}
@@ -99,7 +97,7 @@ class Intro3Fragment : Fragment() {
             override fun onAnimationStart(animation: Animation?) {}
 
             override fun onAnimationEnd(animation: Animation?) {
-               go.visibility = VISIBLE
+                go.visibility = VISIBLE
                 scrollView.scrollToBottom()
 
             }
@@ -112,38 +110,33 @@ class Intro3Fragment : Fragment() {
 
 
 
-
-
-
-
-        usagePermission.setOnClickListener{
-            Log.i("userPermission","clicked!")
-            if (!dataManager.hasUsagePermissionGranted(requireContext()) ||true) {
-                dataManager.requestUsagePermission(requireContext())
-            }
+        usagePermission.setOnClickListener {
+            Log.i("userPermission", "clicked!")
+            dataManager.requestUsagePermission(requireContext())
         }
 
-        overlayPermission.setOnClickListener{
-            Log.i("userPermission","clicked!2")
-            val permission = Manifest.permission.SYSTEM_ALERT_WINDOW
-            if (!Settings.canDrawOverlays(requireContext())  ||true) {
-                val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + requireActivity().packageName))
-                startActivityForResult(intent, 123)
-            }
+        overlayPermission.setOnClickListener {
+            Log.i("userPermission", "clicked!2")
+            val intent = Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:" + requireActivity().packageName)
+            )
+            startActivityForResult(intent, 123)
+
         }
-        notificationPermission.setOnClickListener{
-            Log.i("userPermission","clicked!3")
-            if(!dataManager.isNotificationAccessGranted(requireContext())  ||true){
-                dataManager.requestNotificationAccess(requireContext())
-            }
+        notificationPermission.setOnClickListener {
+            Log.i("userPermission", "clicked!3")
+
+            dataManager.requestNotificationAccess(requireContext())
+
         }
 
 
         lifecycleScope.launch {
             viewModel.usagePermission.collectLatest { granted ->
                 if (granted) {
-                   binding.usageCheckbox.setImageResource(R.drawable.baseline_check_24)
-                }else{
+                    binding.usageCheckbox.setImageResource(R.drawable.baseline_check_24)
+                } else {
                     binding.usageCheckbox.setImageDrawable(null)
                 }
             }
@@ -151,10 +144,10 @@ class Intro3Fragment : Fragment() {
 
         lifecycleScope.launch {
             viewModel.overlayPermission.collectLatest { granted ->
-                Log.i("userPermission","overlay called?")
+                Log.i("userPermission", "overlay called?")
                 if (granted) {
                     binding.overlayCheckbox.setImageResource(R.drawable.baseline_check_24)
-                }else{
+                } else {
                     binding.overlayCheckbox.setImageDrawable(null)
                 }
             }
@@ -164,24 +157,24 @@ class Intro3Fragment : Fragment() {
             viewModel.notificationPermission.collectLatest { granted ->
                 if (granted) {
                     binding.notificationCheckbox.setImageResource(R.drawable.baseline_check_24)
-                }else{
+                } else {
                     binding.notificationCheckbox.setImageDrawable(null)
                 }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.combinedFlow.collectLatest {allTrue ->
+            viewModel.combinedFlow.collectLatest { allTrue ->
                 go.alpha = 1f
                 go.isEnabled = allTrue
             }
         }
 
-        go.setOnClickListener{
+        go.setOnClickListener {
             findNavController().navigate(R.id.action_navigate_to_home_Fragment)
-            editor.putBoolean("first",false)
+            editor.putBoolean("first", false)
             editor.apply()
-            Log.i("sharepref", pref.getBoolean("first",true).toString())
+            Log.i("sharepref", pref.getBoolean("first", true).toString())
         }
 
 
@@ -190,13 +183,16 @@ class Intro3Fragment : Fragment() {
     }
 
     fun startAnimationSequence() {
-        permission1.startAnimation(fadeIn1)
+        usagePermission.startAnimation(fadeIn1)
+        go.visibility = GONE
+        overlayPermission.visibility = GONE
+        notificationPermission.visibility = GONE
     }
 
 
     override fun onResume() {
         super.onResume()
-        viewModel.checkAndUpdateUsagePermissionState(requireContext(),dataManager)
+        viewModel.checkAndUpdateUsagePermissionState(requireContext(), dataManager)
         viewModel.checkAndUpdateOverlayPermissionState(requireContext())
         viewModel.checkAndUpdateNotificationPermissionState(requireContext(), dataManager)
     }

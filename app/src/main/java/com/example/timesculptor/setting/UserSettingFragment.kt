@@ -91,7 +91,6 @@ class UserSettingFragment : Fragment() {
 
 
 
-
             // initialize our Time Picker Dialog
             val timePickerDialog = TimePickerDialog(
                 requireContext(),

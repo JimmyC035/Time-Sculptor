@@ -28,7 +28,7 @@ class TimerService : Service() {
         val totalTime = MutableStateFlow(DEFAULT_TIME)
         val isTimerRunningFlow = MutableStateFlow(false)
     }
-    private var timerCount:CountDownTimer? = null
+    private var timerCount: CountDownTimer? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when(intent?.action){
@@ -48,6 +48,7 @@ class TimerService : Service() {
         isTimerRunningFlow.value = true
         startForegroundNotification()
         startCountdownTimer()
+
     }
 
     private fun resumeTimer(intent: Intent?){
@@ -66,9 +67,10 @@ class TimerService : Service() {
         timeLeftFlow.value = DEFAULT_TIME //set to default
         totalTime.value = 0L
         totalTime.value = DEFAULT_TIME
-        isTimerRunningFlow.value = false
+
         stopService()
         pause()
+        isTimerRunningFlow.value = false
     }
 
     private fun startForegroundNotification() {

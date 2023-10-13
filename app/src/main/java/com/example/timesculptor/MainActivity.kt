@@ -45,42 +45,34 @@ class MainActivity : AppCompatActivity() {
         navBottomView.setupWithNavController(navController)
 
 
-        if(intent != null){
-            val fragmentToLoad = intent.getStringExtra("LOAD_FRAGMENT")
-            if (fragmentToLoad == "pomodoro" && savedInstanceState == null) {
-                navController.navigate(R.id.action_navigate_to_pomodoro_Fragment)
-            }
-        }
-
-
         //start service when first launch
         val pref = this.getSharedPreferences("my_setting", Context.MODE_PRIVATE)
-        val isFirstRun = pref.getBoolean("first",true)
-        val isFirstLaunch = pref.getBoolean("launch",false)
+        val isFirstRun = pref.getBoolean("first", true)
+        val isFirstLaunch = pref.getBoolean("launch", false)
         val editor = pref.edit()
 
-        if(isFirstLaunch){
+        if (isFirstLaunch) {
             val serviceIntent = Intent(this, RebootService::class.java)
             startService(serviceIntent)
-            editor.putBoolean("launch",false)
+            editor.putBoolean("launch", false)
             editor.apply()
         }
 
-        if(isFirstRun){
+        if (isFirstRun) {
 
             navController.navigate(R.id.action_navigate_to_welcome_Fragment)
 
-            Log.i("share pref", pref.getBoolean("first",true).toString())
+            Log.i("share pref", pref.getBoolean("first", true).toString())
         }
 
 
         val lifecycleOwner: LifecycleOwner = this
         WorkManager.getInstance(this).getWorkInfosForUniqueWorkLiveData("WriteDBWorker")
-            .observe(lifecycleOwner){
-                it.forEach{workInfo ->
-                    Log.i("MainWorker","${workInfo.state}")
-                    Log.i("MainWorker","${workInfo.progress}")
-                    Log.i("MainWorker","${workInfo.generation}")
+            .observe(lifecycleOwner) {
+                it.forEach { workInfo ->
+                    Log.i("MainWorker", "${workInfo.state}")
+                    Log.i("MainWorker", "${workInfo.progress}")
+                    Log.i("MainWorker", "${workInfo.generation}")
 
                 }
             }
@@ -90,10 +82,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupBottomNav() {
-        binding.BottomNavigationView.setOnItemSelectedListener { item  ->
+        binding.BottomNavigationView.setOnItemSelectedListener { item ->
+
+            val currentDestinationId = findNavController(R.id.myNavHostFragment).currentDestination?.label
+            Log.i("currentDestinationId ",currentDestinationId.toString())
             when (item.itemId) {
                 R.id.today -> {
-                    findNavController(R.id.myNavHostFragment).navigate(R.id.action_navigate_to_today_Fragment)
+                        Log.i("currentDestinationId today ", R.id.today.toString())
+                        findNavController(R.id.myNavHostFragment).navigate(R.id.action_navigate_to_today_Fragment)
+
                     return@setOnItemSelectedListener true
                 }
 
@@ -103,7 +100,9 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.pomodoro -> {
-                    findNavController(R.id.myNavHostFragment).navigate(R.id.action_navigate_to_pomodoro_Fragment)
+                    if(currentDestinationId != "PomodoroFragment"){
+                        findNavController(R.id.myNavHostFragment).navigate(R.id.action_navigate_to_pomodoro_Fragment)
+                    }
                     return@setOnItemSelectedListener true
                 }
 
@@ -111,6 +110,7 @@ class MainActivity : AppCompatActivity() {
                     findNavController(R.id.myNavHostFragment).navigate(R.id.action_navigate_to_home_Fragment)
                     return@setOnItemSelectedListener true
                 }
+
                 R.id.setting -> {
                     findNavController(R.id.myNavHostFragment).navigate(R.id.action_navigate_to_user_setting_Fragment)
                     return@setOnItemSelectedListener true
@@ -120,6 +120,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        val fragmentToLoad = intent?.getStringExtra("LOAD_FRAGMENT")
+        if (fragmentToLoad == "pomodoro") {
+            findNavController(R.id.myNavHostFragment).navigate(R.id.action_navigate_to_pomodoro_Fragment)
+        }
+
+    }
 
 
 }

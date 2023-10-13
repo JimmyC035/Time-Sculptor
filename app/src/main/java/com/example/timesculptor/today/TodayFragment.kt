@@ -263,7 +263,6 @@ class TodayFragment : Fragment() {
           val xAxisScale = listOf("12AM", "1", "2", "3", "4", "5", "6AM", "7", "8", "9", "10", "11", "12PM", "1", "2", "3", "4", "5", "6PM", "7", "8", "9", "10", "11","12AM")
 
 
-
           lineChart.setContent {
               CustomChart(
                   barValue = yValuesList,

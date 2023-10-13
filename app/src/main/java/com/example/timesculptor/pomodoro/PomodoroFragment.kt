@@ -300,9 +300,11 @@ class PomodoroFragment : Fragment() {
                                 ) {
                                     Button(
                                         onClick = {
-                                            viewModel.cancelTimer(requireContext())
-                                            viewModel.resetTimer()
-                                            value = 1f
+                                            if(isRunning){
+                                                viewModel.cancelTimer(requireContext())
+                                                viewModel.resetTimer()
+                                                value = 1f
+                                            }
                                         },
                                         modifier = Modifier
                                             .size(48.dp)
@@ -363,9 +365,11 @@ class PomodoroFragment : Fragment() {
 
                                     Button(
                                         onClick = {
-                                            viewModel.resetTimer()
-                                            viewModel.cancelTimer(requireContext())
-                                            value = 1f
+                                            if(isRunning || currentTime != DEFAULT_TIME){
+                                                viewModel.resetTimer()
+                                                viewModel.cancelTimer(requireContext())
+                                                value = 1f
+                                            }
                                         },
                                         modifier = Modifier
                                             .size(48.dp)

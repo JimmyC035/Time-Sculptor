@@ -122,6 +122,7 @@ class FloatingWindowService : Service() {
             intent.putExtra("LOAD_FRAGMENT", "pomodoro")
             lottieAnimationView.cancelAnimation()
             startActivity(intent)
+            stopSelf()
         }
     }
 

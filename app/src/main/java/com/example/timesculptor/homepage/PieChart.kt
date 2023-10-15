@@ -37,21 +37,24 @@ import androidx.navigation.fragment.findNavController
 import com.example.timesculptor.R
 import com.example.timesculptor.util.AppUtil.toHoursMinutesSeconds
 import com.example.timesculptor.util.azureBlue
+import com.example.timesculptor.util.blushPetal
 import com.example.timesculptor.util.coralBlush
 import com.example.timesculptor.util.darkBlue
 import com.example.timesculptor.util.darkGreen
+import com.example.timesculptor.util.fadedWalnut
+import com.example.timesculptor.util.forestShade
 import com.example.timesculptor.util.goldenSunray
 import com.example.timesculptor.util.greyRed
 import com.example.timesculptor.util.lavenderMist
 import com.example.timesculptor.util.lightGreen
+import com.example.timesculptor.util.mistyHarbor
 import com.example.timesculptor.util.pink
 import com.example.timesculptor.util.sand
 import com.example.timesculptor.util.softLilac
+import com.example.timesculptor.util.softLinen
+import com.example.timesculptor.util.springMeadow
 import com.example.timesculptor.util.tiffanyBlue
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
-
-
-
 
 
 @Composable
@@ -63,14 +66,12 @@ fun PieChart(
     radiusOuter: Dp = 100.dp,
     chartBarWidth: Dp = 20.dp,
     animDuration: Int = 1000,
-    ) {
+) {
     val totalSum = data.values.sum()
     val floatValue = mutableListOf<Float>()
 
     // To set the value of each Arc according to
     // the value given in the data, we have used a simple formula.
-    // For a detailed explanation check out the Medium Article.
-    // The link is in the about section and readme file of this GitHub Repository
     data.values.forEachIndexed { index, values ->
         floatValue.add(index, 360 * values.toFloat() / totalSum.toFloat())
     }
@@ -83,8 +84,11 @@ fun PieChart(
         pink,
         greyRed,
         darkBlue,
-        lightGreen
-
+        lightGreen,
+        fadedWalnut,
+//        goldenSunray,
+//        forestShade,
+//        softLinen
 
     )
 
@@ -196,7 +200,6 @@ fun DetailsPieChartItem(
     color: Color,
     onClick: (String) -> Unit
 ) {
-
 
 
     Surface(

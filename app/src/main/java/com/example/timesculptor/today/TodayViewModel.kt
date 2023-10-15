@@ -14,6 +14,7 @@ import com.example.timesculptor.data.source.source.AppItem
 import com.example.timesculptor.data.source.source.TimeSculptorRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -37,25 +38,25 @@ class TodayViewModel @Inject constructor(
     val totalTime: StateFlow<Long> = _totalTime
 
     private val _todayDate = MutableStateFlow<String>("")
-    val todayDate : StateFlow<String> = _todayDate
+    val todayDate: StateFlow<String> = _todayDate
 
-    private val _notiCount = MutableLiveData<Int>()
-    val notiCount : LiveData<Int> = _notiCount
+    private val _notiCount = MutableLiveData<Int>(0)
+    val notiCount: LiveData<Int> = _notiCount
 
     private val _notiYesterdayCount = MutableLiveData<Int>()
-    val notiYesterdayCount : LiveData<Int> = _notiYesterdayCount
+    val notiYesterdayCount: LiveData<Int> = _notiYesterdayCount
 
     private val _pickUpCount = MutableLiveData<Int>(0)
-    val pickUpCount : LiveData<Int> = _pickUpCount
+    val pickUpCount: LiveData<Int> = _pickUpCount
 
     private val _pickUpCountYesterday = MutableLiveData<Int>(0)
-    val pickUpCountYesterday : LiveData<Int> = _pickUpCountYesterday
+    val pickUpCountYesterday: LiveData<Int> = _pickUpCountYesterday
 
     private val _charTillNow = MutableLiveData<List<AppItem>>()
-    val charTillNow : LiveData<List<AppItem>> = _charTillNow
+    val charTillNow: LiveData<List<AppItem>> = _charTillNow
 
-    private suspend fun getNotification(today: Date){
-        val notificationHistory= timeSculptorRepository.getNotificationForToday(today)
+    private suspend fun getNotification(today: Date) {
+        val notificationHistory = timeSculptorRepository.getNotificationForToday(today)
         withContext(Dispatchers.Main) {
             _notiCount.value = notificationHistory.size
         }
@@ -65,6 +66,7 @@ class TodayViewModel @Inject constructor(
         val today = LocalDate.now()
         _todayDate.value = formatDate(today)
     }
+
     private fun formatDate(date: LocalDate): String {
         val dayOfWeek = date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
             .uppercase(Locale.ROOT)
@@ -73,26 +75,27 @@ class TodayViewModel @Inject constructor(
 
         return "$dayOfWeek $month $dayOfMonth"
     }
-    fun getUsage(context: Context)= viewModelScope.launch {
+
+    fun getUsage(context: Context) = viewModelScope.launch {
         var calculateTime: Long = 0L
         getHomePageData(context).forEach { calculateTime += it.mUsageTime }
         _totalTime.value = calculateTime
     }
 
     //out of bound if no
-    fun getMostUsedApp(context: Context):AppItem{
+    fun getMostUsedApp(context: Context): AppItem {
         return try {
-            timeSculptorRepository.getApps(context,0)[0]
-        }catch (e :Exception){
+            timeSculptorRepository.getApps(context, 0)[0]
+        } catch (e: Exception) {
             AppItem()
         }
     }
 
-    fun getHomePageData(context: Context):List<AppItem>{
-        return timeSculptorRepository.getApps(context,0)
+    private fun getHomePageData(context: Context): List<AppItem> {
+        return timeSculptorRepository.getApps(context, 0)
     }
 
-    private suspend fun getYesterdayNotificationCount(){
+    private suspend fun getYesterdayNotificationCount() {
 
         val calendar = Calendar.getInstance()
         calendar.add(Calendar.DAY_OF_YEAR, -1)
@@ -104,14 +107,15 @@ class TodayViewModel @Inject constructor(
         calendar.set(Calendar.MINUTE, 59)
         calendar.set(Calendar.SECOND, 59)
         val endTime = calendar.timeInMillis
-        val count = timeSculptorRepository.getNotificationForYesterday(startTime,endTime).size
+        val count = timeSculptorRepository.getNotificationForYesterday(startTime, endTime).size
         _notiYesterdayCount.postValue(count)
     }
 
-    fun getAppIcon(context: Context,packageName:String): Drawable? {
+    fun getAppIcon(context: Context, packageName: String): Drawable? {
         try {
             val packageManager = context.packageManager
-            val appInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
+            val appInfo =
+                packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
             return packageManager.getApplicationIcon(appInfo)
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
@@ -129,7 +133,10 @@ class TodayViewModel @Inject constructor(
         val lastEventTime = format.format(Date(eventStats.lastEventTime))
         val totalTime = eventStats.totalTime / 1000
 
-        Log.i("bqtToday", "| ${_pickUpCount.value} | $eventType | $beginningTime | $endTime | $lastEventTime | $totalTime | ")
+        Log.i(
+            "bqtToday",
+            "| ${_pickUpCount.value} | $eventType | $beginningTime | $endTime | $lastEventTime | $totalTime | "
+        )
     }
 
 
@@ -145,20 +152,22 @@ class TodayViewModel @Inject constructor(
         val beginTime = calendar.timeInMillis
 
         val manager = context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
-        val usageStatsList = manager.queryEventStats(UsageStatsManager.INTERVAL_DAILY,beginTime, endTime)
+        val usageStatsList =
+            manager.queryEventStats(UsageStatsManager.INTERVAL_DAILY, beginTime, endTime)
 
 
         for (eventStats in usageStatsList) {
             if (eventStats.eventType == 18 && eventStats.firstTimeStamp >= beginTime && eventStats.lastTimeStamp <= endTime) {
                 printEventStatsInfo(eventStats)
             }
-            Log.i("bqt today","${_pickUpCount.value}")
-            Log.i("bqt today","${eventStats.firstTimeStamp}")
+            Log.i("bqt today", "${_pickUpCount.value}")
+            Log.i("bqt today", "${eventStats.firstTimeStamp}")
         }
 //        _pickUpCount.value = 12
     }
+
     suspend fun getTillNow(startOfDay: Long, current: Long) {
-        _charTillNow.value =  timeSculptorRepository.getItemsTillNow(startOfDay,current)
+        _charTillNow.value = timeSculptorRepository.getItemsTillNow(startOfDay, current)
     }
 
     fun testEventStatsForYesterday(context: Context) {
@@ -174,11 +183,12 @@ class TodayViewModel @Inject constructor(
         val endTime = calendar.timeInMillis
 
         val manager = context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
-        val usageStatsList = manager.queryEventStats(UsageStatsManager.INTERVAL_DAILY,startTime, endTime)
+        val usageStatsList =
+            manager.queryEventStats(UsageStatsManager.INTERVAL_DAILY, startTime, endTime)
 
 
         for (eventStats in usageStatsList) {
-            if (eventStats.eventType == 18 && eventStats.firstTimeStamp >= startTime ) {
+            if (eventStats.eventType == 18 && eventStats.firstTimeStamp >= startTime) {
                 _pickUpCountYesterday.value = eventStats.count
                 val format = SimpleDateFormat("yyyy.MM.dd_HH:mm:ss", Locale.getDefault())
                 val eventType = eventStats.eventType
@@ -189,7 +199,10 @@ class TodayViewModel @Inject constructor(
 
 
                 Log.i("bqt", _pickUpCountYesterday.value.toString())
-                Log.i("bqtYesterday", "| ${_pickUpCountYesterday.value} | $eventType | $beginningTime | $endTime | $lastEventTime | $totalTime | ")
+                Log.i(
+                    "bqtYesterday",
+                    "| ${_pickUpCountYesterday.value} | $eventType | $beginningTime | $endTime | $lastEventTime | $totalTime | "
+                )
 
             }
         }
@@ -204,14 +217,13 @@ class TodayViewModel @Inject constructor(
             if (currentValue > 1f) {
                 resultList[i] = 1f
                 val carryOver = currentValue - 1f
-                Log.i("accumulator","$carryOver")
+                Log.i("accumulator", "$carryOver")
                 resultList[i + 1] += carryOver
             }
         }
 
         return resultList
     }
-
 
 
     init {
@@ -222,10 +234,16 @@ class TodayViewModel @Inject constructor(
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
         val today = calendar.time
+
+        //may encounter race condition but fixed why
         viewModelScope.launch(Dispatchers.IO) {
             getNotification(today)
+            delay(10L)
             getYesterdayNotificationCount()
         }
+//        viewModelScope.launch(Dispatchers.IO) {
+//
+//        }
     }
 
 }

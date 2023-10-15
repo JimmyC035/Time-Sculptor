@@ -11,9 +11,12 @@ class DateConverters {
 
     @TypeConverter
     fun dateToString(date: Date?): String? {
-
+        try {
             return date?.let { dateFormat.format(it) }
-
+        } catch (e : Exception){
+            Log.i("noti", "dateString: $e")
+            throw e
+        }
     }
 
     @TypeConverter
@@ -25,8 +28,6 @@ class DateConverters {
             Log.i("noti", "dateString: $dateString")
             throw e
         }
-
-
 
     }
 }

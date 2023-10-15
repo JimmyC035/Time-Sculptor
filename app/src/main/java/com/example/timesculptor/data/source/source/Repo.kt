@@ -155,9 +155,9 @@ class Repo @Inject constructor(private var dao: AppDao) : TimeSculptorRepository
 
         val workRequest = PeriodicWorkRequest.Builder(
             NotiWorker::class.java,
-            20,
-            TimeUnit.MINUTES,
-            5,
+            24,
+            TimeUnit.HOURS,
+            15,
             TimeUnit.MINUTES
         ).setBackoffCriteria(
             backoffPolicy = BackoffPolicy.LINEAR,
@@ -211,7 +211,6 @@ class Repo @Inject constructor(private var dao: AppDao) : TimeSculptorRepository
             ExistingPeriodicWorkPolicy.UPDATE,
             workRequest
         )
-
 
         Log.i("work", "called DB")
     }

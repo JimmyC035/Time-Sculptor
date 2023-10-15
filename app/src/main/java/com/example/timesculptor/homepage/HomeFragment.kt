@@ -80,20 +80,18 @@ class HomeFragment : Fragment() {
         }
 
 
-
-
         composeView.setContent {
-            if(listItem.size >= 5){
+            if(listItem.size >= 7){
 
                 PieChart(
-                    data = listItem.take(5).associate {
+                    data = listItem.take(7).associate {
                         val item = it
                         Pair(item.mName, item.mUsageTime)
                     },
-                    icon = listItem.take(5).map {
+                    icon = listItem.take(7).map {
                        viewModel.getAppIcon(requireContext(),it.mPackageName)!!
                     },
-                    packageName = listItem.take(5).map{
+                    packageName = listItem.take(7).map{
                         it.mPackageName
                     },
                     myClick

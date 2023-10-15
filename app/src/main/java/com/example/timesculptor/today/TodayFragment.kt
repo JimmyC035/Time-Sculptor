@@ -134,6 +134,7 @@ class TodayFragment : Fragment() {
         mostUsedTime.text = mostUsed.mUsageTime.toHoursMinutesSeconds()
 
         viewModel.notiCount.observe(viewLifecycleOwner){
+            Log.i("notiCount","$it")
             notiToday.text = it.toString()
         }
         viewModel.notiYesterdayCount.observe(viewLifecycleOwner){

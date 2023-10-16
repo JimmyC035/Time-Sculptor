@@ -55,6 +55,7 @@ class TodayViewModel @Inject constructor(
     private val _charTillNow = MutableLiveData<List<AppItem>>()
     val charTillNow: LiveData<List<AppItem>> = _charTillNow
 
+
     private suspend fun getNotification(today: Date) {
         val notificationHistory = timeSculptorRepository.getNotificationForToday(today)
         withContext(Dispatchers.Main) {
@@ -238,12 +239,9 @@ class TodayViewModel @Inject constructor(
         //may encounter race condition but fixed why
         viewModelScope.launch(Dispatchers.IO) {
             getNotification(today)
-            delay(10L)
             getYesterdayNotificationCount()
         }
-//        viewModelScope.launch(Dispatchers.IO) {
-//
-//        }
+
     }
 
 }

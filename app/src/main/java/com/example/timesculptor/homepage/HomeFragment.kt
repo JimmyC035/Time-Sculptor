@@ -17,6 +17,7 @@ import com.example.timesculptor.databinding.FragmentHomeBinding
 import com.example.timesculptor.util.AppUtil
 import com.example.timesculptor.util.AppUtil.toHoursMinutesSeconds
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
@@ -76,7 +77,6 @@ class HomeFragment : Fragment() {
         //testing
         lifecycleScope.launch {
             viewModel.updateDb(requireContext())
-
         }
 
 

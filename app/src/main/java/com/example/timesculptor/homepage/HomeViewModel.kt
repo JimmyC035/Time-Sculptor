@@ -15,9 +15,11 @@ import com.example.timesculptor.data.source.source.AppItem
 import com.example.timesculptor.data.source.source.TimeSculptorRepository
 import com.example.timesculptor.util.AppUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.TextStyle
@@ -39,14 +41,8 @@ class HomeViewModel @Inject constructor(
     private val _notiCount = MutableLiveData<Int>()
     val notiCount :LiveData<Int> = _notiCount
 
-    fun getNotification(today:Date){
-//        viewModelScope.launch {
-//            val notificationHistory= timeSculptorRepository.getNotificationForToday(today)
-//            _notiCount.value = notificationHistory.size
-//        }
-    }
 
-    fun getTodayDate() {
+    private fun getTodayDate() {
         val today = LocalDate.now()
         _todayDate.value = formatDate(today)
     }
@@ -58,7 +54,7 @@ class HomeViewModel @Inject constructor(
 
         return "$dayOfWeek $month $dayOfMonth"
     }
-    fun getUsage(context: Context)= viewModelScope.launch {
+    fun getUsage(context: Context)= viewModelScope.launch(Dispatchers.Default) {
         var calculateTime: Long = 0L
         getHomePageData(context).forEach { calculateTime += it.mUsageTime }
         _totalTime.value = calculateTime
@@ -80,26 +76,21 @@ class HomeViewModel @Inject constructor(
     }
 
     suspend fun updateDb(context: Context){
-       val latest =  timeSculptorRepository.getLatest()
-        val items = timeSculptorRepository.getAppsForDB(context,latest!!)
-        timeSculptorRepository.insert(items)
-        Log.i("update",latest.toString())
+        withContext(Dispatchers.IO){
+            val latest =  timeSculptorRepository.getLatest()
+            val items = timeSculptorRepository.getAppsForDB(context,latest!!)
+            timeSculptorRepository.insert(items)
+            Log.i("update",latest.toString())
+        }
     }
 
 
     init {
-        val calendar = Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY, 0)
-        calendar.set(Calendar.MINUTE, 0)
-        calendar.set(Calendar.SECOND, 0)
-        calendar.set(Calendar.MILLISECOND, 0)
-        val today = calendar.time
         getTodayDate()
-        getNotification(today)
     }
 
 
-    fun printEventStatsInfo(eventStats: EventStats) {
+    private fun printEventStatsInfo(eventStats: EventStats) {
         val format = SimpleDateFormat("yyyy.MM.dd_HH:mm:ss", Locale.getDefault())
         val count = eventStats.count
         val eventType = eventStats.eventType

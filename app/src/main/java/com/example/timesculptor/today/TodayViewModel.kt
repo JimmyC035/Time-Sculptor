@@ -190,7 +190,6 @@ class TodayViewModel @Inject constructor(
             manager.queryEvents(startTime, endTime)
         val event = UsageEvents.Event()
 
-
         while (usageStatsList.hasNextEvent()) {
             usageStatsList.getNextEvent(event)
             if (event.eventType == 18 && event.timeStamp >= startTime && event.timeStamp <= endTime) {

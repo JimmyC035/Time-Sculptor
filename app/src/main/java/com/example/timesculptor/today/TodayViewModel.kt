@@ -1,6 +1,7 @@
 package com.example.timesculptor.today
 
 import android.app.usage.EventStats
+import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.pm.PackageManager
@@ -154,15 +155,16 @@ class TodayViewModel @Inject constructor(
 
         val manager = context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
         val usageStatsList =
-            manager.queryEventStats(UsageStatsManager.INTERVAL_DAILY, beginTime, endTime)
+            manager.queryEvents(beginTime, endTime)
+        val event = UsageEvents.Event()
 
 
-        for (eventStats in usageStatsList) {
-            if (eventStats.eventType == 18 && eventStats.firstTimeStamp >= beginTime && eventStats.lastTimeStamp <= endTime) {
-                printEventStatsInfo(eventStats)
+        while (usageStatsList.hasNextEvent()) {
+            usageStatsList.getNextEvent(event)
+            if (event.eventType == 18 && event.timeStamp >= beginTime && event.timeStamp <= endTime) {
+                _pickUpCount.value = _pickUpCount.value?.plus(1)
             }
-            Log.i("bqt today", "${_pickUpCount.value}")
-            Log.i("bqt today", "${eventStats.firstTimeStamp}")
+//            Log.i("bqt today", "${_pickUpCount.value}")
         }
 //        _pickUpCount.value = 12
     }
@@ -185,27 +187,16 @@ class TodayViewModel @Inject constructor(
 
         val manager = context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
         val usageStatsList =
-            manager.queryEventStats(UsageStatsManager.INTERVAL_DAILY, startTime, endTime)
+            manager.queryEvents(startTime, endTime)
+        val event = UsageEvents.Event()
 
 
-        for (eventStats in usageStatsList) {
-            if (eventStats.eventType == 18 && eventStats.firstTimeStamp >= startTime) {
-                _pickUpCountYesterday.value = eventStats.count
-                val format = SimpleDateFormat("yyyy.MM.dd_HH:mm:ss", Locale.getDefault())
-                val eventType = eventStats.eventType
-                val beginningTime = format.format(Date(eventStats.firstTimeStamp))
-                val endTime = format.format(Date(eventStats.lastTimeStamp))
-                val lastEventTime = format.format(Date(eventStats.lastEventTime))
-                val totalTime = eventStats.totalTime / 1000
-
-
-                Log.i("bqt", _pickUpCountYesterday.value.toString())
-                Log.i(
-                    "bqtYesterday",
-                    "| ${_pickUpCountYesterday.value} | $eventType | $beginningTime | $endTime | $lastEventTime | $totalTime | "
-                )
-
+        while (usageStatsList.hasNextEvent()) {
+            usageStatsList.getNextEvent(event)
+            if (event.eventType == 18 && event.timeStamp >= startTime && event.timeStamp <= endTime) {
+                _pickUpCountYesterday.value = _pickUpCountYesterday.value?.plus(1)
             }
+//            Log.i("bqt today", "${_pickUpCount.value}")
         }
     }
 

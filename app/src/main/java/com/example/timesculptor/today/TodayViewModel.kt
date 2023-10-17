@@ -157,7 +157,7 @@ class TodayViewModel @Inject constructor(
         val usageStatsList =
             manager.queryEvents(beginTime, endTime)
         val event = UsageEvents.Event()
-
+        _pickUpCount.value = 0
 
         while (usageStatsList.hasNextEvent()) {
             usageStatsList.getNextEvent(event)
@@ -190,6 +190,7 @@ class TodayViewModel @Inject constructor(
             manager.queryEvents(startTime, endTime)
         val event = UsageEvents.Event()
 
+        _pickUpCountYesterday.value = 0
         while (usageStatsList.hasNextEvent()) {
             usageStatsList.getNextEvent(event)
             if (event.eventType == 18 && event.timeStamp >= startTime && event.timeStamp <= endTime) {

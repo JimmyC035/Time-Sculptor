@@ -165,15 +165,16 @@ class Repo @Inject constructor(private var dao: AppDao) : TimeSculptorRepository
             TimeUnit.SECONDS
         )
             .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
+            .addTag("notiWorker")
             .build()
 
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-            "SendNotificationWorker",
+            "NotificationWorker",
             ExistingPeriodicWorkPolicy.UPDATE,
             workRequest
         )
 
-        Log.i("work", "called notification")
+        Log.i("work", "$hour $min called notification")
     }
 
     override fun createAndEnqueueDBWorker(context: Context) {

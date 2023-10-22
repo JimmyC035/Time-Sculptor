@@ -26,7 +26,7 @@ class DbWorker(context: Context, params: WorkerParameters) : CoroutineWorker(con
         return try {
             //create instance and write things into database
             database = TimeSculptorDataBase.getInstance(applicationContext)
-            appDao = database.TimeSculptorDao
+            appDao = database.timeSculptorDao
             repo = Repo(appDao)
             //get data
             val latest  = repo.getLatest()

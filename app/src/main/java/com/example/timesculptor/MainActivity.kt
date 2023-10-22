@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
             editor.apply()
         }
 
-        if (isFirstRun || true) {
+        if (isFirstRun) {
 
             navController.navigate(R.id.action_navigate_to_welcome_Fragment)
 

@@ -1,5 +1,6 @@
 package com.example.timesculptor.homepage
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,6 +14,7 @@ import androidx.work.WorkManager
 import com.example.timesculptor.R
 import com.example.timesculptor.data.source.DataManager
 import com.example.timesculptor.data.source.NotificationHistory
+import com.example.timesculptor.data.source.PieChartDataset
 import com.example.timesculptor.databinding.FragmentHomeBinding
 import com.example.timesculptor.util.AppUtil
 import com.example.timesculptor.util.AppUtil.toHoursMinutesSeconds
@@ -30,7 +32,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentHomeBinding.inflate(inflater,container,false)
+        val binding = FragmentHomeBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
         val usageTime = binding.totalUsage
@@ -38,30 +40,35 @@ class HomeFragment : Fragment() {
         val homeDate = binding.homeDate
         val composeView = binding.composeView
 
-
-
-
         //get data
-        val listItem = viewModel.getHomePageData(requireContext())
-        Log.i("session","$listItem")
+        viewModel.getHomePageData(requireContext())
 
+        val myClick: (String) -> Unit = { packageName: String ->
+            findNavController().navigate(
+                HomeFragmentDirections.actionNavigateToDetailFragment(
+                    packageName
+                )
+            )
+        }
 
-        //can't refresh due to function only call while viewModel init
-
-            viewModel.notiCount.observe(viewLifecycleOwner){
-                Log.i("noti", it.toString())
+        //get total time
+        viewModel.pieChartDataset.observe(viewLifecycleOwner) { dataset ->
+            composeView.setContent {
+                PieChart(
+                    data = dataset.dataMap,
+                    icon = dataset.icons,
+                    packageName = dataset.packageNames,
+                    myClick
+                )
             }
-
-        val myClick : (String) -> Unit = { packageName: String ->
-            findNavController().navigate(HomeFragmentDirections.actionNavigateToDetailFragment(packageName))
         }
 
 
-        //get total time
-        viewModel.getUsage(requireContext())
+
+        WorkManager.getInstance(requireContext()).cancelUniqueWork("SendNotificationWorker")
 
         lifecycleScope.launch {
-            viewModel.totalTime.collect{
+            viewModel.totalTime.collect {
                 usageTime.text = it.toHoursMinutesSeconds()
                 usageTimeInCircle.text = it.toHoursMinutesSeconds()
             }
@@ -69,64 +76,18 @@ class HomeFragment : Fragment() {
 
         //get today date
         lifecycleScope.launch {
-            viewModel.todayDate.collect{
+            viewModel.todayDate.collect {
                 homeDate.text = it
             }
         }
 
-        //testing
+        //update DB
         lifecycleScope.launch {
             viewModel.updateDb(requireContext())
         }
 
-
-        composeView.setContent {
-            if(listItem.size >= 7){
-
-                PieChart(
-                    data = listItem.take(7).associate {
-                        val item = it
-                        Pair(item.mName, item.mUsageTime)
-                    },
-                    icon = listItem.take(7).map {
-                       viewModel.getAppIcon(requireContext(),it.mPackageName)!!
-                    },
-                    packageName = listItem.take(7).map{
-                        it.mPackageName
-                    },
-                    myClick
-
-
-                )
-            }else{
-                PieChart(
-                    data = listItem.indices.associate {
-                        val item = listItem[it]
-                        Pair(item.mName, item.mUsageTime)
-                    },
-                    icon = listItem.indices.map {
-                        val item = listItem[it]
-                        viewModel.getAppIcon(requireContext(),item.mPackageName)!!
-                    },
-                    packageName = listItem.indices.map{
-                        val item = listItem[it]
-                        item.mPackageName
-                    },
-                    myClick
-                )
-            }
-
-        }
-
-
-
-//        viewModel.testEventStats(requireContext())
-
-
-
         return binding.root
     }
-
-
-
 }
+
+

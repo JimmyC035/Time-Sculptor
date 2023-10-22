@@ -19,7 +19,7 @@ abstract class TimeSculptorDataBase: RoomDatabase() {
     /**
      * Connects the database to the DAO.
      */
-    abstract val TimeSculptorDao: AppDao
+    abstract val timeSculptorDao: AppDao
 
     /**
      * Define a companion object, this allows us to add functions on the Database class.

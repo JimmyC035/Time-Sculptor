@@ -55,10 +55,8 @@ class HomeViewModel @Inject constructor(
 
         return "$dayOfWeek $month $dayOfMonth"
     }
-    private fun getUsage(ListData:List<AppItem>)= viewModelScope.launch(Dispatchers.Default) {
-        var calculateTime: Long = 0L
-        ListData.forEach { calculateTime += it.mUsageTime }
-        _totalTime.value = calculateTime
+     fun getUsage(listData: List<AppItem>)= viewModelScope.launch(Dispatchers.Default) {
+        _totalTime.value = listData.sumOf { it.mUsageTime }
     }
 
     fun getHomePageData(context: Context){
@@ -79,7 +77,7 @@ class HomeViewModel @Inject constructor(
         _pieChartDataset.value = dataset
     }
 
-    private fun getAppIcon(context: Context, packageName:String): Drawable? {
+    fun getAppIcon(context: Context, packageName:String): Drawable? {
         try {
             val packageManager = context.packageManager
             val appInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)

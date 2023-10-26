@@ -1,3 +1,40 @@
 <resources>
     <string name="app_name">Time Sculptor</string>
+    <string name="today">Today</string>
+    <string name="clock">Clock</string>
+    <string name="history">History</string>
+    <string name="pomodoro">pomodoro</string>
+    <string name="service_name">NotificationListener</string>
+    <string name="setting">Setting</string>
+    <string name="start">Start</string>
+    <string name="Intro_permission">Enable access permission for Time Sculptor</string>
+    <string name="usage_access">Usage access</string>
+    <string name="usage_permission">Time Sculptor requires usage data to analyze screen time.
+        Please grant access.</string>
+    <string name="overlay_permission">Show on top of other apps</string>
+    <string name="overlay_permission_content">Time Sculptor requires overlay permission to securely lock and show focus progress on your device.</string>
+    <string name="notification_permission">Notification Permission</string>
+    <string name="notification_permission_content">Time Sculptor will provide daily usage summaries and maintain a service for live tracking during timer use.</string>
+    <string name="get_started">Get Started</string>
+    <string name="welcome_to">Welcome to</string>
+    <string name="time_sculptor">Time Sculptor</string>
+    <string name="monitor_and_manage_your">Monitor and manage your</string>
+    <string name="screen_time">Screen Time</string>
+    <string name="retained_on_this_device">Retained on this device</string>
+    <string name="your_information_remains_secure_and_is_solely">Your information remains secure and is solely</string>
+    <string name="daily_report_title">Daily Report</string>
+    <string name="daily_report_content">Pick a time for your daily app use summary</string>
+    <string name="setting_title">Settings</string>
+    <string name="minutes">Minutes</string>
+    <string name="hour">Hour</string>
+    <string name="set_goal">Set Goal</string>
+    <string name="daily_goal_setting_title">Choose your daily usage goal</string>
+    <string name="pick_up_times">Times</string>
+    <string name="pick_up_goal">Choose your daily pick ups</string>
+    <string name="slogan">Craft Your Time, Focus Your Mind.</string>
+    <string name="back">BACK</string>
+    <string name="app_usage_timeline">APP Usage TimeLine</string>
+    <string name="launched">Launched</string>
+    <string name="usage_stats">Usage Stats</string>
+
 </resources>

@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.example.timesculptor.today.TodayViewModel" />
+
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#222627">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/text_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/bar_chart"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:strokeWidth="4dp"
+            app:strokeColor="#131818"
+            app:cardBackgroundColor="#5900080A"
+            app:cardCornerRadius="8dp"
+            app:cardUseCompatPadding="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/most_used_cardview"
+            app:layout_constraintTop_toBottomOf="@+id/total_usage">
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/line_chart"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+
+                </androidx.compose.ui.platform.ComposeView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/today_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:fontFamily="@font/cabin"
+                android:text="MONDAY SEPTEMBER 11"
+                android:textColor="#FF888888"
+                android:textSize="18dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/total_usage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/cabin"
+                android:text="6h 59m"
+                android:textColor="@color/white"
+                android:textSize="26sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/today_date" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/most_used_cardview"
+                android:layout_width="0dp"
+                android:layout_height="300dp"
+                android:layout_marginStart="16dp"
+                app:strokeWidth="4dp"
+                app:strokeColor="#131818"
+                android:layout_marginTop="200dp"
+                app:cardBackgroundColor="#5900080A"
+                app:cardCornerRadius="8dp"
+                app:cardUseCompatPadding="true"
+                app:layout_constraintEnd_toStartOf="@+id/goal_and_pick_up"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/total_usage">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/used_time_title"
+                        android:layout_width="0dp"
+                        android:layout_height="24dp"
+                        android:layout_marginTop="12dp"
+                        android:fontFamily="@font/cabin"
+                        android:layout_marginStart="18dp"
+                        android:text="Most Used"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toTopOf="@id/most_used_icon"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <ImageView
+                        android:id="@+id/most_used_icon"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="16dp"
+                        android:src="@drawable/pomodoro"
+                        app:layout_constraintDimensionRatio="1.5:1"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/used_time_title" />
+
+                    <TextView
+                        android:id="@+id/usage_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="28dp"
+                        android:text="Usage"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/cabin"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/most_used_icon" />
+
+                    <TextView
+                        android:id="@+id/display_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="3h28m"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:fontFamily="@font/cabin"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/usage_time" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/notification_card"
+                android:layout_width="0dp"
+                android:layout_height="300dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp"
+                app:cardBackgroundColor="#5900080A"
+                app:strokeWidth="4dp"
+                app:strokeColor="#131818"
+                app:cardCornerRadius="8dp"
+                app:cardUseCompatPadding="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/pick_ups"
+                app:layout_constraintTop_toBottomOf="@+id/goal_and_pick_up">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/notification_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginTop="12dp"
+                        android:text="Notification"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/cabin"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toTopOf="@+id/ellipse"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <View
+                        android:id="@+id/ellipse"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/ellipse"
+                        app:layout_constraintDimensionRatio="1.5:1"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/notification_title" />
+
+                    <TextView
+                        android:id="@+id/noti_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="78"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/cabin"
+                        android:textSize="36sp"
+                        app:layout_constraintBottom_toBottomOf="@id/ellipse"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/ellipse" />
+
+                    <TextView
+                        android:id="@+id/noti_yesterday"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="28dp"
+                        android:layout_marginTop="24dp"
+                        android:text="yesterday"
+                        android:fontFamily="@font/cabin"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ellipse" />
+
+                    <TextView
+                        android:id="@+id/noti_yesterday_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="8dp"
+                        android:text="78"
+                        android:fontFamily="@font/cabin"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/noti_yesterday" />
+
+                    <ImageView
+                        android:id="@+id/arrow_indicator"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="8dp"
+                        android:src="@drawable/pomodoro"
+                        app:layout_constraintStart_toEndOf="@+id/two_day_diff"
+                        app:layout_constraintTop_toBottomOf="@+id/noti_yesterday" />
+
+                    <TextView
+                        android:id="@+id/two_day_diff"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/cabin"
+                        android:textSize="18sp"
+                        android:text="hello"
+                        android:textColor="@color/white"
+                        app:layout_constraintStart_toEndOf="@+id/noti_yesterday_count"
+                        app:layout_constraintTop_toBottomOf="@+id/noti_yesterday" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/pick_ups"
+                android:layout_width="0dp"
+                android:layout_height="300dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                app:strokeWidth="4dp"
+                app:strokeColor="#131818"
+                app:cardBackgroundColor="#5900080A"
+                app:cardCornerRadius="8dp"
+                app:cardUseCompatPadding="true"
+                app:layout_constraintEnd_toStartOf="@+id/notification_card"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/most_used_cardview">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/pick_up_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginTop="12dp"
+                        android:fontFamily="@font/cabin"
+                        android:text="Pick-ups"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <ImageView
+                        android:id="@+id/ellipse_for_pickups"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginTop="16dp"
+                        android:src="@drawable/ellipse_green"
+                        app:layout_constraintDimensionRatio="1.5:1"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/pick_up_title" />
+
+                    <TextView
+                        android:id="@+id/pick_up_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="78"
+                        android:fontFamily="@font/cabin"
+                        android:textColor="@color/white"
+                        android:textSize="36sp"
+                        app:layout_constraintBottom_toBottomOf="@id/ellipse_for_pickups"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/ellipse_for_pickups" />
+
+                    <TextView
+                        android:id="@+id/pick_up_yesterday"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="28dp"
+                        android:layout_marginTop="24dp"
+                        android:text="yesterday"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/cabin"
+                        android:textSize="16sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ellipse_for_pickups" />
+
+                    <TextView
+                        android:id="@+id/pick_up_yesterday_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="8dp"
+                        android:text="78"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/cabin"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/pick_up_yesterday" />
+
+                    <ImageView
+                        android:id="@+id/pick_up_indicator"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="8dp"
+                        android:src="@drawable/pomodoro"
+                        app:layout_constraintStart_toEndOf="@+id/two_day_diff_pick_up"
+                        app:layout_constraintTop_toBottomOf="@+id/pick_up_yesterday" />
+
+                    <TextView
+                        android:id="@+id/two_day_diff_pick_up"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="8dp"
+                        android:textSize="18sp"
+                        android:text="hello"
+                        android:fontFamily="@font/cabin"
+                        android:textColor="@color/white"
+                        app:layout_constraintStart_toEndOf="@+id/pick_up_yesterday_count"
+                        app:layout_constraintTop_toBottomOf="@+id/pick_up_yesterday" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/goal_and_pick_up"
+                android:layout_width="0dp"
+                android:layout_height="300dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="200dp"
+                android:layout_marginEnd="16dp"
+                app:strokeWidth="4dp"
+                app:strokeColor="#131818"
+                app:cardBackgroundColor="#5900080A"
+                app:cardCornerRadius="8dp"
+                app:cardUseCompatPadding="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/most_used_cardview"
+                app:layout_constraintTop_toBottomOf="@+id/total_usage">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/goal_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="12dp"
+                        android:fontFamily="@font/cabin"
+                        android:text="Goal"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.compose.ui.platform.ComposeView
+                        android:id="@+id/compose_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/goal_title">
+
+                    </androidx.compose.ui.platform.ComposeView>
+
+                    <TextView
+                        android:id="@+id/goal_usage_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="130dp"
+                        android:fontFamily="@font/cabin"
+                        android:textSize="16sp"
+                        android:text="Usage"
+                        android:textColor="@color/white"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/compose_view" />
+
+
+                    <TextView
+                        android:id="@+id/goal_usage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:fontFamily="@font/cabin"
+                        android:textSize="14sp"
+                        android:text="Usage"
+                        android:textColor="@color/white"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/goal_usage_title" />
+
+                    <TextView
+                        android:id="@+id/goal_pick_up_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/cabin"
+                        android:text="Pick-ups"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/goal_usage" />
+
+                    <TextView
+                        android:id="@+id/pick_up_goal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/cabin"
+                        android:layout_marginStart="20dp"
+                        android:text="Pick-ups"
+                        android:textSize="14sp"
+                        android:textColor="@color/white"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/goal_pick_up_title" />
+
+
+
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+</layout>

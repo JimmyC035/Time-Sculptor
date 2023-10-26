@@ -1,0 +1,98 @@
+<!-- res/layout/floating_view_layout.xml -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+   <data>
+
+   </data>
+
+   <androidx.constraintlayout.widget.ConstraintLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:background="#DD111111"
+       android:gravity="center">
+
+
+      <ImageView
+          android:id="@+id/lottie_background"
+          android:layout_width="200dp"
+          android:layout_height="200dp"
+          android:layout_marginTop="100dp"
+          android:background="@drawable/baseline_circle_24"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+
+      <com.airbnb.lottie.LottieAnimationView
+          android:id="@+id/lottieAnimationView"
+          android:layout_width="0dp"
+          android:layout_height="0dp"
+          app:lottie_rawRes="@raw/animation_lnbp2pag"
+          app:layout_constraintBottom_toBottomOf="@+id/lottie_background"
+          app:layout_constraintEnd_toEndOf="@+id/lottie_background"
+          app:layout_constraintStart_toStartOf="@+id/lottie_background"
+          app:layout_constraintTop_toTopOf="@+id/lottie_background">
+
+      </com.airbnb.lottie.LottieAnimationView>
+
+      <TextView
+          android:id="@+id/stay_focus_title"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="32dp"
+          android:fontFamily="@font/cabin"
+          android:text="Stay Focus"
+          android:textColor="@color/white"
+          android:textSize="36sp"
+          android:textStyle="bold"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/lottie_background" />
+
+
+      <TextView
+          android:id="@+id/time_left"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:fontFamily="@font/cabin"
+          android:textColor="@color/white"
+          android:layout_marginTop="32dp"
+          android:text="02:53"
+          app:layout_constraintTop_toBottomOf="@+id/stay_focus_title"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          android:textSize="32sp"
+          android:textStyle="bold"/>
+
+      <androidx.appcompat.widget.AppCompatButton
+          android:id="@+id/close"
+          android:layout_width="wrap_content"
+          android:layout_height="50dp"
+          android:layout_marginTop="150dp"
+          android:background="@drawable/floating_window_buton"
+          android:gravity="center"
+          android:text="    back to Timer    "
+          android:textColor="@color/white"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintHorizontal_bias="0.498"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/stay_focus_title">
+
+      </androidx.appcompat.widget.AppCompatButton>
+
+      <TextView
+          android:id="@+id/quit_timer"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="quit timer :("
+          android:textColor="#2851D1"
+          android:textSize="14sp"
+          android:layout_marginTop="4dp"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/close" />
+
+
+   </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -3,8 +3,21 @@ Overview
 In today's digital age, both Android and iPhone devices come equipped with built-in screen time tracking. Additionally, there's a surge in apps designed to aid focus. Recognizing the central role that time plays in both these contexts, 
 I introduce Time Sculptor. My app not only tracks your screen time but also incorporates the Pomodoro Technique to boost your concentration.
 
+## App Architecture Overview
 ![image](https://github.com/JimmyC035/Time-Sculptor/assets/115048430/d6afa8f6-c27f-4ccd-af57-e73d5090d105)
-
+## Technological Stack
+  * MVVM (Model-View-ViewModel)
+  * MVI (Model-View-Intent)
+  * DI (Hilt)
+  * Room
+  * SharePreference
+  * MPAndroid
+  * Corountine / Flow
+  * Compose UI
+  * WorkManager
+  * UsageStateManager
+  * FloatingWindowService
+  * Unit test
 
 ## Features and Demonstrations 
 <table>
@@ -15,10 +28,7 @@ I introduce Time Sculptor. My app not only tracks your screen time but also inco
     <td>
        <h3>Welcome Page</h3>
       <ul>
-        <li>Upon the first launch, users are greeted with a welcoming message.</li>
-        <li>Users are informed that their data will be securely stored on their own devices, ensuring complete privacy</li>
-        <li>For the app to function optimally, users will be prompted to grant all necessary permissions</li>
-        <li>It's essential for users to grant all the requested permissions. Without complete access, the app cannot be used to its full potential.</li>
+       <li><strong style="font-size: 1.1 em;">Description:</strong> Upon first launch, users receive a welcome message, assurance of data privacy stored securely on their device, and are prompted to grant necessary permissions for optimal app functionality. It's essential to grant all permissions for the app to reach its full potential.</li>
       </ul>
     </td>
   </tr>
@@ -29,11 +39,7 @@ I introduce Time Sculptor. My app not only tracks your screen time but also inco
     <td>
       <h3>Home Page</h3>
       <ul>
-        <li><strong>Daily Usage Summary</strong>: After launching Time Sculptor, users are immediately presented with a summary of the total screen time for the day, as well as a breakdown of time spent on individual apps.</li>
-        <li><strong>Deep Dive into Specific Apps</strong>: Users can tap on a specific app to view more detailed insights.</li>
-        <li><strong>Usage Timeline</strong>: Inside each app's detailed view, users can see a timeline showing when they accessed the app throughout the day.</li>
-        <li><strong>Notifications Count</strong>: The app provides information about the number of notifications received from each specific app.</li>
-        <li><strong>Launch Count</strong>: Users can also see how many times they launched a specific app during the day.</li>
+       <li><strong style="font-size: 1.1 em;">Description:</strong> Time Sculptor presents users with a daily screen time summary, detailed insights per app, an access timeline, notification counts, and launch frequencies for individual apps.</li>
       </ul>
     </td>
   </tr>
@@ -43,13 +49,7 @@ I introduce Time Sculptor. My app not only tracks your screen time but also inco
     </td>
     <td>
       <h3>Today's Details</h3> 
-      <p>Upon entering the second tab, users are presented with detailed insights into their day:</p>
-      <ul>
-        <li><strong>Time Timeline</strong>: The top section displays a timeline covering the entire day, giving users a clear picture of their screen activity.</li>
-        <li><strong>Most Used Apps</strong>: Users can see their most frequently used apps. Clicking on any app will provide more granular details about its usage.</li>
-        <li><strong>User Goals</strong>: Users can view their set goals. These goals can be for desired screen time and the number of times they pick up their phone. Goals can be set and modified in the settings page, and there's a shortcut to navigate users directly to settings from here.</li>
-        <li><strong>Pick-Up Count</strong>: The bottom section displays a comparison between today's and yesterday's phone pick-up counts.</li>
-        <li><strong>Notification Count</strong>: Alongside the pick-up count, users can also see a comparison of the number of notifications received today versus yesterday.</li>
+      <li><strong style="font-size: 1.1 em;">Description:</strong> In the second tab, users view a full-day timeline of screen activity, their most-used apps with in-depth details, set and modify screen time and pick-up goals, and compare today's and yesterday's phone pick-ups and notifications.</li>
       </ul>
     </td>
   </tr>
@@ -59,13 +59,7 @@ I introduce Time Sculptor. My app not only tracks your screen time but also inco
     </td>
     <td>
       <h3>History Page</h3>
-    <p>In the history section, users can delve deep into their past usage:</p> 
-    <ul>
-      <li><strong>Date Selection</strong>: Users can select any date to retrieve detailed information about their usage on that specific day.</li>
-      <li><strong>Daily Usage Time</strong>: Once a date is selected, the total screen time for that day will be displayed prominently.</li>
-      <li><strong>Most Used Apps</strong>: Alongside the daily usage time, users will see which apps they used the most on the selected day.</li>
-      <li><strong>Launch Count</strong>: For the selected day, users can view the number of times they launched various applications.</li>
-      <li><strong>Total Notifications</strong>: A summary of the total notifications received on the chosen day is also provided for user convenience.</li>
+    <li><strong>Description:</strong> The history section allows users to explore past usage, select specific dates to view daily screen time, identify most-used apps, see app launch counts, and review total notifications for any chosen day.</li>
     </ul>
     </td>
   </tr>
@@ -75,11 +69,7 @@ I introduce Time Sculptor. My app not only tracks your screen time but also inco
     </td>
     <td>
       <h3>Pomodoro Timer</h3>
-    <p>The Pomodoro Timer, inspired by the 25-minute work intervals of the Pomodoro Technique, is set to 20 seconds for demo purposes:</p>
-      <ul>
-        <li><strong>Timer Controls</strong>: Users can modify the timer's duration using buttons and can start, reset, or stop it.</li>
-        <li><strong>Focus Mode</strong>: As the timer counts down, a protective overlay prevents distractions if users try accessing other apps or pages.</li>
-        <li><strong>Overlay Options</strong>: The main button returns users to the timer, while a secondary, subtler button allows an emergency timer exit, though its use is discouraged to maintain focus.</li>
+    <li><strong>Description:</strong> The Pomodoro Timer, offers timer controls, a focus mode overlay to prevent distractions, and options to return or urgently exit the timer, emphasizing sustained focus.</li>
       </ul>
     </td>
   </tr>
@@ -89,10 +79,7 @@ I introduce Time Sculptor. My app not only tracks your screen time but also inco
     </td>
     <td>
       <h3>Settings Page</h3>
-      <p>The settings page offers users the ability to customize various aspects of the app:</p>
-      <ul>
-        <li><strong>Goal Settings</strong>: Users can define their desired daily screen time limit and the number of device pickups.</li>
-        <li><strong>Daily Summary Notification</strong>: Users can set a specific time to receive daily screen time statistics as a notification.</li>
+     <li><strong>Description:</strong> The settings page allows users to customize app preferences, including setting daily screen time and device pickup goals, and scheduling daily summary notifications.</li>
       </ul>
     </td>
   </tr>

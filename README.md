@@ -3,6 +3,7 @@ Overview
 In today's digital age, both Android and iPhone devices come equipped with built-in screen time tracking. Additionally, there's a surge in apps designed to aid focus. Recognizing the central role that time plays in both these contexts, 
 I introduce Time Sculptor. My app not only tracks your screen time but also incorporates the Pomodoro Technique to boost your concentration.
 
+![image](https://github.com/JimmyC035/Time-Sculptor/assets/115048430/d6afa8f6-c27f-4ccd-af57-e73d5090d105)
 
 
 ## Features and Demonstrations 

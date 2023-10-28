@@ -10,7 +10,7 @@ I introduce Time Sculptor. My app not only tracks your screen time but also inco
   * MVI (Model-View-Intent)
   * DI (Hilt)
   * Room
-  * SharePreference
+  * SharedPreferences
   * MPAndroid
   * Corountine / Flow
   * Compose UI

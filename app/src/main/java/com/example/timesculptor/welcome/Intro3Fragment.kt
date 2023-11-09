@@ -121,6 +121,7 @@ class Intro3Fragment : Fragment() {
                 Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                 Uri.parse("package:" + requireActivity().packageName)
             )
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivityForResult(intent, 123)
 
         }

@@ -48,13 +48,6 @@ class HistoryFragment : Fragment() {
         val calendar = binding.calendarView
 
 
-
-
-
-
-
-
-
         calendar.setOnDateChangeListener { _, year, month, dayOfMonth ->
             val calendar = Calendar.getInstance()
             calendar.set(year, month, dayOfMonth, 0, 0, 0)

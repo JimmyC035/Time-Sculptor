@@ -42,6 +42,5 @@ class TimeApplication: Application() {
         repo.createAndEnqueueWorker(this,hour,min)
         Log.i("work","workers call?")
 
-
     }
 }

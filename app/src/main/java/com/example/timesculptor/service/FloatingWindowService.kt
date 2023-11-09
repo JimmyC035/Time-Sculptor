@@ -38,7 +38,6 @@ class FloatingWindowService : Service() {
     override fun onCreate() {
         super.onCreate()
 
-
         val inflater = LayoutInflater.from(this)
         val binding = FragmentFloatingWindowBinding.inflate(inflater)
         floatingView = binding.root
